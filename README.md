@@ -1,10 +1,6 @@
 # Written Corpus Annotation - TextAnnot-API
 
-Class project for the Enterprise Software Architectures 2017-18 Course, Polytechnic School, Universitat de Lleida, Spain
-
-[![Build Status](https://travis-ci.org/UdL-EPS-SoftArch/TextAnnot-API.svg?branch=master)](https://travis-ci.org/UdL-EPS-SoftArch/TextAnnot-API/branches) 
-[![codebeat badge](https://codebeat.co/badges/79a45b06-8de1-4af5-81c8-39d789e1c67c)](https://codebeat.co/projects/github-com-udl-eps-softarch-textannot-api-master)
-<a href="https://zenhub.com"><img src="https://cdn.rawgit.com/ZenHubIO/support/master/zenhub-badge.svg"></a>
+[![Build Status](https://travis-ci.org/rhizomik/TextAnnot-API.svg?branch=master)](https://travis-ci.org/rhizomik/TextAnnot-API/branches) 
 
 ## Vision
 
@@ -14,7 +10,6 @@ Class project for the Enterprise Software Architectures 2017-18 Course, Polytech
 
 **that** allows them to upload text samples (XML or using Web form), annotate errors, list samples, search samples, review annotations and analyse errors.
 Moreover, authorised users can define samples metadata and the error tags hierarchy.
-
 
 **Unlike** existing tools TextAnnot focuses on errors annotation and is highly customisable.
 
@@ -39,3 +34,7 @@ Moreover, authorised users can define samples metadata and the error tags hierar
 ## Entities Model
 
 ![Entities Model Diagram](http://www.plantuml.com/plantuml/svg/5Sqn3W8X44RXtbFe0M1wgwMmCB7OPDq388n20iDc-8bwUzVgDL_ofWwl6BKSJbb26P67bcC2jducKl-shumq7gEpXYPWWGsjqXflvZ8lPcbFE0s9xlo14samRhvIzHsijEkChwajSh7R_pAnnBq_?v=1)
+
+## Notes
+
+Based on the project [TextAnnot-API](https://travis-ci.org/UdL-EPS-SoftArch/TextAnnot-API) by the "Enterprise Software Architectures 2017-18" class, EPS, Universitat de Lleida, Spain
