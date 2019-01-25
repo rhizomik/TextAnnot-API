@@ -17,16 +17,4 @@ after_success:
       docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .;
       docker tag $REPO:$TRAVIS_COMMIT $REPO:$TAG;
       docker push $REPO;
-      docker login --username=_ --password=$HEROKU_TOKEN registry.heroku.com;
-      docker tag $REPO:$TRAVIS_COMMIT registry.heroku.com/textannot-api/web;
-      docker push registry.heroku.com/textannot-api/web;
-      wget -qO- https://toolbelt.heroku.com/install.sh | sh;
-      heroku container:release web --app textannot-api;
     fi
-
-notifications:
-  slack:
-    secure: CLJRQTpiv5oCQukwIy/I71zb+iPWMaRg8ZNan0zy3BX1BPXxAdP8S7zX27z/m8wdtV0+ogsHHOXLEkGFbkhfkMXQFO/SRtnrV5OdOb5KEWg5cJZsG8PPW7tC1RcFprFaL9rcJ14XAYn+QrFlSbkvuHMnL2HMXHPkPZ1/7zHg3MAnIlBROIBjM+IpqLBF1c0I+f5NPzH1ILncxezevRHCsXA4WeG1jXz4YiM2BeGD9DAoeQa8X1yhiXzYTNumRAqhmguUuSzDi4VCPJwIiIMsA/buIAS+1GdVOUBFU6+mnM01xKIbfFvXZJyySfQ3Y2WQ3kCOc4p+XdnLOLzmSTcOdwpiemWlqO7+E+k6i2qAIKT43e4C+DKq5Avgu1Wodo+dJerZeKEFvPgMAmc0sFWHgXYQmeYsgS49iJhuDuOII33YCbsDN9uUsMQqgSdr9twS0r7BdFVOsLwy3gwNMMcDK7r43e0hPIjWV6GdLmpylozUrVkdw4dEULrJct81GbDOx6Zdea0B+EzVm8fQaNcCi2jdHrREgDZVk4UeAwqSGPnB0bRCd9p1/sKtYOH1Km75bpGE81ajpwd+kohYVYAl5OYVbTTCISYySudHyAwTv/Qb/G9GfeCmwOEDrp2I0im+ePJqd0hlBE1ttZOcrKHCTzEsN8ODqnnN1510yoEtLY8=
-    on_success: change
-    on_failure: always
-    on_pull_requests: true
