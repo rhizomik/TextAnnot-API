@@ -1,23 +1,21 @@
 package cat.udl.eps.entsoftarch.textannot.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Data
 public class XmlSample extends Sample {
 
-    private final static int textSize = 16 * 1024;// 16KB
-
     /**
      * The content contained in the XmlSample. It is limited to 16KB and it can't be null.
      */
     @NotNull
-    @Column(length = textSize)
-    @Size(max = textSize)
+    @Lob
+    @Type(type = "text")
     private String content;
 
     /**
