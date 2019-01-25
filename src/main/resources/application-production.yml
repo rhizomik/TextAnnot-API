@@ -19,11 +19,3 @@ spring:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: update
-
-logging:
-  level:
-    root: error
-    org:
-      springframework:
-        web: error
-      hibernate: error
