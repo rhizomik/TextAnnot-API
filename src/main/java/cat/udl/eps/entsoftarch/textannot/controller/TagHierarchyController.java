@@ -135,23 +135,27 @@ public class TagHierarchyController {
     @Data
     public static class TagHierarchyJson {
         private String name;
+        private Integer id;
         private List<TagJson> roots;
 
         TagHierarchyJson() {}
 
         TagHierarchyJson(TagHierarchy tagHierarchy) {
+            this.id = tagHierarchy.getId();
             this.name = tagHierarchy.getName();
         }
     }
 
     @Data
     public static class TagJson {
+        private Integer id;
         private String name;
         private List<TagJson> children;
 
         TagJson() {}
 
         TagJson(Tag tag) {
+            this.id = tag.getId();
             this.name = tag.getName();
             children = new ArrayList<>();
         }
