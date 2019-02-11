@@ -1,13 +1,6 @@
 package cat.udl.eps.entsoftarch.textannot.config;
 
-import cat.udl.eps.entsoftarch.textannot.domain.Admin;
-import cat.udl.eps.entsoftarch.textannot.domain.Linguist;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataValue;
-import cat.udl.eps.entsoftarch.textannot.domain.Sample;
-import cat.udl.eps.entsoftarch.textannot.domain.Tag;
-import cat.udl.eps.entsoftarch.textannot.domain.XmlSample;
+import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
 import javax.annotation.PostConstruct;
@@ -34,6 +27,7 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
         config.exposeIdsFor(Sample.class);
         config.exposeIdsFor(Linguist.class);
         config.exposeIdsFor(Tag.class);
+        config.exposeIdsFor(Annotation.class);
     }
 
     @PostConstruct
