@@ -1,12 +1,5 @@
 Feature: List all the annotations associated to a sample
 
-  Scenario: List 1 Annotation referencing a Sample
-    Given I login as "user" with password "password"
-    Given Exists a Sample with text "sampleExpectedText"
-    Given I create an annotation with start 0, end 10 and sample text "sampleExpectedText"
-    When  I link the previous annotation with the previous sample
-    Then  The annotation with the text "sampleExpectedText" has been linked to the sample
-
   Scenario: List 5 Annotations referencing a Sample
     Given I login as "user" with password "password"
     Given I create a different sample with text "5RelatedAnnotations" with 5 related Annotations

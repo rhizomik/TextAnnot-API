@@ -176,61 +176,7 @@ public class CreateAnnotationStepDefs {
                 .andDo(print());
     }
 
-    @When("^I create a new annotation with null start, end (\\d+) and sample \"([^\"]*)\"$")
-    public void iCreateANewAnnotationWithNullStartAndEndAndSample(int end, String sample) throws Throwable {
-        JSONObject annotation = new JSONObject();
-        annotation.put("end", end);
-        String sampleUri = sampleRepository.findByTextContaining(sample).get(0).getUri();
-        annotation.put("sample", sampleUri);
-
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/annotations")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(annotation.toString())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()))
-                .andDo(print());
-
-        newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
-    }
-
-
-    @When("^I create a new annotation with start (\\d+), null end and sample \"([^\"]*)\"$")
-    public void iCreateANewAnnotationWithStartAndNullEndAndSample(int start, String sample) throws Throwable {
-        JSONObject annotation = new JSONObject();
-        annotation.put("start", start);
-        String sampleUri = sampleRepository.findByTextContaining(sample).get(0).getUri();
-        annotation.put("sample", sampleUri);
-
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/annotations")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(annotation.toString())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()))
-                .andDo(print());
-
-        newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
-    }
-
-    @When("^I create a new annotation with null start, null end and sample \"([^\"]*)\"$")
-    public void iCreateANewAnnotationWithNullStartAndNullEndAndSample(String sample) throws Throwable {
-        JSONObject annotation = new JSONObject();
-        String sampleUri = sampleRepository.findByTextContaining(sample).get(0).getUri();
-        annotation.put("sample", sampleUri);
-
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/annotations")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(annotation.toString())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()))
-                .andDo(print());
-
-        newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
-    }
-
-    @When("^I create a new annotation with start (\\d+), end (\\d+), sample \"([^\"]*)\" and I associate a new tag with name \"([^\"]*)\"$")
+    @When("^I create a new annotation with start (\\d+|-\\d+), end (\\d+|-\\d+), sample \"([^\"]*)\" and I associate a new tag with name \"([^\"]*)\"$")
     public void iCreateANewAnnotationWithStartEndSampleAndIAssociateANewTagWithName(int start, int end, String sample, String tagName) throws Throwable {
 
         JSONObject annotation = new JSONObject();

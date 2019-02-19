@@ -18,6 +18,8 @@ public interface TagRepository extends PagingAndSortingRepository<Tag, Integer> 
      */
     List<Tag> findByNameContaining(@Param("name") String name);
 
+    Tag findByName(@Param("name") String name);
+
     /**
      Returns the Tags related to a tagHierarchy.
      * @param tagHierarchy The tagHierarchy that contains the Tags we want.

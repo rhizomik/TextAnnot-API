@@ -28,7 +28,7 @@ Feature: Tag
   Scenario: Create a Tag linked to a Tag Hierarchy as admin
     Given I login as "admin" with password "password"
     And Exists a TagHierarchy with name "hierarchy"
-    And Exists a Tag with name "Tag"
+    And Exists a Tag with name "tag" associated to the TagHierarchy "hierarchy"
     When I create a new tag with name "Tag" defined in the tag hierarchy "hierarchy"
     Then The tag hierarchy "hierarchy" defines a tag with the text "Tag text..."
     And The response code is 204

@@ -64,17 +64,22 @@ public class CreateTagHierarchyDefs {
                 .andExpect(jsonPath("$.name", is(name)));
     }
 
-    @Given("^Exists a Sample with text \"([^\"]*)\"$")
-    public void thereIsASingleSampleWithText(String text) {
+    @Given("^Exists a Sample with text \"([^\"]*)\" and TagHierarchy \"([^\"]*)\"$")
+    public void thereIsASingleSampleWithText(String text, String tagHierarchyName) {
+        TagHierarchy tagHierarchy = this.existsATagHierarchyWithName(tagHierarchyName);
         sample = new Sample(text);
         sampleRepository.save(sample);
     }
 
     @And("^Exists a Tag Hierarchy with name \"([^\"]*)\"$")
-    public void existsATagHierarchyWithName(String name) {
-        tagHierarchy = new TagHierarchy();
-        tagHierarchy.setName(name);
-        tagHierarchyRepository.save(tagHierarchy);
+    public TagHierarchy existsATagHierarchyWithName(String name) {
+        tagHierarchy = tagHierarchyRepository.findByName(name).orElse(null);
+        if (tagHierarchy == null){
+            tagHierarchy = new TagHierarchy();
+            tagHierarchy.setName(name);
+            tagHierarchyRepository.save(tagHierarchy);
+        }
+        return tagHierarchy;
     }
 
     @When("^I set the previous Sample tagged by the previous Tag Hierarchy$")

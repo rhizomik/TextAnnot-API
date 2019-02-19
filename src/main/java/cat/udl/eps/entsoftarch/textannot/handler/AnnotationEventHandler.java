@@ -2,6 +2,7 @@ package cat.udl.eps.entsoftarch.textannot.handler;
 
 import cat.udl.eps.entsoftarch.textannot.domain.Annotation;
 import cat.udl.eps.entsoftarch.textannot.domain.Linguist;
+import cat.udl.eps.entsoftarch.textannot.exception.AnnotationException;
 import cat.udl.eps.entsoftarch.textannot.repository.AnnotationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.core.annotation.HandleBeforeCreate;
@@ -24,12 +25,16 @@ public class AnnotationEventHandler {
 
     @HandleBeforeCreate
     @Transactional
-    public void handleAnnotationPreCreate(Annotation annotation) {
+    public void handleAnnotationPreCreate(Annotation annotation) throws AnnotationException {
         logger.info("Before creating: {}", annotation.toString());
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         logger.info("Username: {}", auth.getAuthorities());
 
         annotation.setLinguist((Linguist) auth.getPrincipal());
+        if(annotation.getSample().getTaggedBy() == null)
+            annotation.getSample().setTaggedBy(annotation.getTag().getTagHierarchy());
+        else if(!annotation.getSample().getTaggedBy().equals(annotation.getTag().getTagHierarchy()))
+            throw new AnnotationException();
         annotationRepository.save(annotation);
     }
 

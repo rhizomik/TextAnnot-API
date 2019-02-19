@@ -33,7 +33,7 @@ public class TagStepDefs {
 
     private Tag tag, parent, child;
     private TagHierarchy tagHierarchy = null;
-    private String childUri, parentUri,errormessage;
+    private String childUri, parentUri, errormessage;
 
     @When("^I create a new tag with name \"([^\"]*)\"$")
     public void iCreateANewTagWithName(String name) throws Throwable {
@@ -60,15 +60,24 @@ public class TagStepDefs {
     }
 
     @And("^Exists a TagHierarchy with name \"([^\"]*)\"$")
-    public void existsATagHierarchyWithName(String name) throws Throwable {
-        tagHierarchy = new TagHierarchy();
-        tagHierarchy.setName(name);
-        tagHierarchyRepository.save(tagHierarchy);
+    public TagHierarchy existsATagHierarchyWithName(String name) throws Throwable {
+        tagHierarchy = tagHierarchyRepository.findByName(name).orElse(null);
+        if(tagHierarchy == null){
+            tagHierarchy = new TagHierarchy();
+            tagHierarchy.setName(name);
+            tagHierarchyRepository.save(tagHierarchy);
+        }
+        return tagHierarchy;
     }
 
-    @And("^Exists a Tag with name \"([^\"]*)\"$")
-    public void existsATagWithName(String name) throws Throwable {
-        tag = new Tag(name);
+    @And("^Exists a Tag with name \"([^\"]*)\" associated to the TagHierarchy \"([^\"]*)\"$")
+    public void existsATagWithName(String tagName, String tagHierarchyName) throws Throwable {
+        TagHierarchy tagHierarchy = existsATagHierarchyWithName(tagHierarchyName);
+        tag = tagRepository.findByName(tagName);
+        if(tag == null)
+            tag = new Tag(tagName);
+
+        tag.setTagHierarchy(tagHierarchy);
         tagRepository.save(tag);
     }
 
