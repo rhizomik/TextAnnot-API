@@ -15,7 +15,6 @@ import org.hibernate.annotations.Type;
 
 @Entity
 @Data
-@Table(name = "TextAnnotSample")
 @EqualsAndHashCode(callSuper = true)
 public class Sample extends UriEntity<Integer>{
 
