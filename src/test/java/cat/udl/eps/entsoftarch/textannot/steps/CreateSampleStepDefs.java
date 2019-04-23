@@ -62,7 +62,7 @@ public class CreateSampleStepDefs {
     @And("^It has not been created a sample with text \"([^\"]*)\"$")
     public void itHasNotBeenCreatedASample(String text) {
         Assert.assertEquals(0,sampleRepository.count());
-        Assert.assertEquals(0,sampleRepository.findByTextContaining(text).size());
+        Assert.assertEquals(0,sampleRepository.findByTextContains(text).size());
     }
 
     @When("^I create a new sample with no text field$")

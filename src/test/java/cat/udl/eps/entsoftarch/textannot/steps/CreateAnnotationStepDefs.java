@@ -3,7 +3,6 @@ package cat.udl.eps.entsoftarch.textannot.steps;
 import cat.udl.eps.entsoftarch.textannot.repository.AnnotationRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.TagRepository;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
 import org.json.JSONObject;
@@ -139,7 +138,7 @@ public class CreateAnnotationStepDefs {
         JSONObject annotation = new JSONObject();
         annotation.put("start", start);
         annotation.put("end", end);
-        String sampleUri = sampleRepository.findByTextContaining(sample).get(0).getUri();
+        String sampleUri = sampleRepository.findByTextContains(sample).get(0).getUri();
         annotation.put("sample", sampleUri);
 
         stepDefs.result = stepDefs.mockMvc.perform(
@@ -184,7 +183,7 @@ public class CreateAnnotationStepDefs {
         annotation.put("end", end);
         String tagUri = tagRepository.findByNameContaining(tagName).get(0).getUri();
         annotation.put("tag", tagUri);
-        String sampleUri = sampleRepository.findByTextContaining(sample).get(0).getUri();
+        String sampleUri = sampleRepository.findByTextContains(sample).get(0).getUri();
         annotation.put("sample", sampleUri);
 
         stepDefs.result = stepDefs.mockMvc.perform(

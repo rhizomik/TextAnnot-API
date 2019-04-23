@@ -51,7 +51,7 @@ public class ListSampleAnnotationsStepDefs {
         JSONObject annotation = new JSONObject();
         annotation.put("start", start);
         annotation.put("end", end);
-        String sampleUri = sampleRepository.findByTextContaining(sample).get(0).getUri();
+        String sampleUri = sampleRepository.findByTextContains(sample).get(0).getUri();
         annotation.put("sample", sampleUri);
 
         stepDefs.result = stepDefs.mockMvc.perform(
