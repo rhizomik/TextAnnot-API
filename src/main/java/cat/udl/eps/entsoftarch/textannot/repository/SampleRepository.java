@@ -2,6 +2,8 @@ package cat.udl.eps.entsoftarch.textannot.repository;
 
 import cat.udl.eps.entsoftarch.textannot.domain.Sample;
 import cat.udl.eps.entsoftarch.textannot.domain.TagHierarchy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -17,8 +19,8 @@ public interface SampleRepository extends PagingAndSortingRepository<Sample, Int
      * @param word String text for finding in Samples
      * @return The list of Samples that contains text in given parameter
      */
-    @Query(nativeQuery = true, value = "SELECT * FROM sample WHERE text REGEXP ?#{'[[:<:]]' + #word + '[[:>:]]'}")
-    List<Sample> findByTextContainingWord(@Param("word") String word);
+    @Query(nativeQuery = true, value = "SELECT * FROM sample s WHERE s.text REGEXP ?#{'[[:<:]]' + #word + '[[:>:]]'}")
+    Page<Sample> findByTextContainingWord(@Param("word") String word, Pageable pageable);
 
     /**
      * Finds all Samples that has word contained like the given one
