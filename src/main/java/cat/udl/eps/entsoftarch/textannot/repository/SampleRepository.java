@@ -20,8 +20,8 @@ public interface SampleRepository extends PagingAndSortingRepository<Sample, Int
      * @param word String text for finding in Samples
      * @return The list of Samples that contains text in given parameter
      */
-    @Query(nativeQuery = true, value = "SELECT * FROM sample s WHERE s.text REGEXP ?#{'[[:<:]]' + #word + '[[:>:]]'}")
-    Page<Sample> findByTextContainingWord(@Param("word") String word, Pageable pageable);
+    @Query(nativeQuery = true, value = "SELECT id FROM sample s WHERE s.text REGEXP ?#{'[[:<:]]' + #word + '[[:>:]]'}")
+    List<Integer> findByTextContainingWord(@Param("word") String word);
 
     /**
      * Finds all Samples that has word contained like the given one

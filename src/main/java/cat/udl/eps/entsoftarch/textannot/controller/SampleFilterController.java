@@ -1,5 +1,6 @@
 package cat.udl.eps.entsoftarch.textannot.controller;
 
+import cat.udl.eps.entsoftarch.textannot.domain.QSample;
 import cat.udl.eps.entsoftarch.textannot.domain.Sample;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.Serializable;
+import java.util.List;
 
 @BasePathAwareController
 public class SampleFilterController {
@@ -24,7 +26,8 @@ public class SampleFilterController {
 
     @PostMapping("/samples/filter")
     public @ResponseBody PagedResources<PersistentEntityResource> getFilteredSamples(@RequestBody SampleFilters filters, Pageable pageable, PagedResourcesAssembler resourceAssembler) {
-        Page<Sample> samples = sampleRepository.findByTextContainingWord(filters.getWord(), pageable);
+        List<Integer> samplesContainingWord = sampleRepository.findByTextContainingWord(filters.getWord());
+        Page<Sample> samples = sampleRepository.findAll(QSample.sample.id.in(samplesContainingWord), pageable);
         return resourceAssembler.toResource(samples);
     }
 
