@@ -5,6 +5,7 @@ import cat.udl.eps.entsoftarch.textannot.domain.TagHierarchy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import org.springframework.data.repository.query.Param;
 
 @RepositoryRestResource
-public interface SampleRepository extends PagingAndSortingRepository<Sample, Integer> {
+public interface SampleRepository extends PagingAndSortingRepository<Sample, Integer>, QuerydslPredicateExecutor<Sample> {
 
     /**
      * Finds all Samples that has text contained like the given one
