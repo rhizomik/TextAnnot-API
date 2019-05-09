@@ -15,5 +15,5 @@ public interface MetadataTemplateRepository extends PagingAndSortingRepository<M
      * @param name The given name of metadataTemplate.
      * @return metadataTemplate object.
      */
-    Optional<MetadataTemplate> findByName(@Param("name") String name);
+    MetadataTemplate findByName(@Param("name") String name);
 }

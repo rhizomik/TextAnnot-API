@@ -108,9 +108,8 @@ public class XmlSampleStepDefs {
         Resource resource = stepDefs.wac.getResource("classpath:"+filename);
         byte[] content = Files.readAllBytes(resource.getFile().toPath());
         sample.setContent(new String(content, StandardCharsets.UTF_8));
-        Optional<MetadataTemplate> metadataTemplateOptional = metadataTemplateRepository.findByName(template);
-        Assert.assertTrue("metadataTemplate is present", metadataTemplateOptional.isPresent());
-        sample.setDescribedBy(metadataTemplateOptional.get());
+        MetadataTemplate metadataTemplateOptional = metadataTemplateRepository.findByName(template);
+        sample.setDescribedBy(metadataTemplateOptional);
 
         String message = stepDefs.mapper.writeValueAsString(sample);
 
@@ -150,9 +149,8 @@ public class XmlSampleStepDefs {
 
     @And("^The metadata template \"([^\"]*)\" has fields$")
     public void theMetadataTemplateHasFields(String templateName, List<List<String>> fields) throws Throwable {
-        Optional<MetadataTemplate> metadataTemplateOptional = metadataTemplateRepository.findByName(templateName);
-        Assert.assertTrue("metadataTemplate is present", metadataTemplateOptional.isPresent());
-        MetadataTemplate template = metadataTemplateOptional.get();
+        MetadataTemplate metadataTemplateOptional = metadataTemplateRepository.findByName(templateName);
+        MetadataTemplate template = metadataTemplateOptional;
         fields.forEach(fieldNameType -> {
             MetadataField field = new MetadataField();
             field.setCategory(fieldNameType.get(0));

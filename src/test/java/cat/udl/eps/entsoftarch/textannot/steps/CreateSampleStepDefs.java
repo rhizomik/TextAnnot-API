@@ -82,9 +82,8 @@ public class CreateSampleStepDefs {
     public void iCreateANewSampleWithMetadataTemplate(String text, String mtName) throws Throwable{
         JSONObject sample = new JSONObject();
         sample.put("text", text);
-        Optional<MetadataTemplate> metadataTemplateOptional = metadataTemplateRepository.findByName(mtName);
-        Assert.assertTrue("metadataTemplate is present", metadataTemplateOptional.isPresent());
-        sample.put("describedBy", metadataTemplateOptional.get().getUri());
+        MetadataTemplate metadataTemplateOptional = metadataTemplateRepository.findByName(mtName);
+        sample.put("describedBy", metadataTemplateOptional.getUri());
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/samples")
                         .contentType(MediaType.APPLICATION_JSON)

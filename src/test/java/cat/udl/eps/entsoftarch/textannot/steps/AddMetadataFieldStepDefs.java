@@ -93,9 +93,7 @@ public class AddMetadataFieldStepDefs {
     public void iRegisterANewMetadataFieldWithTextAndTypeForMetadataTemplateWithValue
             (String name, String type, String metadataTemplateValue) throws Throwable {
         JSONObject metadataField = new JSONObject();
-        Optional<MetadataTemplate> metadataTemplateOptional = metadataTemplateRepository.findByName(metadataTemplateValue);
-        Assert.assertTrue("metadataTemplate is present", metadataTemplateOptional.isPresent());
-        metaTemplate = metadataTemplateOptional.get();
+        metaTemplate = metadataTemplateRepository.findByName(metadataTemplateValue);
         metadataField.put("name", name);
         metadataField.put("type", type);
         metadataField.put("definedAt", "/metadataTemplates/"+metaTemplate.getId()+"");

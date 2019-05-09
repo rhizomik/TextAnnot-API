@@ -65,9 +65,8 @@ public class FindByMetadataTemplateStepDefs {
     @And("There is a sample with text \"([^\"]*)\" defined by \"([^\"]*)\"$")
     public void addSamples(String sam, String metadata) {
         Sample sample = new Sample(sam);
-        Optional<MetadataTemplate> metadataTemplateOptional = metadataTemplateRepository.findByName(metadata);
-        Assert.assertTrue("metadataTemplate is present", metadataTemplateOptional.isPresent());
-        sample.setDescribedBy(metadataTemplateOptional.get());
+        MetadataTemplate metadataTemplateOptional = metadataTemplateRepository.findByName(metadata);
+        sample.setDescribedBy(metadataTemplateOptional);
         sampleRepository.save(sample);
     }
 
