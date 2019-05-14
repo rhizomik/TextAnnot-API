@@ -44,7 +44,7 @@ public class SampleFilterController {
     public @ResponseBody PagedResources<PersistentEntityResource> getFilteredSamples(@RequestBody SampleFilters filters, Pageable pageable, PagedResourcesAssembler resourceAssembler) {
         List<Integer> samplesContainingWord = sampleRepository.findByTextContainingWord(filters.getWord());
         BooleanExpression query = QSample.sample.id.in(samplesContainingWord);
-        if(!filters.getMetadata().isEmpty()) {
+        if(filters.getMetadata() != null && !filters.getMetadata().isEmpty()) {
             for (Map.Entry<String, String> e: filters.getMetadata().entrySet()) {
                  query = query.and(QSample.sample.id.in(JPAExpressions.select(QMetadataValue.metadataValue.forA.id).from(QMetadataValue.metadataValue)
                          .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
