@@ -1,9 +1,6 @@
 package cat.udl.eps.entsoftarch.textannot.controller;
 
-import cat.udl.eps.entsoftarch.textannot.domain.QMetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.QMetadataValue;
-import cat.udl.eps.entsoftarch.textannot.domain.QSample;
-import cat.udl.eps.entsoftarch.textannot.domain.Sample;
+import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
@@ -51,6 +48,12 @@ public class SampleFilterController {
                          .where(QMetadataValue.metadataValue.value.eq(e.getValue()).and(QMetadataField.metadataField.name.eq(e.getKey())))));
             }
         }
+        if(filters.getTags() != null && !filters.getTags().isEmpty()) {
+            for (String tag: filters.getTags()) {
+                query = query.and(JPAExpressions.selectFrom(QAnnotation.annotation).innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                        .where(QAnnotation.annotation.sample.id.eq(QSample.sample.id).and(QTag.tag.name.eq(tag))).exists());
+            }
+        }
         Page<Sample> samples = sampleRepository.findAll(query, pageable);
 
         if (!samples.hasContent()) {
@@ -63,6 +66,7 @@ public class SampleFilterController {
     private static class SampleFilters implements Serializable {
         private String word;
         private Map<String, String> metadata;
+        private List<String> tags;
 
         public String getWord() {
             return word;
@@ -78,6 +82,14 @@ public class SampleFilterController {
 
         public void setMetadata(Map<String, String> metadata) {
             this.metadata = metadata;
+        }
+
+        public List<String> getTags() {
+            return tags;
+        }
+
+        public void setTags(List<String> tags) {
+            this.tags = tags;
         }
     }
 

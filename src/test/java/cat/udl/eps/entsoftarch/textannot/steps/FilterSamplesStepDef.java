@@ -1,26 +1,20 @@
 package cat.udl.eps.entsoftarch.textannot.steps;
 
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataValue;
-import cat.udl.eps.entsoftarch.textannot.domain.Sample;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataValueRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
+import cat.udl.eps.entsoftarch.textannot.domain.*;
+import cat.udl.eps.entsoftarch.textannot.repository.*;
 import cucumber.api.DataTable;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,6 +36,12 @@ public class FilterSamplesStepDef {
     @Autowired
     private MetadataValueRepository metadataValueRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private AnnotationRepository annotationRepository;
+
     @And("^There is a sample with text \"([^\"]*)\" with metadata$")
     public void thereIsASampleWithText(String text, DataTable metadata) throws Throwable {
         Sample sample = sampleRepository.save(new Sample(text));
@@ -52,6 +52,19 @@ public class FilterSamplesStepDef {
             value.setForA(sample);
             value.setValue(e.getValue());
             metadataValueRepository.save(value);
+        }
+    }
+
+    @And("^There is a sample with text \"([^\"]*)\" with annotations$")
+    public void thereIsASampleWithTextWithAnnotations(String text, DataTable annotations) throws Throwable {
+        Sample sample = sampleRepository.save(new Sample(text));
+        for (List<String> e: annotations.asLists(String.class)) {
+            Annotation annotation = new Annotation();
+            annotation.setSample(sample);
+            annotation.setStart(Integer.parseInt(e.get(1)));
+            annotation.setEnd(Integer.parseInt(e.get(2)));
+            annotation.setTag(tagRepository.findByName(e.get(0)));
+            annotationRepository.save(annotation);
         }
     }
 
@@ -89,6 +102,20 @@ public class FilterSamplesStepDef {
         JSONObject request = new JSONObject();
         request.put("word", word);
         request.put("metadata", new JSONObject(table.asMap(String.class, String.class)));
+
+        stepDefs.result = stepDefs.mockMvc.perform(post("/samples/filter")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(AuthenticationStepDefs.authenticate())
+                .content(request.toString()))
+                .andDo(print());
+    }
+
+    @When("^I filter the samples having the word \"([^\"]*)\" and annotated by the tag \"([^\"]*)\"$")
+    public void iFilterTheSamplesHavingTheWordAndAnnotatedByTheTag(String word, String tag) throws Throwable {
+        JSONObject request = new JSONObject();
+        request.put("word", word);
+        request.put("tags", new JSONArray(Arrays.asList(tag)));
 
         stepDefs.result = stepDefs.mockMvc.perform(post("/samples/filter")
                 .contentType(MediaType.APPLICATION_JSON)
