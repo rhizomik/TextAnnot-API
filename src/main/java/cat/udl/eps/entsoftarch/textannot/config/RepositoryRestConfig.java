@@ -5,11 +5,14 @@ import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
+import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver;
 
 @Configuration
 public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
@@ -69,5 +72,14 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
                 metadataFieldRepository.save(field);
             }
         }
+    }
+
+    @Bean
+    public HateoasPageableHandlerMethodArgumentResolver customResolver(
+            HateoasPageableHandlerMethodArgumentResolver pageableResolver) {
+        pageableResolver.setOneIndexedParameters(true);
+        pageableResolver.setFallbackPageable(new PageRequest(0, Integer.MAX_VALUE));
+        pageableResolver.setMaxPageSize(Integer.MAX_VALUE);
+        return pageableResolver;
     }
 }
