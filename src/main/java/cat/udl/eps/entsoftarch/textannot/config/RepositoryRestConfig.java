@@ -31,6 +31,7 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
         config.exposeIdsFor(Linguist.class);
         config.exposeIdsFor(Tag.class);
         config.exposeIdsFor(Annotation.class);
+        config.exposeIdsFor(TagHierarchy.class);
     }
 
     @PostConstruct

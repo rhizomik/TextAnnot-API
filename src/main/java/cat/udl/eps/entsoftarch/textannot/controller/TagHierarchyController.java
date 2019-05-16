@@ -8,6 +8,7 @@ import cat.udl.eps.entsoftarch.textannot.exception.TagTreeException;
 import cat.udl.eps.entsoftarch.textannot.repository.TagHierarchyRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.TagRepository;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @BasePathAwareController
 public class TagHierarchyController {
@@ -169,19 +172,16 @@ public class TagHierarchyController {
         ServletServerHttpRequest request,
         PersistentEntityResourceAssembler resourceAssembler) throws IOException {
 
-        if (isNullOrEmpty(tagHierarchyName))
-            throw new TagHierarchyValidationException();
+        TagHierarchy tagHierarchy = createTagHierarchy(tagHierarchyName);
 
-        if (tagHierarchyRepository.findByName(tagHierarchyName).isPresent())
-            throw new TagHierarchyDuplicateException();
+        readCSVAndSaveTags(request.getBody(), tagHierarchy);
+        return resourceAssembler.toResource(tagHierarchy);
+    }
 
+    private void readCSVAndSaveTags(InputStream csvStream, TagHierarchy tagHierarchy) throws IOException {
         HashMap<String, Tag> processedTags = new HashMap<>();
-
-        TagHierarchy tagHierarchy = new TagHierarchy();
-        tagHierarchy.setName(tagHierarchyName);
-
         CSVFormat excelCSV = CSVFormat.newFormat(';').withRecordSeparator('\n').withFirstRecordAsHeader();
-        CSVParser parser = CSVParser.parse(request.getBody(), StandardCharsets.UTF_8, excelCSV);
+        CSVParser parser = CSVParser.parse(csvStream, StandardCharsets.UTF_8, excelCSV);
         parser.getRecords().forEach(record -> {
             Tag parent = null;
             //TODO: currently ignoring last column with tagging examples
@@ -201,8 +201,30 @@ public class TagHierarchyController {
                 }
             }
         });
-        tagHierarchyRepository.save(tagHierarchy);
         tagRepository.saveAll(processedTags.values());
+    }
+
+    private TagHierarchy createTagHierarchy(@RequestParam("tagHierarchy") String tagHierarchyName) {
+        if (isNullOrEmpty(tagHierarchyName))
+            throw new TagHierarchyValidationException();
+
+        if (tagHierarchyRepository.findByName(tagHierarchyName).isPresent())
+            throw new TagHierarchyDuplicateException();
+
+        TagHierarchy tagHierarchy = new TagHierarchy();
+        tagHierarchy.setName(tagHierarchyName);
+        return tagHierarchyRepository.save(tagHierarchy);
+    }
+
+    @PostMapping(value = "/quickTagHierarchyCreate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public PersistentEntityResource quickTagHierarchyCreateFileCSV(
+            @RequestParam("tagHierarchyName") String tagHierarchyName,
+            @RequestParam("file") MultipartFile file,
+            PersistentEntityResourceAssembler resourceAssembler) throws IOException {
+        TagHierarchy tagHierarchy = createTagHierarchy(tagHierarchyName);
+        readCSVAndSaveTags(file.getInputStream(), tagHierarchy);
         return resourceAssembler.toResource(tagHierarchy);
     }
 }
