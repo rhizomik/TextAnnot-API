@@ -94,7 +94,7 @@ public class SampleFilterController {
     }
 
     private int getTextOccurrences(String word, String text) {
-        Pattern pattern = Pattern.compile("\\b" + word + "\\b");
+        Pattern pattern = Pattern.compile("\\b" + word + "\\b", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(text);
         int sampleOccurrences = 0;
         while (matcher.find())
