@@ -2,10 +2,7 @@ package cat.udl.eps.entsoftarch.textannot.controller;
 
 import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.QTuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -14,12 +11,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.data.rest.webmvc.PersistentEntityResource;
-import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
+import org.springframework.data.util.Pair;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resources;
-import org.springframework.hateoas.core.EmbeddedWrapper;
-import org.springframework.hateoas.core.EmbeddedWrappers;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -30,6 +24,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @BasePathAwareController
 public class SampleFilterController {
@@ -75,15 +72,40 @@ public class SampleFilterController {
     public @ResponseBody StatisticsResults getFilteredSamplesStatistics(@RequestBody SampleFilters filters) {
         StatisticsResults statisticsResults = new StatisticsResults();
         statisticsResults.setMetadataStadistics(getMetadataStatistics(filters));
-
+        Pair<Long, Long> counts = getSampleCounts(filters);
+        statisticsResults.setOccurrences(counts.getFirst());
+        statisticsResults.setSamples(counts.getSecond());
         return statisticsResults;
+    }
+
+    private Pair<Long, Long> getSampleCounts(SampleFilters filters) {
+        final AtomicLong occurrences = new AtomicLong(0L);
+        final AtomicLong samplesCount = new AtomicLong(0L);
+        Iterable<Sample> samples = sampleRepository.findAll(getFiltersExpression(filters));
+        samples.forEach(sample -> {
+            samplesCount.incrementAndGet();
+            occurrences.addAndGet(getTextOccurrences(filters.getWord(), sample.getText()));
+        });
+        return Pair.of(new Long(occurrences.get()), new Long(samplesCount.get()));
+    }
+
+    private int getTextOccurrences(String word, String text) {
+        Pattern pattern = Pattern.compile("\\b"+word+"\\b");
+        Matcher matcher = pattern.matcher(text);
+        int sampleOccurrences = 0;
+        while (matcher.find())
+            sampleOccurrences++;
+        return sampleOccurrences;
     }
 
     private Map<String, Map<String, Long>> getMetadataStatistics(@RequestBody SampleFilters filters) {
         JPAQuery query = new JPAQuery(em);
         query = (JPAQuery) query.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.count())
-                .from(QMetadataValue.metadataValue).innerJoin(QMetadataValue.metadataValue.forA, QSample.sample).innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                .where(getFiltersExpression(filters)).groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value);
+                .from(QMetadataValue.metadataValue)
+                .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
+                .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
+                .where(getFiltersExpression(filters))
+                .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value);
         List<Tuple> result = query.fetch();
         Map<String, Map<String, Long>> statistics = new HashMap<>();
         result.forEach(qTuple -> {
@@ -95,7 +117,25 @@ public class SampleFilterController {
     }
 
     private static class StatisticsResults implements Serializable {
+        private long occurrences;
+        private long samples;
         private Map<String, Map<String, Long>> metadataStadistics;
+
+        public long getOccurrences() {
+            return occurrences;
+        }
+
+        public void setOccurrences(long occurrences) {
+            this.occurrences = occurrences;
+        }
+
+        public long getSamples() {
+            return samples;
+        }
+
+        public void setSamples(long samples) {
+            this.samples = samples;
+        }
 
         public Map<String, Map<String, Long>> getMetadataStadistics() {
             return metadataStadistics;
