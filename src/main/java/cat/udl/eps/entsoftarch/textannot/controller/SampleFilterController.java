@@ -75,7 +75,7 @@ public class SampleFilterController {
     public @ResponseBody
     StatisticsResults getFilteredSamplesStatistics(@RequestBody SampleFilters filters) {
         StatisticsResults statisticsResults = new StatisticsResults();
-        statisticsResults.setMetadataStadistics(getMetadataStatistics(filters));
+        statisticsResults.setMetadataStatistics(getMetadataStatistics(filters));
         Pair<Long, Long> counts = getSampleCounts(filters);
         statisticsResults.setOccurrences(counts.getFirst());
         statisticsResults.setSamples(counts.getSecond());
@@ -125,7 +125,7 @@ public class SampleFilterController {
     private static class StatisticsResults {
         private long occurrences;
         private long samples;
-        private Map<String, Map<String, Long>> metadataStadistics;
+        private Map<String, Map<String, Long>> metadataStatistics;
 
         public long getOccurrences() {
             return occurrences;
@@ -143,12 +143,12 @@ public class SampleFilterController {
             this.samples = samples;
         }
 
-        public Map<String, Map<String, Long>> getMetadataStadistics() {
-            return metadataStadistics;
+        public Map<String, Map<String, Long>> getMetadataStatistics() {
+            return metadataStatistics;
         }
 
-        public void setMetadataStadistics(Map<String, Map<String, Long>> metadataStadistics) {
-            this.metadataStadistics = metadataStadistics;
+        public void setMetadataStatistics(Map<String, Map<String, Long>> metadataStatistics) {
+            this.metadataStatistics = metadataStatistics;
         }
 
     }
