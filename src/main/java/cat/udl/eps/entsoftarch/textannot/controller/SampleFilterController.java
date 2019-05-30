@@ -16,9 +16,8 @@ import org.springframework.data.rest.webmvc.PersistentEntityResource;
 import org.springframework.data.util.Pair;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -39,10 +38,14 @@ public class SampleFilterController {
     @Autowired
     EntityManager em;
 
-    @PostMapping("/samples/filter")
+    @GetMapping("/samples/filter")
     public @ResponseBody
-    PagedResources<PersistentEntityResource> getFilteredSamples(@RequestBody SampleFilters filters, Pageable pageable, PagedResourcesAssembler resourceAssembler) {
-        BooleanExpression query = getFiltersExpression(filters);
+    PagedResources<PersistentEntityResource> getFilteredSamples(@RequestParam("word") String word,
+                                                                @RequestParam("tags") List<String> tags,
+                                                                @RequestParam Map<String, String> params,
+                                                                Pageable pageable, PagedResourcesAssembler resourceAssembler) {
+
+        BooleanExpression query = getFiltersExpression(new SampleFilters(word, getMetadataMap(params), tags));
         Page<Sample> samples = sampleRepository.findAll(query, pageable);
 
         if (!samples.hasContent()) {
@@ -50,6 +53,14 @@ public class SampleFilterController {
         }
 
         return resourceAssembler.toResource(samples);
+    }
+
+    private Map<String, String> getMetadataMap(Map<String, String> params) {
+        params.remove("word");
+        params.remove("tags");
+        params.remove("page");
+        params.remove("size");
+        return params;
     }
 
     private BooleanExpression getFiltersExpression(@RequestBody SampleFilters filters) {
@@ -71,9 +82,12 @@ public class SampleFilterController {
         return query;
     }
 
-    @PostMapping("/samples/filter/statistics")
+    @GetMapping("/samples/filter/statistics")
     public @ResponseBody
-    StatisticsResults getFilteredSamplesStatistics(@RequestBody SampleFilters filters) {
+    StatisticsResults getFilteredSamplesStatistics(@RequestParam("word") String word,
+                                                   @RequestParam("tags") List<String> tags,
+                                                   @RequestParam Map<String, String> params) {
+        SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tags);
         StatisticsResults statisticsResults = new StatisticsResults();
         statisticsResults.setMetadataStatistics(getMetadataStatistics(filters));
         Pair<Long, Long> counts = getSampleCounts(filters);
@@ -157,6 +171,12 @@ public class SampleFilterController {
         private String word;
         private Map<String, String> metadata;
         private List<String> tags;
+
+        public SampleFilters(String word, Map<String, String> metadata, List<String> tags) {
+            this.word = word;
+            this.metadata = metadata;
+            this.tags = tags;
+        }
 
         public String getWord() {
             return word;
