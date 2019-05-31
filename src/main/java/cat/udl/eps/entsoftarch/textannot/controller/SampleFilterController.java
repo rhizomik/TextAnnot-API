@@ -10,6 +10,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.data.rest.webmvc.PersistentEntityResource;
@@ -42,11 +43,12 @@ public class SampleFilterController {
     public @ResponseBody
     PagedResources<PersistentEntityResource> getFilteredSamples(@RequestParam("word") String word,
                                                                 @RequestParam("tags") List<String> tags,
-                                                                @RequestParam Map<String, String> params,
-                                                                Pageable pageable, PagedResourcesAssembler resourceAssembler) {
+                                                                @RequestParam(value = "page", defaultValue = "0") Integer page,
+                                                                @RequestParam(value = "size", defaultValue = "20") Integer size,
+                                                                @RequestParam Map<String, String> params, PagedResourcesAssembler resourceAssembler) {
 
         BooleanExpression query = getFiltersExpression(new SampleFilters(word, getMetadataMap(params), tags));
-        Page<Sample> samples = sampleRepository.findAll(query, pageable);
+        Page<Sample> samples = sampleRepository.findAll(query,  PageRequest.of(page,size));
 
         if (!samples.hasContent()) {
             return resourceAssembler.toEmptyResource(samples, Sample.class);
