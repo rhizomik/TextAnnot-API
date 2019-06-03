@@ -11,6 +11,13 @@ import javax.validation.constraints.NotBlank;
 @EqualsAndHashCode(callSuper = true)
 public class MetadataField extends UriEntity<Integer> {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    /**
+     * Identifier of annotation needs to be unique, otherwise it will generate conflicts.
+     */
+    private Integer id;
+
     @NotBlank
     /**
      * The String name indicates the name of a metadata field and must not be blank.
@@ -23,12 +30,7 @@ public class MetadataField extends UriEntity<Integer> {
      */
     String category;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    /**
-     * Identifier of annotation needs to be unique, otherwise it will generate conflicts.
-     */
-    private Integer id;
+    Boolean includeStatistics;
 
     @ManyToOne
     /**

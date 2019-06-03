@@ -1,0 +1,1 @@
+ALTER TABLE metadata_field ADD COLUMN include_statistics bit not null
