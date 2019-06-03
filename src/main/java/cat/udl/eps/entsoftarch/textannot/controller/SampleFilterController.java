@@ -120,14 +120,12 @@ public class SampleFilterController {
 
     private Map<String, Map<String, Long>> getMetadataStatistics(@RequestBody SampleFilters filters) {
         JPAQuery query = new JPAQuery(em);
-        NumberPath<Long> aliasCount = Expressions.numberPath(Long.class, "c");
-        query = (JPAQuery) query.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.count().as(aliasCount))
+        query = (JPAQuery) query.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.count())
                 .from(QMetadataValue.metadataValue)
                 .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
                 .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
                 .where(getFiltersExpression(filters))
-                .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value)
-                .orderBy(aliasCount.desc());
+                .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value);
         List<Tuple> result = query.fetch();
         Map<String, Map<String, Long>> statistics = new HashMap<>();
         result.forEach(qTuple -> {
