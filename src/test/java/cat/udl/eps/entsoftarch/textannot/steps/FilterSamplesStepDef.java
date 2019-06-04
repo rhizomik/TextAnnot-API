@@ -9,12 +9,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -70,15 +73,12 @@ public class FilterSamplesStepDef {
 
     @When("^I filter the samples having the word \"([^\"]*)\"$")
     public void iFilterTheSamplesHavingTheWord(String word) throws Throwable {
-        JSONObject request = new JSONObject();
-        request.put("word", word);
 
-        stepDefs.result = stepDefs.mockMvc.perform(post("/samples/filter")
-                .contentType(MediaType.APPLICATION_JSON)
+        stepDefs.result = stepDefs.mockMvc.perform(get("/samples/filter")
                 .accept(MediaType.APPLICATION_JSON)
                 .with(AuthenticationStepDefs.authenticate())
-                .content(request.toString()))
-        .andDo(print());
+                .param("word", word)
+                .param("tags", "")).andDo(print());
     }
 
     @And("^The response contains (\\d+) sample$")
@@ -99,29 +99,24 @@ public class FilterSamplesStepDef {
 
     @When("^I filter the samples having the word \"([^\"]*)\" and the metadata$")
     public void iFilterTheSamplesHavingTheWordAndTheMetadata(String word, DataTable table) throws Throwable {
-        JSONObject request = new JSONObject();
-        request.put("word", word);
-        request.put("metadata", new JSONObject(table.asMap(String.class, String.class)));
+        MultiValueMap<String, String> request = new LinkedMultiValueMap<>();
+        request.add("word", word);
+        table.asMap(String.class, String.class).forEach(request::add);
+        request.add("tags", "");
 
-        stepDefs.result = stepDefs.mockMvc.perform(post("/samples/filter")
-                .contentType(MediaType.APPLICATION_JSON)
+        stepDefs.result = stepDefs.mockMvc.perform(get("/samples/filter")
                 .accept(MediaType.APPLICATION_JSON)
                 .with(AuthenticationStepDefs.authenticate())
-                .content(request.toString()))
-                .andDo(print());
+                .params(request)).andDo(print());
     }
 
     @When("^I filter the samples having the word \"([^\"]*)\" and annotated by the tag \"([^\"]*)\"$")
     public void iFilterTheSamplesHavingTheWordAndAnnotatedByTheTag(String word, String tag) throws Throwable {
-        JSONObject request = new JSONObject();
-        request.put("word", word);
-        request.put("tags", new JSONArray(Arrays.asList(tag)));
 
-        stepDefs.result = stepDefs.mockMvc.perform(post("/samples/filter")
-                .contentType(MediaType.APPLICATION_JSON)
+        stepDefs.result = stepDefs.mockMvc.perform(get("/samples/filter")
                 .accept(MediaType.APPLICATION_JSON)
                 .with(AuthenticationStepDefs.authenticate())
-                .content(request.toString()))
-                .andDo(print());
+                .param("word", word)
+                .param("tags", tag)).andDo(print());
     }
 }
