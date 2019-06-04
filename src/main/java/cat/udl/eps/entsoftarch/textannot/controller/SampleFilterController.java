@@ -8,6 +8,7 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import org.springframework.hateoas.PagedResources;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -37,6 +39,13 @@ public class SampleFilterController {
 
     @Autowired
     EntityManager em;
+
+    JPAQueryFactory queryFactory;
+
+    @PostConstruct
+    public void init() {
+        queryFactory = new JPAQueryFactory(em);
+    }
 
     @GetMapping("/samples/filter")
     public @ResponseBody
@@ -117,14 +126,12 @@ public class SampleFilterController {
     }
 
     private Map<String, Map<String, Long>> getMetadataStatistics(@RequestBody SampleFilters filters) {
-        JPAQuery query = new JPAQuery(em);
-        query = (JPAQuery) query.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.count())
+        List<Tuple> result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.count())
                 .from(QMetadataValue.metadataValue)
                 .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
                 .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
                 .where(getFiltersExpression(filters))
-                .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value);
-        List<Tuple> result = query.fetch();
+                .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
         Map<String, Map<String, Long>> statistics = new HashMap<>();
         result.forEach(qTuple -> {
             if (!statistics.containsKey(qTuple.get(QMetadataField.metadataField.name)))

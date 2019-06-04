@@ -48,12 +48,10 @@ public class MetadataController {
         MetadataField metadataField = metadataFieldRepository.findById(id).orElse(null);
         if (metadataField == null)
             throw new NotFoundException();
-        JPAQuery query = new JPAQuery(entityManager);
-        query = (JPAQuery) query.select(QMetadataValue.metadataValue.value, QMetadataValue.metadataValue.value.count())
+        List<Tuple> result = queryFactory.select(QMetadataValue.metadataValue.value, QMetadataValue.metadataValue.value.count())
                 .from(QMetadataValue.metadataValue).innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
                 .where(QMetadataField.metadataField.id.eq(id))
-                .groupBy(QMetadataValue.metadataValue.value);
-        List<Tuple> result = query.fetch();
+                .groupBy(QMetadataValue.metadataValue.value).fetch();
         return new MetadataFieldValueCounts(
                 metadataField.getName(),
                 result.stream().collect(Collectors.toMap(t -> t.get(0, String.class),
