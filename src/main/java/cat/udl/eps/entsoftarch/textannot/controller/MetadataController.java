@@ -8,13 +8,18 @@ import cat.udl.eps.entsoftarch.textannot.exception.NotFoundException;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +33,13 @@ public class MetadataController {
 
     @Autowired
     MetadataFieldRepository metadataFieldRepository;
+
+    JPAQueryFactory queryFactory;
+
+    @PostConstruct
+    public void init() {
+        queryFactory = new JPAQueryFactory(entityManager);
+    }
 
     @GetMapping("/metadataFields/{id}/value-counts")
     public @ResponseBody
@@ -46,9 +58,24 @@ public class MetadataController {
                 metadataField.getName(),
                 result.stream().collect(Collectors.toMap(t -> t.get(0, String.class),
                         t -> t.get(1, Long.class)))
-
         );
+    }
 
+    @PostMapping("/metadataFields/{id}/values-edit")
+    @ResponseStatus(HttpStatus.OK)
+    @Transactional
+    public void renameMetadataFieldValues(
+            @PathVariable("id") Integer id,
+            @RequestBody MetadataFieldValuesRename valuesRename) {
+        valuesRename.getRenames().forEach(renaming -> renameFieldValue(id, renaming.get(0), renaming.get(1)));
+    }
+
+    public void renameFieldValue(Integer metadataFieldId, String oldValue, String newValue) {
+        queryFactory.update(QMetadataValue.metadataValue)
+                .set(QMetadataValue.metadataValue.value, newValue)
+                .where(QMetadataValue.metadataValue.values.id.eq(metadataFieldId)
+                        .and(QMetadataValue.metadataValue.value.eq(oldValue)))
+                .execute();
     }
 
     @Data
@@ -60,5 +87,10 @@ public class MetadataController {
             this.fieldName = fieldName;
             this.valueCounts = valueCounts;
         }
+    }
+
+    @Data
+    private static class MetadataFieldValuesRename {
+        List<List<String>> renames;
     }
 }
