@@ -78,7 +78,7 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
     @Bean
     public HateoasPageableHandlerMethodArgumentResolver customResolver(
             HateoasPageableHandlerMethodArgumentResolver pageableResolver) {
-        pageableResolver.setOneIndexedParameters(true);
+        pageableResolver.setOneIndexedParameters(false);
         pageableResolver.setFallbackPageable(new PageRequest(0, Integer.MAX_VALUE));
         pageableResolver.setMaxPageSize(Integer.MAX_VALUE);
         return pageableResolver;
