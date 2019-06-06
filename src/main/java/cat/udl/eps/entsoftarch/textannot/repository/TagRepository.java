@@ -2,6 +2,7 @@ package cat.udl.eps.entsoftarch.textannot.repository;
 
 import cat.udl.eps.entsoftarch.textannot.domain.Tag;
 import cat.udl.eps.entsoftarch.textannot.domain.TagHierarchy;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -9,7 +10,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 
 @RepositoryRestResource
-public interface TagRepository extends PagingAndSortingRepository<Tag, Integer> {
+public interface TagRepository extends PagingAndSortingRepository<Tag, Integer>, QuerydslPredicateExecutor<Tag> {
 
     /**
      * Finds all Tags that has text containing like the given one
@@ -26,6 +27,8 @@ public interface TagRepository extends PagingAndSortingRepository<Tag, Integer> 
      * @return list of Tags.
      */
     List<Tag> findByTagHierarchy(@Param("tagHierarchy")TagHierarchy tagHierarchy);
+
+    List<Tag> findByTagHierarchyAndParentIsNull(@Param("tagHierarchy")TagHierarchy tagHierarchy);
 
     /**
      Returns the Tags related to a Tag parent.

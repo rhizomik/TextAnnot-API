@@ -130,7 +130,7 @@ public class SampleFilterController {
                 .from(QMetadataValue.metadataValue)
                 .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
                 .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                .where(getFiltersExpression(filters))
+                .where(getFiltersExpression(filters).and(QMetadataField.metadataField.includeStatistics.eq(true)))
                 .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
         Map<String, Map<String, Long>> statistics = new HashMap<>();
         result.forEach(qTuple -> {

@@ -1,9 +1,11 @@
 package cat.udl.eps.entsoftarch.textannot.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -30,4 +32,9 @@ public class TagHierarchy extends UriEntity<Integer> {
     @NotBlank
     @Column(unique = true)
     private String name;
+
+    @JsonIgnore
+    @Lob
+    @Type(type = "text")
+    private String precalculatedTagTree;
 }

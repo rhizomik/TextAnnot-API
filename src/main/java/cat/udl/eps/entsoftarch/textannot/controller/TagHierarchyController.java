@@ -15,42 +15,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import cat.udl.eps.entsoftarch.textannot.service.TagHierarchyPrecalcService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.JSONWrappedObject;
 import lombok.Data;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.data.rest.webmvc.PersistentEntityResource;
 import org.springframework.data.rest.webmvc.PersistentEntityResourceAssembler;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.server.ServletServerHttpRequest;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.transaction.Transactional;
 
 @BasePathAwareController
 public class TagHierarchyController {
 
     private TagHierarchyRepository tagHierarchyRepository;
     private TagRepository tagRepository;
+    private TagHierarchyPrecalcService tagHierarchyPrecalcService;
 
-    public TagHierarchyController(TagHierarchyRepository tagHierarchyRepository, TagRepository tagRepository) {
+    public TagHierarchyController(TagHierarchyRepository tagHierarchyRepository, TagRepository tagRepository,
+                                  TagHierarchyPrecalcService tagHierarchyPrecalcService) {
         this.tagHierarchyRepository = tagHierarchyRepository;
         this.tagRepository = tagRepository;
+        this.tagHierarchyPrecalcService = tagHierarchyPrecalcService;
     }
 
     @PostMapping(value = "/quickTagHierarchyCreate", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public PersistentEntityResource quickTagHierarchyCreate(
-            @RequestBody TagHierarchyJson body,
+            @RequestBody TagHierarchyPrecalcService.TagHierarchyJson body,
             PersistentEntityResourceAssembler resourceAssembler) {
 
         if (isNullOrEmpty(body.getName()))
@@ -75,7 +82,7 @@ public class TagHierarchyController {
         return resourceAssembler.toResource(tagHierarchy);
     }
 
-    private void createTag(TagJson tagJson, Tag parent, TagHierarchy tagHierarchy, List<Tag> treeHierarchy) {
+    private void createTag(TagHierarchyPrecalcService.TagJson tagJson, Tag parent, TagHierarchy tagHierarchy, List<Tag> treeHierarchy) {
         if (isNullOrEmpty(tagJson.getName()))
             throw new TagHierarchyValidationException();
 
@@ -97,71 +104,20 @@ public class TagHierarchyController {
         return name == null || name.isEmpty();
     }
 
-    @RequestMapping("/tagHierarchies/{id}/tags")
-    @ResponseBody
+    @GetMapping(value = "/tagHierarchies/{id}/tags", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public TagHierarchyJson tagHierarchyDetail(@PathVariable("id") Integer id) {
+    @Transactional
+    public @ResponseBody
+    JsonNode tagHierarchyDetail(@PathVariable("id") Integer id) throws IOException {
 
-        Optional<TagHierarchy> tagHierarchyOptional = tagHierarchyRepository.findById(id);
-
-        TagHierarchy tagHierarchy = tagHierarchyOptional
+        TagHierarchy tagHierarchy = tagHierarchyRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
-        List<Tag> roots =
-                tagRepository.findByTagHierarchy(tagHierarchy).stream()
-                        .filter(this::isRoot)
-                        .collect(Collectors.toList());
-
-        TagHierarchyJson tagHierarchyJson = new TagHierarchyJson(tagHierarchy);
-        tagHierarchyJson.setRoots(roots.stream().map(TagJson::new).collect(Collectors.toList()));
-
-        tagHierarchyJson.getRoots().forEach(this::setChildren);
-        return tagHierarchyJson;
-    }
-
-    private void setChildren(TagJson root) {
-        List<TagJson> children =
-                tagRepository.findByParentName(root.getName())
-                        .stream()
-                        .map(TagJson::new)
-                        .collect(Collectors.toList());
-
-        root.getChildren().addAll(children);
-
-        children.forEach(this::setChildren);
-    }
-
-    private boolean isRoot(Tag tag) {
-        return tag.getParent() == null;
-    }
-
-    @Data
-    public static class TagHierarchyJson {
-        private String name;
-        private Integer id;
-        private List<TagJson> roots;
-
-        TagHierarchyJson() {}
-
-        TagHierarchyJson(TagHierarchy tagHierarchy) {
-            this.id = tagHierarchy.getId();
-            this.name = tagHierarchy.getName();
+        if (tagHierarchy.getPrecalculatedTagTree() == null){
+            tagHierarchyPrecalcService.recalculateTagHierarchyTree(tagHierarchy);
+            tagHierarchyRepository.save(tagHierarchy);
         }
-    }
-
-    @Data
-    public static class TagJson {
-        private Integer id;
-        private String name;
-        private List<TagJson> children;
-
-        TagJson() {}
-
-        TagJson(Tag tag) {
-            this.id = tag.getId();
-            this.name = tag.getName();
-            children = new ArrayList<>();
-        }
+        return new ObjectMapper().readTree(tagHierarchy.getPrecalculatedTagTree());
     }
 
     @PostMapping(value = "/quickTagHierarchyCreate", consumes = MediaType.TEXT_PLAIN_VALUE)
