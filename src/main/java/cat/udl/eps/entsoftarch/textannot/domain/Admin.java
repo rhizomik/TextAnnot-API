@@ -7,7 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
 @Entity
-public class Admin extends User {
+public class Admin extends Linguist {
 
   @Override
   @Transient
@@ -17,7 +17,7 @@ public class Admin extends User {
    * Returns the collection of granted authority for the user.
    */
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN");
+    return AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_ADMIN, ROLE_LINGUIST");
   }
 
 }
