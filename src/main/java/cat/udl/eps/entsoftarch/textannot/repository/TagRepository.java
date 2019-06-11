@@ -1,7 +1,7 @@
 package cat.udl.eps.entsoftarch.textannot.repository;
 
 import cat.udl.eps.entsoftarch.textannot.domain.Tag;
-import cat.udl.eps.entsoftarch.textannot.domain.TagHierarchy;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -22,13 +22,13 @@ public interface TagRepository extends PagingAndSortingRepository<Tag, Integer>,
     Tag findByName(@Param("name") String name);
 
     /**
-     Returns the Tags related to a tagHierarchy.
-     * @param tagHierarchy The tagHierarchy that contains the Tags we want.
+     Returns the Tags related to a project.
+     * @param project The project that contains the Tags we want.
      * @return list of Tags.
      */
-    List<Tag> findByTagHierarchy(@Param("tagHierarchy")TagHierarchy tagHierarchy);
+    List<Tag> findByTagHierarchy(@Param("project") Project project);
 
-    List<Tag> findByTagHierarchyAndParentIsNull(@Param("tagHierarchy")TagHierarchy tagHierarchy);
+    List<Tag> findByTagHierarchyAndParentIsNull(@Param("project") Project project);
 
     /**
      Returns the Tags related to a Tag parent.

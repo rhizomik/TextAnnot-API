@@ -32,17 +32,6 @@ public interface MetadataValueRepository extends PagingAndSortingRepository<Meta
     List<MetadataValue> findByValues(@Param("metadataField")MetadataField metadataField);
 
     /**
-     * Query that gives us a list of metadataTemplate that accomplish that his id is equal to metadatafield id
-     and his value is equal to the first parameter(String value).
-     * @param value The given value of MetadataTemplate
-     * @return a list of metadataTemplate that accomplishes the result of the query.
-     */
-    @Query("SELECT t " +
-            "FROM MetadataTemplate t, MetadataField f, MetadataValue v " +
-            "WHERE v.values.id = f.id AND f.definedAt.id = t.id AND v.value = ?1")
-    List<MetadataTemplate> findAllMetadataTemplatesByValue(@Param("value")String value);
-
-    /**
      * Returns a list of metadataValue that were found by a given sample.
      * @param sample The given sample of a group of metadataValues
      * @return list of metadataValues.

@@ -56,7 +56,7 @@ public class CreateTagHierarchyInASingleShotDefs {
     @When("^I send the following CSV to create tag hierarchy \"([^\"]*)\"$")
     public void iSendTheFollowingCSVToCreateTagHierarchy(String hierarchyName, String csvContent) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
-            post("/quickTagHierarchyCreate?tagHierarchy={name}", hierarchyName)
+            post("/quickTagHierarchyCreate?project={name}", hierarchyName)
                 .contentType(MediaType.TEXT_PLAIN)
                 .content(csvContent)
                 .accept(MediaType.APPLICATION_JSON)
@@ -71,7 +71,7 @@ public class CreateTagHierarchyInASingleShotDefs {
         String csvContent = new String(content, StandardCharsets.UTF_8);
 
         stepDefs.result = stepDefs.mockMvc.perform(
-            post("/quickTagHierarchyCreate?tagHierarchy={name}", hierarchyName)
+            post("/quickTagHierarchyCreate?project={name}", hierarchyName)
                 .contentType(MediaType.TEXT_PLAIN)
                 .content(csvContent)
                 .accept(MediaType.APPLICATION_JSON)

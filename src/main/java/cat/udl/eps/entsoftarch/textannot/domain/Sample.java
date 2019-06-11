@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -36,19 +35,11 @@ public class Sample extends UriEntity<Integer>{
 
 
     /**
-     * Linking Sample with MetadataTemplate;
+     * Linking Sample with Project.
      */
     @ManyToOne
     @JsonIdentityReference(alwaysAsId = true)
-    private MetadataTemplate describedBy;
-
-
-    /**
-     * Linking Sample with TagHierarchy.
-     */
-    @ManyToOne
-    @JsonIdentityReference(alwaysAsId = true)
-    private TagHierarchy taggedBy;
+    private Project project;
 
     public Sample(String text) {
         this.text=text;

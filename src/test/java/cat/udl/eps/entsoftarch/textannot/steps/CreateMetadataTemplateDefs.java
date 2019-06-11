@@ -1,8 +1,8 @@
 package cat.udl.eps.entsoftarch.textannot.steps;
 
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.domain.Sample;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
@@ -29,7 +29,7 @@ public class CreateMetadataTemplateDefs {
     @Autowired
     private SampleRepository sampleRepository;
     @Autowired
-    private MetadataTemplateRepository metadataTemplateRepository;
+    private ProjectRepository projectRepository;
 
     protected ResultActions result;
 
@@ -71,13 +71,13 @@ public class CreateMetadataTemplateDefs {
 
     @When("^I create a new metadata Template \"([^\"]*)\" with the previous sample$")
     public void iCreateANewMetadataTemplateThePreviousSample(String name) throws Throwable {
-        MetadataTemplate metadataTemplate =  new MetadataTemplate();
-        metadataTemplate.setName(name);
-        metadataTemplateRepository.save(metadataTemplate);
+        Project project =  new Project();
+        project.setName(name);
+        projectRepository.save(project);
         stepDefs.result = stepDefs.mockMvc.perform(
                 put("/samples/"+ sample.getId() +"/describedBy")
                         .contentType("text/uri-list")
-                        .content(metadataTemplate.getUri())
+                        .content(project.getUri())
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());

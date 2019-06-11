@@ -1,11 +1,10 @@
 package cat.udl.eps.entsoftarch.textannot.steps;
 
 
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.domain.Tag;
-import cat.udl.eps.entsoftarch.textannot.domain.TagHierarchy;
-import cat.udl.eps.entsoftarch.textannot.repository.TagHierarchyRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.TagRepository;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -27,12 +26,12 @@ public class TagStepDefs {
     @Autowired
     private StepDefs stepDefs;
     @Autowired
-    private TagHierarchyRepository tagHierarchyRepository;
+    private ProjectRepository projectRepository;
     @Autowired
     private TagRepository tagRepository;
 
     private Tag tag, parent, child;
-    private TagHierarchy tagHierarchy = null;
+    private Project project = null;
     private String childUri, parentUri, errormessage;
 
     @When("^I create a new tag with name \"([^\"]*)\"$")
@@ -60,39 +59,38 @@ public class TagStepDefs {
     }
 
     @And("^Exists a TagHierarchy with name \"([^\"]*)\"$")
-    public TagHierarchy existsATagHierarchyWithName(String name) throws Throwable {
-        tagHierarchy = tagHierarchyRepository.findByName(name).orElse(null);
-        if(tagHierarchy == null){
-            tagHierarchy = new TagHierarchy();
-            tagHierarchy.setName(name);
-            tagHierarchyRepository.save(tagHierarchy);
+    public Project existsATagHierarchyWithName(String name) throws Throwable {
+        project = projectRepository.findByName(name);
+        if(project == null){
+            project = new Project();
+            project.setName(name);
+            projectRepository.save(project);
         }
-        return tagHierarchy;
+        return project;
     }
 
     @And("^Exists a Tag with name \"([^\"]*)\" associated to the TagHierarchy \"([^\"]*)\"$")
     public void existsATagWithName(String tagName, String tagHierarchyName) throws Throwable {
-        TagHierarchy tagHierarchy = existsATagHierarchyWithName(tagHierarchyName);
+        Project project = existsATagHierarchyWithName(tagHierarchyName);
         tag = tagRepository.findByName(tagName);
         if(tag == null)
             tag = new Tag(tagName);
 
-        tag.setTagHierarchy(tagHierarchy);
+        tag.setProject(project);
         tagRepository.save(tag);
     }
 
     @When("^I create a new tag with name \"([^\"]*)\" defined in the tag hierarchy \"([^\"]*)\"$")
     public void iCreateANewTagWithNameDefinedInTheTagHierarchy(String name, String tagHierName) throws Throwable {
         List<Tag> tags = tagRepository.findByNameContaining(name);
-        Optional<TagHierarchy> tagHierarchyOptional = tagHierarchyRepository.findByName(tagHierName);
-        Assert.assertTrue("TagHierarchy exists", tagHierarchyOptional.isPresent());
-        TagHierarchy tagHierarchy = tagHierarchyOptional.get();
+        Project project = projectRepository.findByName(tagHierName);
+        Assert.assertNotNull("Project exists", project);
         if(!tags.isEmpty())
             tag.setName(tags.get(0).getName());
         stepDefs.result = stepDefs.mockMvc.perform(
-                put("/tags/" + tag.getId() + "/tagHierarchy")
+                put("/tags/" + tag.getId() + "/project")
                     .contentType("text/uri-list")
-                    .content(tagHierarchy.getUri())
+                    .content(project.getUri())
                     .accept(MediaType.APPLICATION_JSON)
                     .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
@@ -101,7 +99,7 @@ public class TagStepDefs {
     @Then("^The tag hierarchy \"([^\"]*)\" defines a tag with the text \"([^\"]*)\"$")
     public void theTagHierarchyDefinesATagWithTheText(String tagHierName, String name) throws Throwable {
         stepDefs.mockMvc.perform(
-                get("/tags/search/findByTagHierarchy?tagHierarchy=" + tagHierarchy.getUri())
+                get("/tags/search/findByTagHierarchy?project=" + project.getUri())
                     .accept(MediaType.APPLICATION_JSON)
                     .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print())
@@ -112,7 +110,7 @@ public class TagStepDefs {
     @And("^I create the parent Tag with name \"([^\"]*)\"$")
     public void iCreateTheParentTagWithName(String parentName) throws Throwable {
         parent = new Tag(parentName);
-        parent.setTagHierarchy(tagHierarchy);
+        parent.setProject(project);
         tagRepository.save(parent);
         parentUri = parent.getUri();
         System.out.println(parent.getUri());
@@ -123,7 +121,7 @@ public class TagStepDefs {
     @And("^I create the child Tag with name \"([^\"]*)\"$")
     public void iCreateTheChildTagWithName(String childName) throws Throwable {
         child = new Tag(childName);
-        child.setTagHierarchy(tagHierarchy);
+        child.setProject(project);
         tagRepository.save(child);
         childUri = child.getUri();
 

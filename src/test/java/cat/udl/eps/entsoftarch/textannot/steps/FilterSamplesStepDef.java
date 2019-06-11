@@ -5,14 +5,11 @@ import cat.udl.eps.entsoftarch.textannot.repository.*;
 import cucumber.api.DataTable;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +28,7 @@ public class FilterSamplesStepDef {
     private SampleRepository sampleRepository;
 
     @Autowired
-    private MetadataTemplateRepository metadataTemplateRepository;
+    private ProjectRepository projectRepository;
 
     @Autowired
     private MetadataFieldRepository metadataFieldRepository;
@@ -88,7 +85,7 @@ public class FilterSamplesStepDef {
 
     @And("^There is a metadata field \"([^\"]*)\" related to the template \"([^\"]*)\"$")
     public void thereIsAMetadataFieldRelatedToTheTemplate(String field, String template) throws Throwable {
-        MetadataTemplate metadataTemplate = metadataTemplateRepository.findByName(template);
+        Project metadataTemplate = projectRepository.findByName(template);
         MetadataField metadataField = new MetadataField();
         metadataField.setDefinedAt(metadataTemplate);
         metadataField.setName(field);

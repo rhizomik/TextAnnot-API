@@ -1,9 +1,6 @@
 package cat.udl.eps.entsoftarch.textannot.service;
 
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataValue;
-import cat.udl.eps.entsoftarch.textannot.domain.XmlSample;
+import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataValueRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.XmlSampleRepository;
@@ -84,12 +81,12 @@ public class XMLIngestionService {
                 }
                 return;
             }
-            MetadataTemplate template = xmlSample.getDescribedBy();
-            Assert.notNull(template, "The XMLSample lacks an associated MetadataTemplate");
+            Project project = xmlSample.getProject();
+            Assert.notNull(project, "The XMLSample lacks an associated Project");
             MetadataField metadataField =
                 metadataFieldRepository.findByCategoryAndName(currentField, currentSubfield);
             Assert.notNull(metadataField, "The metadata field \"" + currentField + ">" +
-                currentSubfield + "\" is not defined in template " + template.getName());
+                currentSubfield + "\" is not defined in project " + project.getName());
             MetadataValue metadataValue = new MetadataValue(value);
             metadataValue.setValues(metadataField);
             metadataValue.setForA(xmlSample);

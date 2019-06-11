@@ -8,12 +8,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataValue;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.domain.Sample;
-import cat.udl.eps.entsoftarch.textannot.domain.TagHierarchy;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.TagHierarchyRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -26,27 +24,27 @@ public class CreateTagHierarchyDefs {
 
     private final StepDefs stepDefs;
     private final SampleRepository sampleRepository;
-    private final TagHierarchyRepository tagHierarchyRepository;
+    private final ProjectRepository projectRepository;
 
     private Sample sample;
-    private TagHierarchy tagHierarchy;
+    private Project project;
 
     public CreateTagHierarchyDefs(StepDefs stepDefs,
                                   SampleRepository sampleRepository,
-                                  TagHierarchyRepository tagHierarchyRepository) {
+                                  ProjectRepository projectRepository) {
         this.stepDefs = stepDefs;
         this.sampleRepository = sampleRepository;
-        this.tagHierarchyRepository = tagHierarchyRepository;
+        this.projectRepository = projectRepository;
     }
 
     @When("^I create a new Tag Hierarchy with name \"([^\"]*)\"$")
     public void iCreateANewTagHierarchyWithName(String name) throws Exception {
-        TagHierarchy tagHierarchy = new TagHierarchy();
-        tagHierarchy.setName(name);
+        Project project = new Project();
+        project.setName(name);
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/tagHierarchies")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(stepDefs.mapper.writeValueAsString(tagHierarchy))
+                        .content(stepDefs.mapper.writeValueAsString(project))
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
@@ -66,20 +64,20 @@ public class CreateTagHierarchyDefs {
 
     @Given("^Exists a Sample with text \"([^\"]*)\" and TagHierarchy \"([^\"]*)\"$")
     public void thereIsASingleSampleWithText(String text, String tagHierarchyName) {
-        TagHierarchy tagHierarchy = this.existsATagHierarchyWithName(tagHierarchyName);
+        Project project = this.existsATagHierarchyWithName(tagHierarchyName);
         sample = new Sample(text);
         sampleRepository.save(sample);
     }
 
     @And("^Exists a Tag Hierarchy with name \"([^\"]*)\"$")
-    public TagHierarchy existsATagHierarchyWithName(String name) {
-        tagHierarchy = tagHierarchyRepository.findByName(name).orElse(null);
-        if (tagHierarchy == null){
-            tagHierarchy = new TagHierarchy();
-            tagHierarchy.setName(name);
-            tagHierarchyRepository.save(tagHierarchy);
+    public Project existsATagHierarchyWithName(String name) {
+        project = projectRepository.findByName(name);
+        if (project == null){
+            project = new Project();
+            project.setName(name);
+            projectRepository.save(project);
         }
-        return tagHierarchy;
+        return project;
     }
 
     @When("^I set the previous Sample tagged by the previous Tag Hierarchy$")
@@ -87,7 +85,7 @@ public class CreateTagHierarchyDefs {
         stepDefs.result = stepDefs.mockMvc.perform(
                 put("/samples/"+ sample.getId() +"/taggedBy")
                         .contentType("text/uri-list")
-                        .content(tagHierarchy.getUri())
+                        .content(project.getUri())
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()));
     }
@@ -95,7 +93,7 @@ public class CreateTagHierarchyDefs {
     @Then("^The Tag Hierarchy have (\\d+) samples$")
     public void theTagHierarchyWithNameHaveSamples(String name, int numSamples) throws Exception {
         stepDefs.mockMvc.perform(
-                get("/tagHierarchies/" + tagHierarchy.getId())
+                get("/tagHierarchies/" + project.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
@@ -108,16 +106,16 @@ public class CreateTagHierarchyDefs {
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print())
-                .andExpect(jsonPath("$.id", is(tagHierarchy.getId())));
+                .andExpect(jsonPath("$.id", is(project.getId())));
     }
 
     @When("^I create a new sample with text \"([^\"]*)\" tagged by the tag hierarchy \"([^\"]*)\"$")
     public void iCreateANewSampleWithTextTaggedByTheTagHierarchy(String text, String tagHierarchyName) throws Throwable {
-        Optional<TagHierarchy> tagHierarchy = tagHierarchyRepository.findByName(tagHierarchyName);
-        Assert.assertTrue("Tag hierarchy must exist", tagHierarchy.isPresent());
+        Project tagHierarchy = projectRepository.findByName(tagHierarchyName);
+        Assert.assertNotNull("Tag hierarchy must exist", tagHierarchy);
         Sample sample = new Sample();
         sample.setText(text);
-        sample.setTaggedBy(tagHierarchy.get());
+        sample.setProject(tagHierarchy);
         stepDefs.mockMvc.perform(post("/samples")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .content(stepDefs.mapper.writeValueAsString(sample))
@@ -129,10 +127,10 @@ public class CreateTagHierarchyDefs {
 
     @Then("^The tag hierarchy \"([^\"]*)\" tags a sample with text \"([^\"]*)\"$")
     public void theTagHierarchyTagsASampleWithText(String tagHierarchyName, String text) throws Throwable {
-        Optional<TagHierarchy> tagHierarchy = tagHierarchyRepository.findByName(tagHierarchyName);
-        Assert.assertTrue("Tag hiearchy must exist", tagHierarchy.isPresent());
+        Project project = projectRepository.findByName(tagHierarchyName);
+        Assert.assertNotNull("Tag hiearchy must exist", project);
         stepDefs.mockMvc.perform(
-            get("/samples/search/findByTaggedBy?taggedBy=" + tagHierarchy.get().getUri())
+            get("/samples/search/findByTaggedBy?taggedBy=" + project.getUri())
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .with(AuthenticationStepDefs.authenticate()))
             .andDo(print())

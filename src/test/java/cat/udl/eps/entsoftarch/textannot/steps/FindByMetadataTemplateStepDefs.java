@@ -1,16 +1,13 @@
 package cat.udl.eps.entsoftarch.textannot.steps;
 
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.domain.Sample;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-
-import java.util.*;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
@@ -28,19 +25,19 @@ public class FindByMetadataTemplateStepDefs {
     private SampleRepository sampleRepository;
 
     @Autowired
-    private MetadataTemplateRepository metadataTemplateRepository;
+    private ProjectRepository projectRepository;
 
     @And("^There are some Metadata Templates with text \"([^\"]*)\" \"([^\"]*)\" and \"([^\"]*)\"$")
     public void saveTheMetadataTemplate(String md1, String md2, String md3) {
-        MetadataTemplate metadata1 = new MetadataTemplate();
-        metadata1.setName(md1);
-        MetadataTemplate metadata2 = new MetadataTemplate();
-        metadata2.setName(md2);
-        MetadataTemplate metadata3 = new MetadataTemplate();
-        metadata3.setName(md3);
-        metadataTemplateRepository.save(metadata1);
-        metadataTemplateRepository.save(metadata2);
-        metadataTemplateRepository.save(metadata3);
+        Project project1 = new Project();
+        project1.setName(md1);
+        Project project2 = new Project();
+        project2.setName(md2);
+        Project project3 = new Project();
+        project3.setName(md3);
+        projectRepository.save(project1);
+        projectRepository.save(project2);
+        projectRepository.save(project3);
 
     }
 
@@ -65,8 +62,8 @@ public class FindByMetadataTemplateStepDefs {
     @And("There is a sample with text \"([^\"]*)\" defined by \"([^\"]*)\"$")
     public void addSamples(String sam, String metadata) {
         Sample sample = new Sample(sam);
-        MetadataTemplate metadataTemplateOptional = metadataTemplateRepository.findByName(metadata);
-        sample.setDescribedBy(metadataTemplateOptional);
+        Project project = projectRepository.findByName(metadata);
+        sample.setProject(project);
         sampleRepository.save(sample);
     }
 

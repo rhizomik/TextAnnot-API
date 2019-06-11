@@ -6,8 +6,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
@@ -17,8 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-
-import java.util.Optional;
 
 public class CreateSampleStepDefs {
     private static final Logger logger = LoggerFactory.getLogger(RegisterLinguistStepDef.class);
@@ -30,7 +28,7 @@ public class CreateSampleStepDefs {
     private SampleRepository sampleRepository;
 
     @Autowired
-    private MetadataTemplateRepository metadataTemplateRepository;
+    private ProjectRepository projectRepository;
 
     private String newResourceUri;
 
@@ -82,8 +80,8 @@ public class CreateSampleStepDefs {
     public void iCreateANewSampleWithMetadataTemplate(String text, String mtName) throws Throwable{
         JSONObject sample = new JSONObject();
         sample.put("text", text);
-        MetadataTemplate metadataTemplateOptional = metadataTemplateRepository.findByName(mtName);
-        sample.put("describedBy", metadataTemplateOptional.getUri());
+        Project project = projectRepository.findByName(mtName);
+        sample.put("describedBy", project.getUri());
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/samples")
                         .contentType(MediaType.APPLICATION_JSON)

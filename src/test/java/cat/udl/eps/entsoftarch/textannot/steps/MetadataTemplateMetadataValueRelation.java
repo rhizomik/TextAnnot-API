@@ -1,11 +1,11 @@
 package cat.udl.eps.entsoftarch.textannot.steps;
 
 import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
 import cat.udl.eps.entsoftarch.textannot.domain.MetadataValue;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataValueRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -26,7 +26,7 @@ public class MetadataTemplateMetadataValueRelation {
     private StepDefs stepDefs;
 
     @Autowired
-    private MetadataTemplateRepository metadataTemplateRepository;
+    private ProjectRepository projectRepository;
 
     @Autowired
     private MetadataFieldRepository metadataFieldRepository;
@@ -34,17 +34,17 @@ public class MetadataTemplateMetadataValueRelation {
     @Autowired
     private MetadataValueRepository metadataValueRepository;
 
-    private List<MetadataTemplate> metadataTemplateList;
+    private List<Project> projectList;
 
     @Given("^A MetadataTemplate with name \"([^\"]*)\" defines a MetadataField with name \"([^\"]*)\" and type \"([^\"]*)\" that values a MetadataValue with value \"([^\"]*)\"$")
     public void aMetadataTemplateWithNameDefinesAMetadataFieldWithNameAndTypeThatValuesAMetadataValueWithValue(String name, String FName, String FType, String VValue) {
-        MetadataTemplate mt = new MetadataTemplate();
-        mt.setName(name);
+        Project project = new Project();
+        project.setName(name);
         MetadataField mf = new MetadataField(FName, FType);
         MetadataValue mv = new MetadataValue(VValue);
 
-        mt = metadataTemplateRepository.save(mt);
-        mf.setDefinedAt(mt);
+        project = projectRepository.save(project);
+        mf.setDefinedAt(project);
         metadataFieldRepository.save(mf);
         mv.setValues(mf);
         metadataValueRepository.save(mv);

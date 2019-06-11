@@ -6,10 +6,10 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = TagHierarchyConstraintValidator.class)
+@Constraint(validatedBy = TagConstraintValidator.class)
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TagHierarchyConstraint {
+public @interface TagConstraint {
 
     String message() default "Invalid tag hierarchy";
 

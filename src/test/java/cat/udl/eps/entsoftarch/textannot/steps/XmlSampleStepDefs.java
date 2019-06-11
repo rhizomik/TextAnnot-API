@@ -9,23 +9,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataValue;
-import cat.udl.eps.entsoftarch.textannot.domain.XmlSample;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataValueRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.XmlSampleRepository;
+import cat.udl.eps.entsoftarch.textannot.domain.*;
+import cat.udl.eps.entsoftarch.textannot.repository.*;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.Optional;
 
 import org.hamcrest.Matchers;
-import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -39,7 +31,7 @@ public class XmlSampleStepDefs {
     private MetadataField metaField;
 
     @Autowired private XmlSampleRepository xmlSampleRepository;
-    @Autowired private MetadataTemplateRepository metadataTemplateRepository;
+    @Autowired private ProjectRepository projectRepository;
     @Autowired private MetadataFieldRepository metadataFieldRepository;
     @Autowired private MetadataValueRepository metadataValueRepository;
 
@@ -108,8 +100,8 @@ public class XmlSampleStepDefs {
         Resource resource = stepDefs.wac.getResource("classpath:"+filename);
         byte[] content = Files.readAllBytes(resource.getFile().toPath());
         sample.setContent(new String(content, StandardCharsets.UTF_8));
-        MetadataTemplate metadataTemplateOptional = metadataTemplateRepository.findByName(template);
-        sample.setDescribedBy(metadataTemplateOptional);
+        Project project = projectRepository.findByName(template);
+        sample.setProject(project);
 
         String message = stepDefs.mapper.writeValueAsString(sample);
 
@@ -149,14 +141,13 @@ public class XmlSampleStepDefs {
 
     @And("^The metadata template \"([^\"]*)\" has fields$")
     public void theMetadataTemplateHasFields(String templateName, List<List<String>> fields) throws Throwable {
-        MetadataTemplate metadataTemplateOptional = metadataTemplateRepository.findByName(templateName);
-        MetadataTemplate template = metadataTemplateOptional;
+        Project project = projectRepository.findByName(templateName);
         fields.forEach(fieldNameType -> {
             MetadataField field = new MetadataField();
             field.setCategory(fieldNameType.get(0));
             field.setName(fieldNameType.get(1));
             field.setType(fieldNameType.get(2));
-            field.setDefinedAt(template);
+            field.setDefinedAt(project);
             metadataFieldRepository.save(field);
         });
     }

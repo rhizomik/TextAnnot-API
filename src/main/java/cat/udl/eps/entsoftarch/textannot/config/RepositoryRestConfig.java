@@ -2,8 +2,10 @@ package cat.udl.eps.entsoftarch.textannot.config;
 
 import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
+
 import javax.annotation.PostConstruct;
+
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +19,7 @@ import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver
 @Configuration
 public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
     @Autowired Environment environment;
-    @Autowired MetadataTemplateRepository metadataTemplateRepository;
+    @Autowired ProjectRepository projectRepository;
     @Autowired MetadataFieldRepository metadataFieldRepository;
 
     @Override
@@ -25,23 +27,22 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
         config.exposeIdsFor(Admin.class);
         config.exposeIdsFor(MetadataValue.class);
         config.exposeIdsFor(MetadataField.class);
-        config.exposeIdsFor(MetadataTemplate.class);
         config.exposeIdsFor(XmlSample.class);
         config.exposeIdsFor(Sample.class);
         config.exposeIdsFor(Linguist.class);
         config.exposeIdsFor(Tag.class);
         config.exposeIdsFor(Annotation.class);
-        config.exposeIdsFor(TagHierarchy.class);
+        config.exposeIdsFor(Project.class);
     }
 
     @PostConstruct
     @Profile("!test")
     public void init() {
         if(!environment.acceptsProfiles("Test") &&
-            !metadataTemplateRepository.existsById(1)) {
-            MetadataTemplate template = new MetadataTemplate();
-            template.setName("default");
-            metadataTemplateRepository.save(template);
+            !projectRepository.existsById(1)) {
+            Project project = new Project();
+            project.setName("default");
+            projectRepository.save(project);
 
             String[][] defaultTemplateFields = {
                 {"datos_generales", "número_muestra", "String"},
@@ -69,7 +70,7 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
                 field.setCategory(fieldData[0]);
                 field.setName(fieldData[1]);
                 field.setType(fieldData[2]);
-                field.setDefinedAt(template);
+                field.setDefinedAt(project);
                 metadataFieldRepository.save(field);
             }
         }

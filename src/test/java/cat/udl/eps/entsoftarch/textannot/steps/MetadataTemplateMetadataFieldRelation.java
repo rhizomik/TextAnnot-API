@@ -1,9 +1,9 @@
 package cat.udl.eps.entsoftarch.textannot.steps;
 
 import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -19,7 +19,7 @@ import java.util.*;
 
 public class MetadataTemplateMetadataFieldRelation {
     @Autowired
-    private MetadataTemplateRepository mtr;
+    private ProjectRepository projectRepository;
 
     @Autowired
     private MetadataFieldRepository mtfr;
@@ -27,16 +27,16 @@ public class MetadataTemplateMetadataFieldRelation {
     @Autowired
     private StepDefs stepDefs;
 
-    private List<MetadataTemplate> MetadataTemplatesList;
+    private List<Project> projectList;
 
     @Given("^A MetadataTemplate with name \"([^\"]*)\" defines a MetadataField with name \"([^\"]*)\" and type \"([^\"]*)\"$")
     public void aMetadataTemplateWithNameDefinesAMetadataFieldWithNameAndType(String name, String FName, String FType) {
-        MetadataTemplate mt = new MetadataTemplate();
-        mt.setName(name);
+        Project project = new Project();
+        project.setName(name);
         MetadataField mf = new MetadataField(FName, FType);
 
-        mt = mtr.save(mt);
-        mf.setDefinedAt(mt);
+        project = projectRepository.save(project);
+        mf.setDefinedAt(project);
         mtfr.save(mf);
     }
 
@@ -60,12 +60,12 @@ public class MetadataTemplateMetadataFieldRelation {
 
     @Given("^A MetadataTemplate with name \"([^\"]*)\" which defines a MetadataFields with name \"([^\"]*)\"$")
     public void aMetadataTemplateWithNameWhichDefinesAMetadataFieldsWithName(String name, String FName) {
-        MetadataTemplate m = new MetadataTemplate();
-        m.setName(name);
+        Project project = new Project();
+        project.setName(name);
         MetadataField f = new MetadataField(FName,"NTp"); //no type
 
-        m = mtr.save(m);
-        f.setDefinedAt(m);
+        project = projectRepository.save(project);
+        f.setDefinedAt(project);
         mtfr.save(f);
 
     }
@@ -82,12 +82,12 @@ public class MetadataTemplateMetadataFieldRelation {
 
     @Given("^A MetadataTemplate with name \"([^\"]*)\" defines a MetadataField with type \"([^\"]*)\"$")
     public void aMetadataTemplateWithNameDefinesAMedatataFieldWithType(String name, String FType) {
-        MetadataTemplate m = new MetadataTemplate();
-        m.setName(name);
+        Project project = new Project();
+        project.setName(name);
         MetadataField f = new MetadataField("NName",FType); //no name
 
-        m = mtr.save(m);
-        f.setDefinedAt(m);
+        project = projectRepository.save(project);
+        f.setDefinedAt(project);
         mtfr.save(f);
     }
 

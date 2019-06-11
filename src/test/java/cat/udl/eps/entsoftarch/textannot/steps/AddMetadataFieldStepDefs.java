@@ -8,33 +8,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataValue;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataValueRepository;
-import cucumber.api.PendingException;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
 import org.json.JSONObject;
-import org.junit.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-
-import java.util.Optional;
 
 public class AddMetadataFieldStepDefs {
 
     @Autowired
     private StepDefs stepDefs;
     private MetadataField metaField;
-    private MetadataTemplate metaTemplate;
+    private Project project;
 
 
     @Autowired
-    private MetadataTemplateRepository metadataTemplateRepository;
+    private ProjectRepository projectRepository;
 
     @Autowired
     private MetadataFieldRepository metadataFieldRepository;
@@ -93,10 +85,10 @@ public class AddMetadataFieldStepDefs {
     public void iRegisterANewMetadataFieldWithTextAndTypeForMetadataTemplateWithValue
             (String name, String type, String metadataTemplateValue) throws Throwable {
         JSONObject metadataField = new JSONObject();
-        metaTemplate = metadataTemplateRepository.findByName(metadataTemplateValue);
+        project = projectRepository.findByName(metadataTemplateValue);
         metadataField.put("name", name);
         metadataField.put("type", type);
-        metadataField.put("definedAt", "/metadataTemplates/"+metaTemplate.getId()+"");
+        metadataField.put("definedAt", "/metadataTemplates/"+ project.getId()+"");
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/metadataFields")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -123,7 +115,7 @@ public class AddMetadataFieldStepDefs {
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print())
-                .andExpect(jsonPath("$.name", is(metaTemplate.getName())))
+                .andExpect(jsonPath("$.name", is(project.getName())))
                 .andExpect(status().is(200));
     }
 }

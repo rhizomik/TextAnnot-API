@@ -31,9 +31,9 @@ public class AnnotationEventHandler {
         logger.info("Username: {}", auth.getAuthorities());
 
         annotation.setLinguist((Linguist) auth.getPrincipal());
-        if(annotation.getSample().getTaggedBy() == null)
-            annotation.getSample().setTaggedBy(annotation.getTag().getTagHierarchy());
-        else if(!annotation.getSample().getTaggedBy().equals(annotation.getTag().getTagHierarchy()))
+        if(annotation.getSample().getProject() == null)
+            annotation.getSample().setProject(annotation.getTag().getProject());
+        else if(!annotation.getSample().getProject().equals(annotation.getTag().getProject()))
             throw new AnnotationException();
         annotationRepository.save(annotation);
     }

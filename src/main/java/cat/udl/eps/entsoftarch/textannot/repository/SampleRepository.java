@@ -1,9 +1,7 @@
 package cat.udl.eps.entsoftarch.textannot.repository;
 
 import cat.udl.eps.entsoftarch.textannot.domain.Sample;
-import cat.udl.eps.entsoftarch.textannot.domain.TagHierarchy;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -77,9 +75,9 @@ public interface SampleRepository extends PagingAndSortingRepository<Sample, Int
     List<Sample> findByDescribedByName(@Param("text") String text);
 
     /**
-     Returns the Samples related to a tagHierarchy.
-     * @param tagHierarchy The tagHierarchy that contains the Samples we want.
+     Returns the Samples related to a project.
+     * @param project The project that contains the Samples we want.
      * @return list of samples.
      */
-    List<Sample> findByTaggedBy(@Param("taggedBy")TagHierarchy tagHierarchy);
+    List<Sample> findByTaggedBy(@Param("taggedBy") Project project);
 }

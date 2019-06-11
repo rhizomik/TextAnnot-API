@@ -1,14 +1,15 @@
 package cat.udl.eps.entsoftarch.textannot.controller;
 
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataTemplate;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.domain.XmlSample;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataTemplateRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.XmlSampleRepository;
 import cat.udl.eps.entsoftarch.textannot.service.XMLIngestionService;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.util.Assert;
@@ -23,7 +24,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class UploadController {
 
   @Autowired XmlSampleRepository xmlSampleRepository;
-  @Autowired MetadataTemplateRepository metadataTemplateRepository;
+  @Autowired
+  ProjectRepository projectRepository;
   @Autowired XMLIngestionService xmlService;
 
   @PostMapping("/xmlsample")
@@ -31,8 +33,8 @@ public class UploadController {
   public void uploadXML(MultipartHttpServletRequest request) throws Exception {
     String templateUri = request.getParameter("metadataTemplate");
     Integer templateId = Integer.parseInt(templateUri.substring(templateUri.lastIndexOf('/') + 1));
-    Optional<MetadataTemplate> template = metadataTemplateRepository.findById(templateId);
-    Assert.isTrue(template.isPresent(), "The specified MetadataTemplate does not exist");
+    Optional<Project> project = projectRepository.findById(templateId);
+    Assert.isTrue(project.isPresent(), "The specified MetadataTemplate does not exist");
 
     Iterator<String> fileNames = request.getFileNames();
     MultipartFile xmlFile = request.getFile(fileNames.next());
@@ -46,7 +48,7 @@ public class UploadController {
       result.write(buffer, 0, length);
     }
     xmlSample.setContent(result.toString("UTF-8"));
-    xmlSample.setDescribedBy(template.get());
+    xmlSample.setProject(project.get());
     xmlService.ingest(xmlSample);
   }
 }

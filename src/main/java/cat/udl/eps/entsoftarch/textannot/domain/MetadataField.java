@@ -36,7 +36,7 @@ public class MetadataField extends UriEntity<Integer> {
     /**
      * Linking MetadataField with Metadata Template.
      */
-    private MetadataTemplate definedAt;
+    private Project definedAt;
 
     public MetadataField() {
         this.name = "";

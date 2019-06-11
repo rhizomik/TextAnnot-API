@@ -14,10 +14,10 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class TagHierarchy extends UriEntity<Integer> {
+public class Project extends UriEntity<Integer> {
 
     /**
-     * Identifier of TagHierarchy needs to be unique, otherwise it will generate conflicts.
+     * Identifier of Project needs to be unique, otherwise it will generate conflicts.
      */
 
     @Id
@@ -25,7 +25,7 @@ public class TagHierarchy extends UriEntity<Integer> {
     private Integer id;
 
     /**
-     *  The name given to the TagHierarchy. It can't be blank.
+     *  The name given to the Project. It can't be blank.
      *
      */
 

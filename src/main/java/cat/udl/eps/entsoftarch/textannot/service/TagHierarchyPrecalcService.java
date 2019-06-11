@@ -1,10 +1,8 @@
 package cat.udl.eps.entsoftarch.textannot.service;
 
-import cat.udl.eps.entsoftarch.textannot.controller.TagHierarchyController;
-import cat.udl.eps.entsoftarch.textannot.domain.QTag;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.domain.Tag;
-import cat.udl.eps.entsoftarch.textannot.domain.TagHierarchy;
-import cat.udl.eps.entsoftarch.textannot.repository.TagHierarchyRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.TagRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,18 +21,18 @@ public class TagHierarchyPrecalcService {
     TagRepository tagRepository;
 
     @Autowired
-    TagHierarchyRepository tagHierarchyRepository;
+    ProjectRepository projectRepository;
 
-    public void recalculateTagHierarchyTree(TagHierarchy tagHierarchy) throws JsonProcessingException {
-        List<Tag> roots = tagRepository.findByTagHierarchyAndParentIsNull(tagHierarchy);
-        TagHierarchyJson tagHierarchyJson = retrieveTagHierarchyTree(tagHierarchy, roots);
+    public void recalculateTagHierarchyTree(Project project) throws JsonProcessingException {
+        List<Tag> roots = tagRepository.findByTagHierarchyAndParentIsNull(project);
+        TagHierarchyJson tagHierarchyJson = retrieveTagHierarchyTree(project, roots);
         ObjectMapper mapper = new ObjectMapper();
-        tagHierarchy.setPrecalculatedTagTree(mapper.writeValueAsString(tagHierarchyJson));
-        tagHierarchyRepository.save(tagHierarchy);
+        project.setPrecalculatedTagTree(mapper.writeValueAsString(tagHierarchyJson));
+        projectRepository.save(project);
     }
 
-    private TagHierarchyJson retrieveTagHierarchyTree(TagHierarchy tagHierarchy, List<Tag> roots) {
-        TagHierarchyJson tagHierarchyJson = new TagHierarchyJson(tagHierarchy);
+    private TagHierarchyJson retrieveTagHierarchyTree(Project project, List<Tag> roots) {
+        TagHierarchyJson tagHierarchyJson = new TagHierarchyJson(project);
         tagHierarchyJson.setRoots(retrieveTagsTree(roots));
         return tagHierarchyJson;
     }
@@ -65,9 +63,9 @@ public class TagHierarchyPrecalcService {
 
         TagHierarchyJson() {}
 
-        TagHierarchyJson(TagHierarchy tagHierarchy) {
-            this.id = tagHierarchy.getId();
-            this.name = tagHierarchy.getName();
+        TagHierarchyJson(Project project) {
+            this.id = project.getId();
+            this.name = project.getName();
         }
     }
 

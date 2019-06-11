@@ -12,7 +12,6 @@ import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.Iterator;
 import java.util.List;
 @RepositoryEventHandler
 @Component
@@ -30,13 +29,13 @@ public class TagEventHandler {
     @HandleAfterDelete
     @Transactional
     public void handleTagPostCreateAndSave(Tag tag) throws JsonProcessingException {
-        tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getTagHierarchy());
+        tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getProject());
     }
 
     @HandleAfterLinkSave
     @HandleAfterLinkDelete
     public void handleTagPostLinkSave(Tag tag, Object o) throws JsonProcessingException {
-        tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getTagHierarchy());
+        tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getProject());
     }
 
     @HandleBeforeDelete
