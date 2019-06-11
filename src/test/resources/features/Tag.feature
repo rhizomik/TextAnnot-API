@@ -27,15 +27,15 @@ Feature: Tag
 
   Scenario: Create a Tag linked to a Tag Hierarchy as admin
     Given I login as "admin" with password "password"
-    And Exists a TagHierarchy with name "hierarchy"
-    And Exists a Tag with name "tag" associated to the TagHierarchy "hierarchy"
+    And Exists a Project with name "hierarchy"
+    And Exists a Tag with name "tag" associated to the Project "hierarchy"
     When I create a new tag with name "Tag" defined in the tag hierarchy "hierarchy"
     Then The tag hierarchy "hierarchy" defines a tag with the text "Tag text..."
     And The response code is 204
 
   Scenario: Setting the parent of a given tag
     Given I login as "admin" with password "password"
-    And Exists a TagHierarchy with name "hierarchy"
+    And Exists a Project with name "hierarchy"
     And I create the parent Tag with name "parent"
     And I create the child Tag with name "child"
     When I set the parent with name "parent" to child with name "child"
@@ -44,9 +44,9 @@ Feature: Tag
 
   Scenario: Linking parent and child with different tag hierarchy
     Given I login as "admin" with password "password"
-    And Exists a TagHierarchy with name "hierarchy1"
+    And Exists a Project with name "hierarchy1"
     And I create the parent Tag with name "parent"
-    And Exists a TagHierarchy with name "hierarchy2"
+    And Exists a Project with name "hierarchy2"
     And I create the child Tag with name "child"
     When I set the parent with name "parent" to child with name "child"
     And I try to link between parent with name "parent" and child with name "child"
@@ -56,7 +56,7 @@ Feature: Tag
   Scenario: Linking parent without tag hierarchy with child with tag hierarchy
     Given I login as "admin" with password "password"
     And I create the parent Tag with name "parent"
-    And Exists a TagHierarchy with name "hierarchy"
+    And Exists a Project with name "hierarchy"
     And I create the child Tag with name "child"
     When I set the parent with name "parent" to child with name "child"
     And I try to link between parent with name "parent" and child with name "child"
@@ -66,7 +66,7 @@ Feature: Tag
   Scenario: Linking parent with tag hierarchy with child without tag hierarchy
     Given I login as "admin" with password "password"
     And I create the child Tag with name "child"
-    And Exists a TagHierarchy with name "hierarchy"
+    And Exists a Project with name "hierarchy"
     And I create the parent Tag with name "parent"
     When I set the parent with name "parent" to child with name "child"
     And I try to link between parent with name "parent" and child with name "child"
@@ -76,7 +76,7 @@ Feature: Tag
 
   Scenario: Deleting a tag which has a child
     Given I login as "admin" with password "password"
-    And Exists a TagHierarchy with name "hierarchy"
+    And Exists a Project with name "hierarchy"
     And I create the parent Tag with name "parent"
     And I create the child Tag with name "child"
     And I try to link between parent with name "parent" and child with name "child"
@@ -87,7 +87,7 @@ Feature: Tag
 
   Scenario: Deleting a tag which has not a child
     Given I login as "admin" with password "password"
-    And Exists a TagHierarchy with name "hierarchy"
+    And Exists a Project with name "hierarchy"
     And I create the parent Tag with name "parent"
     When I delete the parent
     Then The response code is 204

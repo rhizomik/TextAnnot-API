@@ -27,20 +27,20 @@ Feature: Create new Tag Hierarchy
 
   Scenario: Check that a Tag Hierarchy has 1 sample
     Given I login as "admin" with password "password"
-    And Exists a Tag Hierarchy with name "tag hierarchy"
+    And Exists a Project with name "tag hierarchy"
     And Exists a Sample with text "Test" and TagHierarchy "tag hierarchy"
     When I set the previous Sample tagged by the previous Tag Hierarchy
     Then The tag hierarchy "tag hierarchy" tags a sample with text "Test"
 
   Scenario: Link a Sample with a Tag Hierarchy as linguist
     Given I login as "linguist" with password "password"
-    And Exists a Tag Hierarchy with name "tag hierarchy"
+    And Exists a Project with name "tag hierarchy"
     And Exists a Sample with text "Test" and TagHierarchy "tag hierarchy"
     When I set the previous Sample tagged by the previous Tag Hierarchy
     Then The response code is 401
 
   Scenario: Create a Sample linked to a Tag Hierarchy as linguist
     Given I login as "user" with password "password"
-    And Exists a Tag Hierarchy with name "linguistic tags"
+    And Exists a Project with name "linguistic tags"
     When I create a new sample with text "Sample text..." tagged by the tag hierarchy "linguistic tags"
     Then The tag hierarchy "linguistic tags" tags a sample with text "Sample text..."

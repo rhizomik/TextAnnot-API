@@ -16,7 +16,6 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import java.util.Optional;
 import org.junit.Assert;
 import org.springframework.http.MediaType;
 
@@ -62,15 +61,16 @@ public class CreateTagHierarchyDefs {
                 .andExpect(jsonPath("$.name", is(name)));
     }
 
-    @Given("^Exists a Sample with text \"([^\"]*)\" and TagHierarchy \"([^\"]*)\"$")
-    public void thereIsASingleSampleWithText(String text, String tagHierarchyName) {
-        Project project = this.existsATagHierarchyWithName(tagHierarchyName);
+    @Given("^Exists a Sample with text \"([^\"]*)\" and Project \"([^\"]*)\"$")
+    public void thereIsASingleSampleWithText(String text, String projectName) {
+        Project project = this.existsAProjectWithName(projectName);
         sample = new Sample(text);
+        sample.setProject(project);
         sampleRepository.save(sample);
     }
 
-    @And("^Exists a Tag Hierarchy with name \"([^\"]*)\"$")
-    public Project existsATagHierarchyWithName(String name) {
+    @And("^Exists a Project with name \"([^\"]*)\"$")
+    public Project existsAProjectWithName(String name) {
         project = projectRepository.findByName(name);
         if (project == null){
             project = new Project();

@@ -58,7 +58,7 @@ public class TagStepDefs {
                 .andExpect(jsonPath("$.id", is(id)));
     }
 
-    @And("^Exists a TagHierarchy with name \"([^\"]*)\"$")
+//    @And("^Exists a Project with name \"([^\"]*)\"$")
     public Project existsATagHierarchyWithName(String name) throws Throwable {
         project = projectRepository.findByName(name);
         if(project == null){
@@ -69,7 +69,7 @@ public class TagStepDefs {
         return project;
     }
 
-    @And("^Exists a Tag with name \"([^\"]*)\" associated to the TagHierarchy \"([^\"]*)\"$")
+    @And("^Exists a Tag with name \"([^\"]*)\" associated to the Project \"([^\"]*)\"$")
     public void existsATagWithName(String tagName, String tagHierarchyName) throws Throwable {
         Project project = existsATagHierarchyWithName(tagHierarchyName);
         tag = tagRepository.findByName(tagName);

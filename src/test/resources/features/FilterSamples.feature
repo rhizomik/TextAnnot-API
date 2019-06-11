@@ -7,8 +7,8 @@ Feature: Filter Samples
     Given There is a metadata template with name "Test Template"
     And There is a metadata field "field1" related to the template "Test Template"
     And There is a metadata field "field2" related to the template "Test Template"
-    And Exists a TagHierarchy with name "Tag hierarchy"
-    And Exists a Tag with name "Tag1" associated to the TagHierarchy "Tag hierarchy"
+    And Exists a Project with name "Tag hierarchy"
+    And Exists a Tag with name "Tag1" associated to the Project "Tag hierarchy"
 
   Scenario: Filter Samples by text and fields
     Given I login as "user" with password "password"
