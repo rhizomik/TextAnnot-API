@@ -92,7 +92,7 @@ public class ListTagsStepDefs {
     @Then("^I list tags in the tag hierarchy called \"([^\"]*)\"$")
     public void iListTagsInTheTagHierarchyCalled(String name) throws Throwable {
         Project project = projectRepository.findByName(name);
-        List<Tag> tags = tagRepository.findByTagHierarchy(projectRepository.findByName(name));
+        List<Tag> tags = tagRepository.findByProject(projectRepository.findByName(name));
         stepDefs.mockMvc.perform(
                 get("/tags/search/findByTagHierarchy?project=" + project.getUri())
                         .accept(MediaType.APPLICATION_JSON)
@@ -112,7 +112,7 @@ public class ListTagsStepDefs {
     @Then("^The tags' list is empty in the tag hierarchy called \"([^\"]*)\"$")
     public void theTagsListIsEmptyInTheTagHierarchyCalled(String name) throws Throwable {
         if(projectRepository.findByName(name) != null) {
-            List<Tag> tags = tagRepository.findByTagHierarchy(projectRepository.findByName(name));
+            List<Tag> tags = tagRepository.findByProject(projectRepository.findByName(name));
             assertEquals(0, tags.size());
         }
     }

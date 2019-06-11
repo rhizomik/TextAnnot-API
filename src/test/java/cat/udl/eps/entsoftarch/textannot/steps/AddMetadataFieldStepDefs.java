@@ -67,14 +67,14 @@ public class AddMetadataFieldStepDefs {
                 .andExpect(status().isNotFound());
     }
 
-    @And("^there is a created metadataTemplate with name \"([^\"]*)\"$")
-    public void thereIsACreatedMetadataTemplateWithName(String arg0) throws Throwable {
-        JSONObject metadataTemplate = new JSONObject();
-        metadataTemplate.put("name", arg0);
+    @And("^there is a created Project with name \"([^\"]*)\"$")
+    public void thereIsACreatedProjectTemplateWithName(String arg0) throws Throwable {
+        JSONObject project = new JSONObject();
+        project.put("name", arg0);
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/metadataTemplates")
+                post("/projects")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(metadataTemplate.toString())
+                        .content(project.toString())
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());

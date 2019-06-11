@@ -24,7 +24,7 @@ public class TagHierarchyPrecalcService {
     ProjectRepository projectRepository;
 
     public void recalculateTagHierarchyTree(Project project) throws JsonProcessingException {
-        List<Tag> roots = tagRepository.findByTagHierarchyAndParentIsNull(project);
+        List<Tag> roots = tagRepository.findByProjectAndParentIsNull(project);
         TagHierarchyJson tagHierarchyJson = retrieveTagHierarchyTree(project, roots);
         ObjectMapper mapper = new ObjectMapper();
         project.setPrecalculatedTagTree(mapper.writeValueAsString(tagHierarchyJson));

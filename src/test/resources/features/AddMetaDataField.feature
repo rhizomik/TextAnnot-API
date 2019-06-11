@@ -30,7 +30,7 @@ Feature: Add MetaDataField
 
   Scenario: Register new metadataField for existing metadataTemplate
     Given I login as "user" with password "password"
-    And there is a created metadataTemplate with name "test_template"
+    And there is a created Project with name "test_template"
     When I register a new metadataField with text "test_field" and type "field" for metadataTemplate with value "test_template"
     Then The response code is 201
     And It has been created a new metadataField with text "test_field"  for metadataTemplate with value "test_template"

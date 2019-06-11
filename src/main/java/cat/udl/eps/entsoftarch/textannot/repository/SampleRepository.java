@@ -67,17 +67,17 @@ public interface SampleRepository extends PagingAndSortingRepository<Sample, Int
 
 
     /**
-     * Finds all Samples that are described by parameter text
-     * @param text String text, name of the metadataTemplate, for finding in Samples
+     * Finds all Samples that are contained in a project with name
+     * @param name String text, name of the Project, for finding in Samples
      * @return The list of Samples that are described by same name as the parameter
      */
 
-    List<Sample> findByDescribedByName(@Param("text") String text);
+    List<Sample> findByProjectName(@Param("name") String name);
 
     /**
      Returns the Samples related to a project.
      * @param project The project that contains the Samples we want.
      * @return list of samples.
      */
-    List<Sample> findByTaggedBy(@Param("taggedBy") Project project);
+    List<Sample> findByProject(@Param("project") Project project);
 }

@@ -85,7 +85,7 @@ public class CreateMetadataTemplateDefs {
 
     @Then("^The metadataTemplate with name \"([^\"]*)\" have (\\d+) samples$")
     public void theMetadataTemplateWithNameHaveSamples(String name, int size) throws Throwable {
-        List<Sample> samples = sampleRepository.findByDescribedByName(name);
+        List<Sample> samples = sampleRepository.findByProjectName(name);
         Assert.assertTrue(
                 "Only exists 1 sample describedBy a MetadataTemplate with name " + name,
                 samples != null && samples.size() == size

@@ -26,9 +26,9 @@ public interface TagRepository extends PagingAndSortingRepository<Tag, Integer>,
      * @param project The project that contains the Tags we want.
      * @return list of Tags.
      */
-    List<Tag> findByTagHierarchy(@Param("project") Project project);
+    List<Tag> findByProject(@Param("project") Project project);
 
-    List<Tag> findByTagHierarchyAndParentIsNull(@Param("project") Project project);
+    List<Tag> findByProjectAndParentIsNull(@Param("project") Project project);
 
     /**
      Returns the Tags related to a Tag parent.
