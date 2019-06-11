@@ -38,5 +38,5 @@ public interface TagRepository extends PagingAndSortingRepository<Tag, Integer>,
 
     List<Tag> findByParent(@Param("parent") Tag parent);
 
-    List<Tag> findByParentName(@Param("name") String name);
+    List<Tag> findByParentId(@Param("id") Integer id);
 }

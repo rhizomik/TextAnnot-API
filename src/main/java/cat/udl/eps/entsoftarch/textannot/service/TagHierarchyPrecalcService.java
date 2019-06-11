@@ -47,7 +47,7 @@ public class TagHierarchyPrecalcService {
 
     private void setChildren(TagJson root) {
         List<TagJson> children =
-                tagRepository.findByParentName(root.getName())
+                tagRepository.findByParentId(root.getId())
                         .stream()
                         .map(TagJson::new)
                         .collect(Collectors.toList());
