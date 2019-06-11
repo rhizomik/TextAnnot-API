@@ -13,17 +13,18 @@ skinparam class {
 	BackgroundColor<<User>> LightBlue
 	BackgroundColor<<Metadata>> LightGreen
 	BackgroundColor<<Annotation>> LightYellow
+	BackgroundColor<<Project>> Orchid
 }
 
-class MetadataTemplate <<Metadata>> {
+class Project <<Project>> {
     String name
 }
 
 class MetadataField <<Metadata>> {
     String name, type
 }
-MetadataTemplate "tagHierarchy 1" -- "defines many" MetadataField
-MetadataTemplate "describedBy 1" -- "describes many" Sample
+Project "forProject 1" -- "metadataFields many" MetadataField
+Project "containedIn 1" -- "contains many" Sample
 
 class MetadataValue <<Metadata>> {
     String value
@@ -39,15 +40,10 @@ class XMLSample <<Sample>> extends Sample {
     String content
 }
 
-class TagHierarchy <<Annotation>> {
-    String name
-}
-TagHierarchy "taggedBy 1" -- "tags many" Sample
-
 class Tag <<Annotation>> {
     String name
 }
-Tag "defines many" -up- "tagHierarchy 1" TagHierarchy
+Tag "tags many" -up- "forProject 1" Project
 Tag "child many" -- "parent 0..1" Tag
 Tag "uses 1" -- "usedIn many" Annotation
 
