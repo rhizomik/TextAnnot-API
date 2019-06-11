@@ -8,10 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.core.annotation.HandleAfterCreate;
-import org.springframework.data.rest.core.annotation.HandleAfterSave;
-import org.springframework.data.rest.core.annotation.HandleBeforeDelete;
-import org.springframework.data.rest.core.annotation.RepositoryEventHandler;
+import org.springframework.data.rest.core.annotation.*;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -30,8 +27,15 @@ public class TagEventHandler {
 
     @HandleAfterCreate
     @HandleAfterSave
+    @HandleAfterDelete
     @Transactional
     public void handleTagPostCreateAndSave(Tag tag) throws JsonProcessingException {
+        tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getTagHierarchy());
+    }
+
+    @HandleAfterLinkSave
+    @HandleAfterLinkDelete
+    public void handleTagPostLinkSave(Tag tag, Object o) throws JsonProcessingException {
         tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getTagHierarchy());
     }
 
