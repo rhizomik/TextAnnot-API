@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import cat.udl.eps.entsoftarch.textannot.service.TagHierarchyPrecalcService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.csv.CSVFormat;
@@ -46,33 +47,29 @@ public class TagHierarchyController {
         this.tagHierarchyPrecalcService = tagHierarchyPrecalcService;
     }
 
-    @PostMapping(value = "/quickTagHierarchyCreate", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "projects/{projectId}/tags", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public PersistentEntityResource quickTagHierarchyCreate(
+            @PathVariable("projectId") Integer projectId,
             @RequestBody TagHierarchyPrecalcService.TagHierarchyJson body,
-            PersistentEntityResourceAssembler resourceAssembler) {
+            PersistentEntityResourceAssembler resourceAssembler) throws JsonProcessingException {
 
-        if (isNullOrEmpty(body.getName()))
+        Optional<Project> project = projectRepository.findById(projectId);
+        if (!project.isPresent() || project.get().getPrecalculatedTagTree() != null)
             throw new TagHierarchyValidationException();
-
-
-        if (projectRepository.findByName(body.getName()) != null)
-            throw new TagHierarchyDuplicateException();
 
         List<Tag> treeHierarchy = new ArrayList<>();
 
-        Project project = new Project();
-        project.setName(body.getName());
 
         Optional.ofNullable(body.getRoots())
             .orElseThrow(TagHierarchyValidationException::new)
-            .forEach(root -> createTag(root, null, project, treeHierarchy));
+            .forEach(root -> createTag(root, null, project.get(), treeHierarchy));
 
-        projectRepository.save(project);
         treeHierarchy.forEach(tagRepository::save);
 
-        return resourceAssembler.toResource(project);
+        tagHierarchyPrecalcService.recalculateTagHierarchyTree(project.get());
+        return resourceAssembler.toResource(project.get());
     }
 
     private void createTag(TagHierarchyPrecalcService.TagJson tagJson, Tag parent, Project project, List<Tag> treeHierarchy) {
@@ -97,7 +94,7 @@ public class TagHierarchyController {
         return name == null || name.isEmpty();
     }
 
-    @GetMapping(value = "/tagHierarchies/{id}/tags", produces = "application/json")
+    @GetMapping(value = "/projects/{id}/tags", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     @Transactional
     public @ResponseBody
@@ -113,18 +110,20 @@ public class TagHierarchyController {
         return new ObjectMapper().readTree(project.getPrecalculatedTagTree());
     }
 
-    @PostMapping(value = "/quickTagHierarchyCreate", consumes = MediaType.TEXT_PLAIN_VALUE)
+    @PostMapping(value = "/projects/{id}/tags", consumes = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public PersistentEntityResource quickTagHierarchyCreateCSV(
-        @RequestParam("project") String tagHierarchyName,
+            @PathVariable("id") Integer id,
         ServletServerHttpRequest request,
         PersistentEntityResourceAssembler resourceAssembler) throws IOException {
 
-        Project project = createTagHierarchy(tagHierarchyName);
+        Optional<Project> project = projectRepository.findById(id);
+        if (!project.isPresent() || project.get().getPrecalculatedTagTree() != null)
+            throw new TagHierarchyValidationException();
 
-        readCSVAndSaveTags(request.getBody(), project);
-        return resourceAssembler.toResource(project);
+        readCSVAndSaveTags(request.getBody(), project.get());
+        return resourceAssembler.toResource(project.get());
     }
 
     private void readCSVAndSaveTags(InputStream csvStream, Project project) throws IOException {
@@ -153,27 +152,19 @@ public class TagHierarchyController {
         tagRepository.saveAll(processedTags.values());
     }
 
-    private Project createTagHierarchy(@RequestParam("project") String tagHierarchyName) {
-        if (isNullOrEmpty(tagHierarchyName))
-            throw new TagHierarchyValidationException();
-
-        if (projectRepository.findByName(tagHierarchyName) != null)
-            throw new TagHierarchyDuplicateException();
-
-        Project project = new Project();
-        project.setName(tagHierarchyName);
-        return projectRepository.save(project);
-    }
-
-    @PostMapping(value = "/quickTagHierarchyCreate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/projects/{id}/tags", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public PersistentEntityResource quickTagHierarchyCreateFileCSV(
+            @PathVariable("id") Integer projectId,
             @RequestParam("tagHierarchyName") String tagHierarchyName,
             @RequestParam("file") MultipartFile file,
             PersistentEntityResourceAssembler resourceAssembler) throws IOException {
-        Project project = createTagHierarchy(tagHierarchyName);
-        readCSVAndSaveTags(file.getInputStream(), project);
-        return resourceAssembler.toResource(project);
+        Optional<Project> project = projectRepository.findById(projectId);
+        if (!project.isPresent() || project.get().getPrecalculatedTagTree() != null)
+            throw new TagHierarchyValidationException();
+
+        readCSVAndSaveTags(file.getInputStream(), project.get());
+        return resourceAssembler.toResource(project.get());
     }
 }
