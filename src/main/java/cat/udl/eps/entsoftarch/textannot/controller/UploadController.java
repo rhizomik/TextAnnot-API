@@ -31,7 +31,7 @@ public class UploadController {
   @PostMapping("/xmlsample")
   @ResponseBody
   public void uploadXML(MultipartHttpServletRequest request) throws Exception {
-    String templateUri = request.getParameter("metadataTemplate");
+    String templateUri = request.getParameter("project");
     Integer templateId = Integer.parseInt(templateUri.substring(templateUri.lastIndexOf('/') + 1));
     Optional<Project> project = projectRepository.findById(templateId);
     Assert.isTrue(project.isPresent(), "The specified MetadataTemplate does not exist");
