@@ -81,7 +81,7 @@ public class CreateSampleStepDefs {
         JSONObject sample = new JSONObject();
         sample.put("text", text);
         Project project = projectRepository.findByName(mtName);
-        sample.put("describedBy", project.getUri());
+        sample.put("project", project.getUri());
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/samples")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -93,8 +93,8 @@ public class CreateSampleStepDefs {
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
     }
 
-    @And("^The sample with text \"([^\"]+)\" has a metadata template \"([^\"]+)\"$")
-    public void theSampleWithTextHasMetadataTemplate(String text, String mtName) throws Throwable {
+    @And("^The sample with text \"([^\"]+)\" has a Project \"([^\"]+)\"$")
+    public void theSampleWithTextHasProject(String text, String mtName) throws Throwable {
 
         stepDefs.result = stepDefs.mockMvc.perform(
                 get(newResourceUri)
@@ -104,7 +104,7 @@ public class CreateSampleStepDefs {
 
         JSONObject jsonObject = new JSONObject(stepDefs.result.andReturn().getResponse().getContentAsString());
         JSONObject links = (JSONObject)jsonObject.get("_links");
-        JSONObject descBy = (JSONObject)links.get("describedBy");
+        JSONObject descBy = (JSONObject)links.get("project");
         String mtUrl = descBy.getString("href");
         stepDefs.result = stepDefs.mockMvc.perform(
                 get(mtUrl)

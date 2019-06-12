@@ -37,22 +37,22 @@ public class CreateMetadataTemplateDefs {
 
     private String newResourceUri;
 
-    @When("^I create a new Metadata Template with name \"([^\"]*)\"$")
-    public void iCreateANewMetadataTemplateWithName(String name) throws Throwable {
-        JSONObject metadataTemplate = new JSONObject();
-        metadataTemplate.put("name", name);
+    @When("^I create a new Project with name \"([^\"]*)\"$")
+    public void iCreateANewProjectTemplateWithName(String name) throws Throwable {
+        JSONObject project = new JSONObject();
+        project.put("name", name);
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/metadataTemplates")
+                post("/projects")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(metadataTemplate.toString())
+                        .content(project.toString())
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print());
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
     }
 
-    @And("^The metadata template name is \"([^\"]*)\"$")
-    public void theObjectNameIs(String name) throws Throwable {
+    @And("^The Project name is \"([^\"]*)\"$")
+    public void theProjectNameIs(String name) throws Throwable {
         stepDefs.result = stepDefs.mockMvc.perform(
                 get(newResourceUri)
                         .accept(MediaType.APPLICATION_JSON)
@@ -69,13 +69,13 @@ public class CreateMetadataTemplateDefs {
     }
 
 
-    @When("^I create a new metadata Template \"([^\"]*)\" with the previous sample$")
+    @When("^I create a new Project \"([^\"]*)\" with the previous sample$")
     public void iCreateANewMetadataTemplateThePreviousSample(String name) throws Throwable {
         Project project =  new Project();
         project.setName(name);
         projectRepository.save(project);
         stepDefs.result = stepDefs.mockMvc.perform(
-                put("/samples/"+ sample.getId() +"/describedBy")
+                put("/samples/"+ sample.getId() +"/project")
                         .contentType("text/uri-list")
                         .content(project.getUri())
                         .accept(MediaType.APPLICATION_JSON)
@@ -83,15 +83,15 @@ public class CreateMetadataTemplateDefs {
                 .andDo(print());
     }
 
-    @Then("^The metadataTemplate with name \"([^\"]*)\" have (\\d+) samples$")
+    @Then("^The Project with name \"([^\"]*)\" have (\\d+) samples$")
     public void theMetadataTemplateWithNameHaveSamples(String name, int size) throws Throwable {
         List<Sample> samples = sampleRepository.findByProjectName(name);
         Assert.assertTrue(
-                "Only exists 1 sample describedBy a MetadataTemplate with name " + name,
+                "Only exists 1 sample project a MetadataTemplate with name " + name,
                 samples != null && samples.size() == size
         );
         stepDefs.result = stepDefs.mockMvc.perform(
-                get("/samples/" + samples.get(0).getId() + "/describedBy")
+                get("/samples/" + samples.get(0).getId() + "/project")
                         .accept(MediaType.APPLICATION_JSON)
                         .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print())

@@ -21,10 +21,10 @@ Feature: Create Sample
     Then The response code is 400
     And The error message is "must not be null"
 
-  Scenario: Create a new sample with a metadata template
+  Scenario: Create a new sample with a project
     Given I login as "user" with password "password"
-    And There is a metadata template with name "mtTest"
+    And there is a created Project with name "mtTest"
     When I create a new sample with text "Lorem ipsum text" with metadata template "mtTest"
     Then The response code is 201
     And It has been created a sample with text "Lorem ipsum text"
-    And The sample with text "Lorem ipsum text" has a metadata template "mtTest"
+    And The sample with text "Lorem ipsum text" has a Project "mtTest"

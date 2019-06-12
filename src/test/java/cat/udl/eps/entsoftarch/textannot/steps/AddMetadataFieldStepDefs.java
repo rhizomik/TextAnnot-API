@@ -68,27 +68,21 @@ public class AddMetadataFieldStepDefs {
     }
 
     @And("^there is a created Project with name \"([^\"]*)\"$")
-    public void thereIsACreatedProjectTemplateWithName(String arg0) throws Throwable {
-        JSONObject project = new JSONObject();
-        project.put("name", arg0);
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/projects")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(project.toString())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()))
-                .andDo(print());
+    public void thereIsACreatedProjectTemplateWithName(String name) throws Throwable {
+        Project project = new Project();
+        project.setName(name);
+        projectRepository.save(project);
     }
 
     @When("^I register a new metadataField with text \"([^\"]*)\" and type \"([^\"]*)\" " +
-            "for metadataTemplate with value \"([^\"]*)\"$")
+            "for Project with name \"([^\"]*)\"$")
     public void iRegisterANewMetadataFieldWithTextAndTypeForMetadataTemplateWithValue
-            (String name, String type, String metadataTemplateValue) throws Throwable {
+            (String name, String type, String projectName) throws Throwable {
         JSONObject metadataField = new JSONObject();
-        project = projectRepository.findByName(metadataTemplateValue);
+        project = projectRepository.findByName(projectName);
         metadataField.put("name", name);
         metadataField.put("type", type);
-        metadataField.put("definedAt", "/metadataTemplates/"+ project.getId()+"");
+        metadataField.put("definedAt", "/projects/"+ project.getId()+"");
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/metadataFields")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -100,7 +94,7 @@ public class AddMetadataFieldStepDefs {
         String newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
     }
 
-    @And("^It has been created a new metadataField with text \"([^\"]*)\"  for metadataTemplate with value \"([^\"]*)\"$")
+    @And("^It has been created a new metadataField with text \"([^\"]*)\" for Project with name \"([^\"]*)\"$")
     public void itHasBeenCreatedANewMetadataFieldWithTextForMetadataTemplateWithValue(String name, String arg1) throws Throwable {
         metaField=metadataFieldRepository.findByName(name);
         stepDefs.result = stepDefs.mockMvc.perform(

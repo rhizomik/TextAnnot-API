@@ -21,7 +21,7 @@ Feature: Tag
     And The error message is "must not be blank"
 
   Scenario: Try to register new tag as a linguistic
-    Given I login as "linguist" with password "password"
+    Given I login as "user" with password "password"
     When I create a new tag with name "noauthenticating"
     Then The response code is 401
 

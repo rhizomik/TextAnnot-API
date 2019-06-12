@@ -35,13 +35,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.GET, "/tags*/**").authenticated()
 
         .antMatchers(HttpMethod.GET, "/identity").authenticated()
-        .antMatchers(HttpMethod.GET, "/metadataTemplates*/**").authenticated()
 
         .antMatchers(HttpMethod.POST, "/tags*/**").hasRole("ADMIN")
         .antMatchers(HttpMethod.DELETE, "/tags*/**").hasRole("ADMIN")
 
-        .antMatchers(HttpMethod.POST, "/tagHierarchies*/**").hasRole("ADMIN")
-        .antMatchers(HttpMethod.DELETE, "/tagHierarchies*/**").hasRole("ADMIN")
+        .antMatchers(HttpMethod.POST, "/projects*/**").hasRole("ADMIN")
+        .antMatchers(HttpMethod.DELETE, "/projects*/**").hasRole("ADMIN")
+
+        .antMatchers(HttpMethod.POST, "/metadataFields*/**").hasRole("ADMIN")
+        .antMatchers(HttpMethod.PUT, "/metadataFields*/**").hasRole("ADMIN")
+        .antMatchers(HttpMethod.PATCH, "/metadataFields*/*").hasRole("ADMIN")
+        .antMatchers(HttpMethod.DELETE, "/metadataFields*/**").hasRole("ADMIN")
 
         .antMatchers(HttpMethod.POST, "/**/*").authenticated()
         .antMatchers(HttpMethod.PUT, "/**/*").authenticated()
