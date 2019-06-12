@@ -1,8 +1,11 @@
 package cat.udl.eps.entsoftarch.textannot.steps;
 
+import cat.udl.eps.entsoftarch.textannot.domain.Sample;
 import cat.udl.eps.entsoftarch.textannot.repository.AnnotationRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.TagRepository;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
 import org.json.JSONObject;
@@ -32,6 +35,9 @@ public class CreateAnnotationStepDefs {
 
     @Autowired
     private SampleRepository sampleRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Autowired
     public CreateAnnotationStepDefs(AnnotationRepository annotationRepository) {
@@ -195,6 +201,14 @@ public class CreateAnnotationStepDefs {
                 .andDo(print());
 
         newResourceUri = stepDefs.result.andReturn().getResponse().getHeader("Location");
+    }
+
+    @And("^Exists a Sample with text \"([^\"]*)\" and Project \"([^\"]*)\"$")
+    public void existsASampleWithTextAndProject(String text, String projectName) throws Throwable {
+        Sample sample = new Sample();
+        sample.setText(text);
+        sample.setProject(projectRepository.findByName(projectName));
+        sampleRepository.save(sample);
     }
 }
 

@@ -4,7 +4,7 @@ Feature: Create XML Sample
     I want to create a new xml sample
 
   Background: Existing template
-    Given There is a metadata template with name "TemplateA"
+    Given there is a created Project with name "TemplateA"
     And The metadata template "TemplateA" has fields
       | datos_generales  | número_muestra      | String             |
       | datos_generales  | código_informante   | String             |

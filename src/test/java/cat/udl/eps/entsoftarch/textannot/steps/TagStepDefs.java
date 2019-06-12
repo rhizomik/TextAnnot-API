@@ -58,7 +58,7 @@ public class TagStepDefs {
                 .andExpect(jsonPath("$.id", is(id)));
     }
 
-//    @And("^Exists a Project with name \"([^\"]*)\"$")
+    @And("^Exists a Project with name \"([^\"]*)\"$")
     public Project existsATagHierarchyWithName(String name) throws Throwable {
         project = projectRepository.findByName(name);
         if(project == null){
@@ -96,10 +96,10 @@ public class TagStepDefs {
                 .andDo(print());
     }
 
-    @Then("^The tag hierarchy \"([^\"]*)\" defines a tag with the text \"([^\"]*)\"$")
-    public void theTagHierarchyDefinesATagWithTheText(String tagHierName, String name) throws Throwable {
+    @Then("^The Project \"([^\"]*)\" defines a tag with the text \"([^\"]*)\"$")
+    public void theTagHierarchyDefinesATagWithTheText(String projectName, String name) throws Throwable {
         stepDefs.mockMvc.perform(
-                get("/tags/search/findByTagHierarchy?project=" + project.getUri())
+                get("/tags/search/findByProject?project=" + project.getUri())
                     .accept(MediaType.APPLICATION_JSON)
                     .with(AuthenticationStepDefs.authenticate()))
                 .andDo(print())

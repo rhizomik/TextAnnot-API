@@ -29,13 +29,15 @@ public class TagEventHandler {
     @HandleAfterDelete
     @Transactional
     public void handleTagPostCreateAndSave(Tag tag) throws JsonProcessingException {
-        tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getProject());
+        if (tag.getProject() != null)
+            tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getProject());
     }
 
     @HandleAfterLinkSave
     @HandleAfterLinkDelete
     public void handleTagPostLinkSave(Tag tag, Object o) throws JsonProcessingException {
-        tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getProject());
+        if (tag.getProject() != null)
+            tagHierarchyPrecalcService.recalculateTagHierarchyTree(tag.getProject());
     }
 
     @HandleBeforeDelete

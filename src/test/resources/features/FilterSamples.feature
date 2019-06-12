@@ -4,11 +4,10 @@ Feature: Filter Samples
   I want to filter them with different parameters
 
   Background:
-    Given There is a metadata template with name "Test Template"
-    And There is a metadata field "field1" related to the template "Test Template"
-    And There is a metadata field "field2" related to the template "Test Template"
-    And Exists a Project with name "Tag hierarchy"
-    And Exists a Tag with name "Tag1" associated to the Project "Tag hierarchy"
+    Given there is a created Project with name "Test Project"
+    And There is a metadata field "field1" related to the template "Test Project"
+    And There is a metadata field "field2" related to the template "Test Project"
+    And Exists a Tag with name "Tag1" associated to the Project "Test Project"
 
   Scenario: Filter Samples by text and fields
     Given I login as "user" with password "password"

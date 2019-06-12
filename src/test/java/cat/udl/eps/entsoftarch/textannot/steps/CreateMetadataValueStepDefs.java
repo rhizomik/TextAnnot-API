@@ -79,16 +79,10 @@ public class CreateMetadataValueStepDefs {
 
     @And("^there is a created metadataField with text \"([^\"]*)\" and type \"([^\"]*)\"$")
     public void thereIsACreatedMetadataFieldWithTextAndType(String name, String type) throws Throwable {
-        JSONObject metadataField = new JSONObject();
-        metadataField.put("name", name);
-        metadataField.put("type", type);
-        stepDefs.result = stepDefs.mockMvc.perform(
-                post("/metadataFields")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(metadataField.toString())
-                        .accept(MediaType.APPLICATION_JSON)
-                        .with(AuthenticationStepDefs.authenticate()))
-                .andDo(print());
+        MetadataField metadataField = new MetadataField();
+        metadataField.setName(name);
+        metadataField.setType(type);
+        metadataFieldRepository.save(metadataField);
     }
 
 
