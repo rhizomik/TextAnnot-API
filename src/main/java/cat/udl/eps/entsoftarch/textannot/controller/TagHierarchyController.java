@@ -103,7 +103,7 @@ public class TagHierarchyController {
         Project project = projectRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
 
-        if (project.getPrecalculatedTagTree() == null){
+        if (project.getPrecalculatedTagTree() == null || project.getPrecalculatedTagTree().isEmpty()){
             tagHierarchyPrecalcService.recalculateTagHierarchyTree(project);
             projectRepository.save(project);
         }
@@ -155,16 +155,13 @@ public class TagHierarchyController {
     @PostMapping(value = "/projects/{id}/tags", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public PersistentEntityResource quickTagHierarchyCreateFileCSV(
+    public void quickTagHierarchyCreateFileCSV(
             @PathVariable("id") Integer projectId,
-            @RequestParam("tagHierarchyName") String tagHierarchyName,
-            @RequestParam("file") MultipartFile file,
-            PersistentEntityResourceAssembler resourceAssembler) throws IOException {
+            @RequestParam("file") MultipartFile file) throws IOException {
         Optional<Project> project = projectRepository.findById(projectId);
-        if (!project.isPresent() || project.get().getPrecalculatedTagTree() != null)
+        if (!project.isPresent())
             throw new TagHierarchyValidationException();
 
         readCSVAndSaveTags(file.getInputStream(), project.get());
-        return resourceAssembler.toResource(project.get());
     }
 }
