@@ -1,1 +1,0 @@
-RENAME TABLE text_annot_sample TO sample

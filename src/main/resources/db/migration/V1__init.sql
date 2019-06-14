@@ -1,82 +1,55 @@
 create table hibernate_sequence
 (
     next_val bigint null
-)
-    collate = utf8mb4_unicode_ci;
+);
 
-create table metadata_template
+insert into hibernate_sequence values (0);
+insert into hibernate_sequence values (0);
+insert into hibernate_sequence values (0);
+insert into hibernate_sequence values (0);
+insert into hibernate_sequence values (0);
+insert into hibernate_sequence values (0);
+
+create table project
 (
+    id                     int          not null
+        primary key,
+    uri                    varchar(255) null,
+    version                bigint       null,
+    name                   varchar(255) null,
+    precalculated_tag_tree longtext     null,
+    constraint UK_3k75vvu7mevyvvb5may5lj8k7
+        unique (name)
+);
+
+create table metadata_field
+(
+    id                 int auto_increment
+        primary key,
+    uri                varchar(255) null,
+    version            bigint       null,
+    category           varchar(255) null,
+    include_statistics bit          null,
+    name               varchar(255) null,
+    type               varchar(255) null,
+    defined_at_id      int          null,
+    constraint FKfywhpwaxrj6htah1r0hfvuqu2
+        foreign key (defined_at_id) references project (id)
+);
+
+create table sample
+(
+    dtype      varchar(31)  not null,
     id         int          not null
         primary key,
     uri        varchar(255) null,
     version    bigint       null,
-    name       varchar(255) null,
-    start_date datetime     null,
-    constraint UK_8w42mbwddut6vuhqrea0ur1pl
-        unique (name)
-)
-    collate = utf8mb4_unicode_ci;
-
-create table metadata_field
-(
-    id            int auto_increment
-        primary key,
-    uri           varchar(255) null,
-    version       bigint       null,
-    category      varchar(255) null,
-    name          varchar(255) null,
-    type          varchar(255) null,
-    defined_at_id int          null,
-    constraint FKf8pgpk9p1pulcwoyntrhmosx
-        foreign key (defined_at_id) references metadata_template (id)
-)
-    collate = utf8mb4_unicode_ci;
-
-create table tag_hierarchy
-(
-    id      int          not null
-        primary key,
-    uri     varchar(255) null,
-    version bigint       null,
-    name    varchar(255) null,
-    constraint UK_r9u8kxt68ujmfg08n9ie6146f
-        unique (name)
-)
-    collate = utf8mb4_unicode_ci;
-
-create table tag
-(
-    id               int          not null
-        primary key,
-    uri              varchar(255) null,
-    version          bigint       null,
-    name             varchar(255) null,
-    parent_id        int          null,
-    tag_hierarchy_id int          null,
-    constraint FK7qmvvbjehhppyl7shle3qeli1
-        foreign key (parent_id) references tag (id),
-    constraint FKm5ihvfiu0gy0n56d4hkj7wqtb
-        foreign key (tag_hierarchy_id) references tag_hierarchy (id)
-)
-    collate = utf8mb4_unicode_ci;
-
-create table text_annot_sample
-(
-    dtype           varchar(31)  not null,
-    id              int          not null
-        primary key,
-    uri             varchar(255) null,
-    version         bigint       null,
-    text            longtext     not null,
-    content         longtext     null,
-    described_by_id int          null,
-    tagged_by_id    int          null,
-    constraint FK6tpct746fbokryxn50i0y6r0j
-        foreign key (described_by_id) references metadata_template (id),
-    constraint FKqtiblcr8xi0lbn7kuh2yxslc0
-        foreign key (tagged_by_id) references tag_hierarchy (id)
-)
-    collate = utf8mb4_unicode_ci;
+    text       longtext     not null,
+    content    longtext     null,
+    project_id int          null,
+    constraint FKeytsctv5b8stbijub6yeil5ie
+        foreign key (project_id) references project (id)
+);
 
 create table metadata_value
 (
@@ -87,12 +60,26 @@ create table metadata_value
     value     longtext     null,
     fora_id   int          null,
     values_id int          null,
-    constraint FKrc40t3puayqblv6l7s3yn91hn
-        foreign key (fora_id) references text_annot_sample (id),
+    constraint FK5p2dlkp54vhchey6l1spk2c0a
+        foreign key (fora_id) references sample (id),
     constraint FKre39664hdf93rimc0hrqmg6dl
         foreign key (values_id) references metadata_field (id)
-)
-    collate = utf8mb4_unicode_ci;
+);
+
+create table tag
+(
+    id         int          not null
+        primary key,
+    uri        varchar(255) null,
+    version    bigint       null,
+    name       varchar(255) null,
+    parent_id  int          null,
+    project_id int          null,
+    constraint FK7qmvvbjehhppyl7shle3qeli1
+        foreign key (parent_id) references tag (id),
+    constraint FKbyy56vice9njgl86752up8120
+        foreign key (project_id) references project (id)
+);
 
 create table text_annot_user
 (
@@ -103,8 +90,7 @@ create table text_annot_user
     version  bigint       null,
     email    varchar(255) null,
     password varchar(256) null
-)
-    collate = utf8mb4_unicode_ci;
+);
 
 create table annotation
 (
@@ -122,8 +108,7 @@ create table annotation
         foreign key (tag_id) references tag (id),
     constraint FKhqfk4e5pu7kjuk7nuyb6cd0rv
         foreign key (linguist_username) references text_annot_user (username),
-    constraint FKmc3of2kpftpog3livp77a0hsk
-        foreign key (sample_id) references text_annot_sample (id)
-)
-    collate = utf8mb4_unicode_ci;
+    constraint FKoh4hdr7ypj9lv9kulj5bf7d3e
+        foreign key (sample_id) references sample (id)
+);
 
