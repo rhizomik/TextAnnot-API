@@ -39,7 +39,7 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
     @Profile("!test")
     public void init() {
         if(!environment.acceptsProfiles("Test") &&
-            !projectRepository.existsById(1)) {
+            !projectRepository.existsByName("default")) {
             Project project = new Project();
             project.setName("default");
             projectRepository.save(project);

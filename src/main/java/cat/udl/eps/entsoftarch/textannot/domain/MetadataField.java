@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 public class MetadataField extends UriEntity<Integer> {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     /**
      * Identifier of annotation needs to be unique, otherwise it will generate conflicts.
      */

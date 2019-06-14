@@ -18,4 +18,5 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, I
      */
     Project findByName(@Param("name") String name);
     List<Project> findByNameContaining(@Param("name") String name);
+    boolean existsByName(String name);
 }

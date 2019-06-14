@@ -50,7 +50,7 @@ public class TagHierarchyController {
     @PostMapping(value = "projects/{projectId}/tags", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public PersistentEntityResource quickTagHierarchyCreate(
+    public void quickTagHierarchyCreate(
             @PathVariable("projectId") Integer projectId,
             @RequestBody TagHierarchyPrecalcService.TagHierarchyJson body,
             PersistentEntityResourceAssembler resourceAssembler) throws JsonProcessingException {
@@ -69,7 +69,6 @@ public class TagHierarchyController {
         treeHierarchy.forEach(tagRepository::save);
 
         tagHierarchyPrecalcService.recalculateTagHierarchyTree(project.get());
-        return resourceAssembler.toResource(project.get());
     }
 
     private void createTag(TagHierarchyPrecalcService.TagJson tagJson, Tag parent, Project project, List<Tag> treeHierarchy) {
@@ -113,7 +112,7 @@ public class TagHierarchyController {
     @PostMapping(value = "/projects/{id}/tags", consumes = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public PersistentEntityResource quickTagHierarchyCreateCSV(
+    public void quickTagHierarchyCreateCSV(
             @PathVariable("id") Integer id,
         ServletServerHttpRequest request,
         PersistentEntityResourceAssembler resourceAssembler) throws IOException {
@@ -123,7 +122,7 @@ public class TagHierarchyController {
             throw new TagHierarchyValidationException();
 
         readCSVAndSaveTags(request.getBody(), project.get());
-        return resourceAssembler.toResource(project.get());
+        tagHierarchyPrecalcService.recalculateTagHierarchyTree(project.get());
     }
 
     private void readCSVAndSaveTags(InputStream csvStream, Project project) throws IOException {
@@ -163,5 +162,6 @@ public class TagHierarchyController {
             throw new TagHierarchyValidationException();
 
         readCSVAndSaveTags(file.getInputStream(), project.get());
+        tagHierarchyPrecalcService.recalculateTagHierarchyTree(project.get());
     }
 }
