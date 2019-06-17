@@ -5,6 +5,7 @@ import cat.udl.eps.entsoftarch.textannot.domain.Tag;
 import cat.udl.eps.entsoftarch.textannot.exception.TagHierarchyDuplicateException;
 import cat.udl.eps.entsoftarch.textannot.exception.TagHierarchyValidationException;
 import cat.udl.eps.entsoftarch.textannot.exception.TagTreeException;
+import cat.udl.eps.entsoftarch.textannot.repository.AnnotationRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.TagRepository;
 import java.io.IOException;
@@ -34,17 +35,20 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 
 @BasePathAwareController
-public class TagHierarchyController {
+public class TagsController {
 
     private ProjectRepository projectRepository;
     private TagRepository tagRepository;
     private TagHierarchyPrecalcService tagHierarchyPrecalcService;
+    private AnnotationRepository annotationRepository;
 
-    public TagHierarchyController(ProjectRepository projectRepository, TagRepository tagRepository,
-                                  TagHierarchyPrecalcService tagHierarchyPrecalcService) {
+    public TagsController(ProjectRepository projectRepository, TagRepository tagRepository,
+                          TagHierarchyPrecalcService tagHierarchyPrecalcService,
+                          AnnotationRepository annotationRepository) {
         this.projectRepository = projectRepository;
         this.tagRepository = tagRepository;
         this.tagHierarchyPrecalcService = tagHierarchyPrecalcService;
+        this.annotationRepository = annotationRepository;
     }
 
     @PostMapping(value = "projects/{projectId}/tags", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -163,5 +167,20 @@ public class TagHierarchyController {
 
         readCSVAndSaveTags(file.getInputStream(), project.get());
         tagHierarchyPrecalcService.recalculateTagHierarchyTree(project.get());
+    }
+
+    @DeleteMapping(value = "/projects/{id}/tags")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Transactional
+    public void deleteTagsTree(
+            @PathVariable("id") Integer projectId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        if (!project.isPresent())
+            throw new TagHierarchyValidationException();
+
+        this.annotationRepository.deleteByTagProject(project.get());
+        this.tagRepository.deleteByProject(project.get());
+        project.get().setPrecalculatedTagTree("");
+        this.projectRepository.save(project.get());
     }
 }
