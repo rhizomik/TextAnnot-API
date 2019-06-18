@@ -84,7 +84,7 @@ public class XMLIngestionService {
             Project project = xmlSample.getProject();
             Assert.notNull(project, "The XMLSample lacks an associated Project");
             MetadataField metadataField =
-                metadataFieldRepository.findByCategoryAndName(currentField, currentSubfield);
+                metadataFieldRepository.findByCategoryAndXmlName(currentField, currentSubfield);
             Assert.notNull(metadataField, "The metadata field \"" + currentField + ">" +
                 currentSubfield + "\" is not defined in project " + project.getName());
             MetadataValue metadataValue = new MetadataValue(value);

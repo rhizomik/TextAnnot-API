@@ -13,24 +13,19 @@ public class MetadataField extends UriEntity<Integer> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    /**
-     * Identifier of annotation needs to be unique, otherwise it will generate conflicts.
-     */
     private Integer id;
 
-    @NotBlank
-    /**
-     * The String name indicates the name of a metadata field and must not be blank.
-     * The String type indicates the kind of a metadata field and must not be blank.
-     */
-    String name="", type;
+    private String name;
 
-    /**
-     * The String category indicates the category of a metadata field.
-     */
-    String category;
+    private String xmlName;
 
-    Boolean includeStatistics;
+    private String type;
+
+    private String category;
+
+    private Boolean includeStatistics;
+
+    private Boolean privateField;
 
     @ManyToOne
     /**

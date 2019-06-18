@@ -25,7 +25,7 @@ public interface MetadataFieldRepository extends PagingAndSortingRepository<Meta
      * @param name The given name of metadataField.
      * @return metadataField object.
      */
-    MetadataField findByCategoryAndName (@Param("category") String category, @Param("name") String name);
+    MetadataField findByCategoryAndXmlName(@Param("category") String category, @Param("name") String name);
 
     /**
      * Returns the metadataField list related to a metadataTemplate.

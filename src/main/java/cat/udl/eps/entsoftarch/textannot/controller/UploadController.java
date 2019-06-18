@@ -34,7 +34,7 @@ public class UploadController {
     String templateUri = request.getParameter("project");
     Integer templateId = Integer.parseInt(templateUri.substring(templateUri.lastIndexOf('/') + 1));
     Optional<Project> project = projectRepository.findById(templateId);
-    Assert.isTrue(project.isPresent(), "The specified MetadataTemplate does not exist");
+    Assert.isTrue(project.isPresent(), "The specified Project does not exist");
 
     Iterator<String> fileNames = request.getFileNames();
     MultipartFile xmlFile = request.getFile(fileNames.next());

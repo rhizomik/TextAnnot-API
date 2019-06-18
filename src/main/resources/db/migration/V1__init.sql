@@ -24,7 +24,7 @@ create table project
 
 create table metadata_field
 (
-    id                 int auto_increment
+    id                 int not null
         primary key,
     uri                varchar(255) null,
     version            bigint       null,
