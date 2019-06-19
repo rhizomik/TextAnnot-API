@@ -29,7 +29,7 @@ create table metadata_field
     uri                varchar(255) null,
     version            bigint       null,
     category           varchar(255) null,
-    include_statistics bit          null,
+    include_statistics bit          not null default 1,
     name               varchar(255) null,
     type               varchar(255) null,
     defined_at_id      int          null,
