@@ -3,10 +3,10 @@ package cat.udl.eps.entsoftarch.textannot.repository;
 
 import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
 import cat.udl.eps.entsoftarch.textannot.domain.Project;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.security.access.prepost.PostFilter;
 
 import java.util.List;
 
@@ -32,5 +32,6 @@ public interface MetadataFieldRepository extends PagingAndSortingRepository<Meta
      * @param project The given metadataTemplate that contains metadataFields that we want.
      * @return a list of metadataFields.
      */
+    @PostFilter("hasRole('ROLE_ADMIN') || filterObject.privateField != null && !filterObject.privateField")
     List<MetadataField> findByDefinedAt(@Param("project") Project project);
 }
