@@ -76,6 +76,18 @@ public class MetadataController {
                 .execute();
     }
 
+    @GetMapping("/metadataValues/search/findDistinctByField")
+    @ResponseStatus(HttpStatus.OK)
+    public @ResponseBody MetadataDistinctValues getDistinctMetadataValueByField(@RequestParam("name") String name) {
+        MetadataDistinctValues values = new MetadataDistinctValues();
+        values.setValues(
+                queryFactory.selectDistinct(QMetadataValue.metadataValue.value)
+                .from(QMetadataValue.metadataValue)
+                        .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
+                        .where(QMetadataField.metadataField.name.eq(name)).fetch());
+        return values;
+    }
+
     @Data
     private static class MetadataFieldValueCounts {
         String fieldName;
@@ -90,5 +102,10 @@ public class MetadataController {
     @Data
     private static class MetadataFieldValuesRename {
         List<List<String>> renames;
+    }
+
+    @Data
+    private static class MetadataDistinctValues {
+        List<String> values;
     }
 }
