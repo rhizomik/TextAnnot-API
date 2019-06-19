@@ -2,6 +2,7 @@ package cat.udl.eps.entsoftarch.textannot.controller;
 
 import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -54,7 +55,7 @@ public class SampleFilterController {
                                                                 @RequestParam Map<String, String> params,
                                                                 Pageable pageable, PagedResourcesAssembler resourceAssembler) {
 
-        BooleanExpression query = getFiltersExpression(new SampleFilters(word, getMetadataMap(params), tags));
+        BooleanBuilder query = getFiltersExpression(new SampleFilters(word, getMetadataMap(params), tags));
         Page<Sample> samples = sampleRepository.findAll(query, pageable);
 
         if (!samples.hasContent()) {
@@ -72,23 +73,26 @@ public class SampleFilterController {
         return params;
     }
 
-    private BooleanExpression getFiltersExpression(@RequestBody SampleFilters filters) {
-        List<Integer> samplesContainingWord = sampleRepository.findByTextContainingWord(filters.getWord());
-        BooleanExpression query = QSample.sample.id.in(samplesContainingWord);
+    private BooleanBuilder getFiltersExpression(@RequestBody SampleFilters filters) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (filters.getWord() != null && !filters.getWord().isEmpty()) {
+            List<Integer> samplesContainingWord = sampleRepository.findByTextContainingWord(filters.getWord());
+            booleanBuilder = booleanBuilder.and(QSample.sample.id.in(samplesContainingWord));
+        }
         if (filters.getMetadata() != null && !filters.getMetadata().isEmpty()) {
             for (Map.Entry<String, String> e : filters.getMetadata().entrySet()) {
-                query = query.and(QSample.sample.id.in(JPAExpressions.select(QMetadataValue.metadataValue.forA.id).from(QMetadataValue.metadataValue)
+                booleanBuilder = booleanBuilder.and(QSample.sample.id.in(JPAExpressions.select(QMetadataValue.metadataValue.forA.id).from(QMetadataValue.metadataValue)
                         .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
                         .where(QMetadataValue.metadataValue.value.eq(e.getValue()).and(QMetadataField.metadataField.name.eq(e.getKey())))));
             }
         }
         if (filters.getTags() != null && !filters.getTags().isEmpty()) {
             for (String tag : filters.getTags()) {
-                query = query.and(JPAExpressions.selectFrom(QAnnotation.annotation).innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                booleanBuilder = booleanBuilder.and(JPAExpressions.selectFrom(QAnnotation.annotation).innerJoin(QAnnotation.annotation.tag, QTag.tag)
                         .where(QAnnotation.annotation.sample.id.eq(QSample.sample.id).and(QTag.tag.name.eq(tag))).exists());
             }
         }
-        return query;
+        return booleanBuilder;
     }
 
     @GetMapping("/samples/filter/statistics")
