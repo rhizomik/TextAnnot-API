@@ -38,6 +38,6 @@ public interface MetadataValueRepository extends PagingAndSortingRepository<Meta
      * @param sample The given sample of a group of metadataValues
      * @return list of metadataValues.
      */
-    @PostFilter("hasRole('ADMIN') || !filterObject.values.privateField")
+    @PostFilter("hasRole('ADMIN') || filterObject.values.privateField != null && !filterObject.values.privateField")
     List<MetadataValue> findByForA(@Param("sample") Sample sample);
 }

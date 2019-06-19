@@ -36,6 +36,7 @@ public class AddMetadataFieldStepDefs {
     public void iCreateANewMetadatafieldWithTextAndType(String name, String type) throws Throwable {
         JSONObject AddMetaDataField = new JSONObject();
         AddMetaDataField.put("name",name);
+        AddMetaDataField.put("xmlName",name);
         AddMetaDataField.put("type",type);
         stepDefs.result = stepDefs.mockMvc.perform(
                 post("/metadataFields")

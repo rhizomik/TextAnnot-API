@@ -15,6 +15,7 @@ public class MetadataField extends UriEntity<Integer> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @NotBlank
     private String name;
 
     private String xmlName;
