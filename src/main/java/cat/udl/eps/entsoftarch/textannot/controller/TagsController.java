@@ -144,7 +144,7 @@ public class TagsController {
                     Tag tag = new Tag(tagName);
                     tag.setParent(parent);
                     tag.setProject(project);
-                    processedTags.put(tagName, tag);
+                    processedTags.put(tagName, tagRepository.save(tag));
                     parent = tag;
                 }
                 else {
@@ -152,7 +152,6 @@ public class TagsController {
                 }
             }
         });
-        tagRepository.saveAll(processedTags.values());
     }
 
     @PostMapping(value = "/projects/{id}/tags", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
