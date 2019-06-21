@@ -19,5 +19,6 @@ spring:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddl-auto: validate
-    flyway:
-      enabled: true
+      use-new-id-generator-mappings: true
+  flyway:
+    enabled: true
