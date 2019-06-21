@@ -9,10 +9,10 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       use-new-id-generator-mappings: true
   flyway:
-    enabled: false
+    enabled: true
 
 #Location of db files. delete this directory if you need to recreate from scratch
 mariaDB4j:
