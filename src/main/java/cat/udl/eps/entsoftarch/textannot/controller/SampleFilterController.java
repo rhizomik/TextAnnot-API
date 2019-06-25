@@ -84,8 +84,8 @@ public class SampleFilterController {
         return statisticsResults;
     }
 
-    private List<AnnotationStatistics> getAnnotationStatistics(SampleFilters filters) {
-        List<Tuple> result = queryFactory.select(QTag.tag.name, QSample.sample.count(), QSample.sample.countDistinct())
+    private Set<AnnotationStatistics> getAnnotationStatistics(SampleFilters filters) {
+        List<Tuple> result = queryFactory.select(QTag.tag.name, QTag.tag.treePath, QSample.sample.count(), QSample.sample.countDistinct())
                 .from(QAnnotation.annotation)
                 .innerJoin(QAnnotation.annotation.sample, QSample.sample)
                 .innerJoin(QAnnotation.annotation.tag, QTag.tag)
@@ -97,9 +97,31 @@ public class SampleFilterController {
                 .innerJoin(QAnnotation.annotation.tag, QTag.tag)
                 .groupBy(QTag.tag.name).fetch();
         Map<String, Long> globalResultMap = globalResult.stream().collect(Collectors.toMap((Tuple t) -> t.get(QTag.tag.name), (Tuple t) -> t.get(1, Long.TYPE)));
-        return result.stream().map(tuple -> new AnnotationStatistics(tuple.get(QTag.tag.name),
-                tuple.get(1, Long.TYPE), tuple.get(2, Long.TYPE),
-                globalResultMap.get(tuple.get(QTag.tag.name)))).collect(Collectors.toList());
+        Map<String, AnnotationStatistics> annotationStatisticsMap = new HashMap<>();
+
+         Set<AnnotationStatistics> annotationStatisticsList = result.stream().map(tuple -> updateStatisticsTreeAndGetRoot(annotationStatisticsMap, tuple.get(QTag.tag.treePath),
+                new AnnotationStatistics(tuple.get(QTag.tag.name), tuple.get(2, Long.class),
+                        tuple.get(3, Long.class), globalResultMap.get(tuple.get(QTag.tag.name)))))
+                 .collect(Collectors.toSet());
+         annotationStatisticsList.stream().forEach(annotationStatistics -> annotationStatistics.calculateStatistics());
+        return annotationStatisticsList;
+    }
+
+    private AnnotationStatistics updateStatisticsTreeAndGetRoot(Map<String, AnnotationStatistics> annotationStatisticsMap,
+                                                                String tagPath, AnnotationStatistics tagStatistics) {
+        AnnotationStatistics child = tagStatistics;
+        String[] tags = tagPath.split(";");
+        annotationStatisticsMap.put(tagStatistics.tag, tagStatistics);
+        for (int i = tags.length - 2; i >= 0; i--) {
+            if (annotationStatisticsMap.containsKey(tags[i])) {
+                annotationStatisticsMap.get(tags[i]).addChildStatistics(child);
+                return annotationStatisticsMap.get(tags[0]);
+            } else {
+                child = new AnnotationStatistics(tags[i], child);
+                annotationStatisticsMap.put(tags[i], child);
+            }
+        }
+        return child;
     }
 
     private Map<String, String> getMetadataMap(Map<String, String> params) {
@@ -178,7 +200,7 @@ public class SampleFilterController {
         private long totalSamples;
         private Map<String, Map<String, Long>> metadataStatistics;
         private Map<String, Map<String, Long>> globalMetadataStatistics;
-        private List<AnnotationStatistics> annotationStatistics;
+        private Set<AnnotationStatistics> annotationStatistics;
     }
 
     @Data
@@ -187,12 +209,48 @@ public class SampleFilterController {
         private long occurrences;
         private long samples;
         private long globalSamples;
+        private List<AnnotationStatistics> childrenStatistics;
 
         public AnnotationStatistics(String tag, long occurrences, long samples, long globalSamples) {
             this.tag = tag;
             this.occurrences = occurrences;
             this.samples = samples;
             this.globalSamples = globalSamples;
+            this.childrenStatistics = new ArrayList<>();
+        }
+
+        public AnnotationStatistics(String tag, AnnotationStatistics child) {
+            this(tag, 0, 0, 0);
+            this.childrenStatistics.add(child);
+
+        }
+
+        public void addChildStatistics(AnnotationStatistics child) {
+            this.childrenStatistics.add(child);
+        }
+
+        public AnnotationStatistics calculateStatistics() {
+            childrenStatistics.forEach(annotationStatistics -> this.updateStatistics(annotationStatistics.calculateStatistics()));
+            return this;
+        }
+
+        private void updateStatistics(AnnotationStatistics annotationStatistics) {
+            this.occurrences += annotationStatistics.getOccurrences();
+            this.samples += annotationStatistics.getSamples();
+            this.globalSamples += annotationStatistics.getGlobalSamples();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AnnotationStatistics that = (AnnotationStatistics) o;
+            return Objects.equals(tag, that.tag);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(tag);
         }
     }
 
