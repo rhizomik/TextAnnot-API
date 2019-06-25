@@ -10,6 +10,7 @@ import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -31,6 +33,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.StreamSupport;
 
 @BasePathAwareController
 public class SampleFilterController {
@@ -73,7 +76,7 @@ public class SampleFilterController {
         return params;
     }
 
-    private BooleanBuilder getFiltersExpression(@RequestBody SampleFilters filters) {
+    private BooleanBuilder getFiltersExpression(SampleFilters filters) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         if (filters.getWord() != null && !filters.getWord().isEmpty()) {
             List<Integer> samplesContainingWord = sampleRepository.findByTextContainingWord(filters.getWord());
@@ -103,9 +106,12 @@ public class SampleFilterController {
         SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tags);
         StatisticsResults statisticsResults = new StatisticsResults();
         statisticsResults.setMetadataStatistics(getMetadataStatistics(filters));
+        statisticsResults.setGlobalMetadataStatistics(getMetadataStatistics(new SampleFilters()));
         Pair<Long, Long> counts = getSampleCounts(filters);
         statisticsResults.setOccurrences(counts.getFirst());
         statisticsResults.setSamples(counts.getSecond());
+        Pair<Long, Long> globalCounts = getSampleCounts(new SampleFilters());
+        statisticsResults.setTotalSamples(globalCounts.getSecond());
         return statisticsResults;
     }
 
@@ -113,10 +119,13 @@ public class SampleFilterController {
         final AtomicLong occurrences = new AtomicLong(0L);
         final AtomicLong samplesCount = new AtomicLong(0L);
         Iterable<Sample> samples = sampleRepository.findAll(getFiltersExpression(filters));
-        samples.forEach(sample -> {
-            samplesCount.incrementAndGet();
-            occurrences.addAndGet(getTextOccurrences(filters.getWord(), sample.getText()));
-        });
+        if (filters.getWord() != null && !filters.getWord().isEmpty())
+            samples.forEach(sample -> {
+                samplesCount.incrementAndGet();
+                occurrences.addAndGet(getTextOccurrences(filters.getWord(), sample.getText()));
+            });
+        else
+            samplesCount.set(StreamSupport.stream(samples.spliterator(), false).count());
         return Pair.of(new Long(occurrences.get()), new Long(samplesCount.get()));
     }
 
@@ -129,7 +138,7 @@ public class SampleFilterController {
         return sampleOccurrences;
     }
 
-    private Map<String, Map<String, Long>> getMetadataStatistics(@RequestBody SampleFilters filters) {
+    private Map<String, Map<String, Long>> getMetadataStatistics(SampleFilters filters) {
         List<Tuple> result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.count())
                 .from(QMetadataValue.metadataValue)
                 .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
@@ -145,41 +154,22 @@ public class SampleFilterController {
         return statistics;
     }
 
+    @Data
     private static class StatisticsResults {
         private long occurrences;
         private long samples;
+        private long totalSamples;
         private Map<String, Map<String, Long>> metadataStatistics;
-
-        public long getOccurrences() {
-            return occurrences;
-        }
-
-        public void setOccurrences(long occurrences) {
-            this.occurrences = occurrences;
-        }
-
-        public long getSamples() {
-            return samples;
-        }
-
-        public void setSamples(long samples) {
-            this.samples = samples;
-        }
-
-        public Map<String, Map<String, Long>> getMetadataStatistics() {
-            return metadataStatistics;
-        }
-
-        public void setMetadataStatistics(Map<String, Map<String, Long>> metadataStatistics) {
-            this.metadataStatistics = metadataStatistics;
-        }
-
+        private Map<String, Map<String, Long>> globalMetadataStatistics;
     }
 
     private static class SampleFilters implements Serializable {
         private String word;
         private Map<String, String> metadata;
         private List<String> tags;
+
+        public SampleFilters() {
+        }
 
         public SampleFilters(String word, Map<String, String> metadata, List<String> tags) {
             this.word = word;
