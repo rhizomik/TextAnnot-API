@@ -135,15 +135,18 @@ public class TagsController {
         CSVParser parser = CSVParser.parse(csvStream, StandardCharsets.UTF_8, excelCSV);
         parser.getRecords().forEach(record -> {
             Tag parent = null;
+            StringBuilder tagPath = new StringBuilder();
             //TODO: currently ignoring last column with tagging examples
             for(int i = 0; i < record.size()-1; i++) {
                 String tagName = record.get(i);
+                tagPath.append(tagName + ";");
                 if (isNullOrEmpty(tagName))
                     continue;
                 if (!processedTags.containsKey(tagName)) {
                     Tag tag = new Tag(tagName);
                     tag.setParent(parent);
                     tag.setProject(project);
+                    tag.setTreePath(tagPath.toString());
                     processedTags.put(tagName, tagRepository.save(tag));
                     parent = tag;
                 }

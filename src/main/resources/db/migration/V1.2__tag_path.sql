@@ -1,0 +1,1 @@
+alter table tag add column tree_path text null;

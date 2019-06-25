@@ -2,6 +2,7 @@ package cat.udl.eps.entsoftarch.textannot.domain;
 
 import cat.udl.eps.entsoftarch.textannot.domain.validator.TagConstraint;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,6 +30,10 @@ public class Tag extends UriEntity<Integer> {
 
     @NotBlank
     private String name;
+
+    @JsonIgnore
+    @Column(columnDefinition = "TEXT")
+    private String treePath;
 
     /**
      * Linking Tag with Project.

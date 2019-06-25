@@ -26,13 +26,11 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import java.io.File;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @BasePathAwareController
@@ -68,6 +66,42 @@ public class SampleFilterController {
         return resourceAssembler.toResource(samples);
     }
 
+    @GetMapping("/samples/filter/statistics")
+    public @ResponseBody
+    StatisticsResults getFilteredSamplesStatistics(@RequestParam("word") String word,
+                                                   @RequestParam("tags") List<String> tags,
+                                                   @RequestParam Map<String, String> params) {
+        SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tags);
+        StatisticsResults statisticsResults = new StatisticsResults();
+        statisticsResults.setMetadataStatistics(getMetadataStatistics(filters));
+        statisticsResults.setGlobalMetadataStatistics(getMetadataStatistics(new SampleFilters()));
+        Pair<Long, Long> counts = getSampleCounts(filters);
+        statisticsResults.setOccurrences(counts.getFirst());
+        statisticsResults.setSamples(counts.getSecond());
+        Pair<Long, Long> globalCounts = getSampleCounts(new SampleFilters());
+        statisticsResults.setTotalSamples(globalCounts.getSecond());
+        statisticsResults.setAnnotationStatistics(getAnnotationStatistics(filters));
+        return statisticsResults;
+    }
+
+    private List<AnnotationStatistics> getAnnotationStatistics(SampleFilters filters) {
+        List<Tuple> result = queryFactory.select(QTag.tag.name, QSample.sample.count(), QSample.sample.countDistinct())
+                .from(QAnnotation.annotation)
+                .innerJoin(QAnnotation.annotation.sample, QSample.sample)
+                .innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                .where(getFiltersExpression(filters))
+                .groupBy(QTag.tag.name).fetch();
+        List<Tuple> globalResult = queryFactory.select(QTag.tag.name, QSample.sample.countDistinct())
+                .from(QAnnotation.annotation)
+                .innerJoin(QAnnotation.annotation.sample, QSample.sample)
+                .innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                .groupBy(QTag.tag.name).fetch();
+        Map<String, Long> globalResultMap = globalResult.stream().collect(Collectors.toMap((Tuple t) -> t.get(QTag.tag.name), (Tuple t) -> t.get(1, Long.TYPE)));
+        return result.stream().map(tuple -> new AnnotationStatistics(tuple.get(QTag.tag.name),
+                tuple.get(1, Long.TYPE), tuple.get(2, Long.TYPE),
+                globalResultMap.get(tuple.get(QTag.tag.name)))).collect(Collectors.toList());
+    }
+
     private Map<String, String> getMetadataMap(Map<String, String> params) {
         params.remove("word");
         params.remove("tags");
@@ -96,23 +130,6 @@ public class SampleFilterController {
             }
         }
         return booleanBuilder;
-    }
-
-    @GetMapping("/samples/filter/statistics")
-    public @ResponseBody
-    StatisticsResults getFilteredSamplesStatistics(@RequestParam("word") String word,
-                                                   @RequestParam("tags") List<String> tags,
-                                                   @RequestParam Map<String, String> params) {
-        SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tags);
-        StatisticsResults statisticsResults = new StatisticsResults();
-        statisticsResults.setMetadataStatistics(getMetadataStatistics(filters));
-        statisticsResults.setGlobalMetadataStatistics(getMetadataStatistics(new SampleFilters()));
-        Pair<Long, Long> counts = getSampleCounts(filters);
-        statisticsResults.setOccurrences(counts.getFirst());
-        statisticsResults.setSamples(counts.getSecond());
-        Pair<Long, Long> globalCounts = getSampleCounts(new SampleFilters());
-        statisticsResults.setTotalSamples(globalCounts.getSecond());
-        return statisticsResults;
     }
 
     private Pair<Long, Long> getSampleCounts(SampleFilters filters) {
@@ -161,8 +178,25 @@ public class SampleFilterController {
         private long totalSamples;
         private Map<String, Map<String, Long>> metadataStatistics;
         private Map<String, Map<String, Long>> globalMetadataStatistics;
+        private List<AnnotationStatistics> annotationStatistics;
     }
 
+    @Data
+    private static class AnnotationStatistics {
+        private String tag;
+        private long occurrences;
+        private long samples;
+        private long globalSamples;
+
+        public AnnotationStatistics(String tag, long occurrences, long samples, long globalSamples) {
+            this.tag = tag;
+            this.occurrences = occurrences;
+            this.samples = samples;
+            this.globalSamples = globalSamples;
+        }
+    }
+
+    @Data
     private static class SampleFilters implements Serializable {
         private String word;
         private Map<String, String> metadata;
@@ -174,30 +208,6 @@ public class SampleFilterController {
         public SampleFilters(String word, Map<String, String> metadata, List<String> tags) {
             this.word = word;
             this.metadata = metadata;
-            this.tags = tags;
-        }
-
-        public String getWord() {
-            return word;
-        }
-
-        public void setWord(String word) {
-            this.word = word;
-        }
-
-        public Map<String, String> getMetadata() {
-            return metadata;
-        }
-
-        public void setMetadata(Map<String, String> metadata) {
-            this.metadata = metadata;
-        }
-
-        public List<String> getTags() {
-            return tags;
-        }
-
-        public void setTags(List<String> tags) {
             this.tags = tags;
         }
     }
