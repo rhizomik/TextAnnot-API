@@ -111,13 +111,14 @@ public class SampleFilterController {
                                                                 String tagPath, AnnotationStatistics tagStatistics) {
         AnnotationStatistics child = tagStatistics;
         String[] tags = tagPath.split(";");
+        child.setLevel(tags.length - 1);
         annotationStatisticsMap.put(tagStatistics.tag, tagStatistics);
         for (int i = tags.length - 2; i >= 0; i--) {
             if (annotationStatisticsMap.containsKey(tags[i])) {
                 annotationStatisticsMap.get(tags[i]).addChildStatistics(child);
                 return annotationStatisticsMap.get(tags[0]);
             } else {
-                child = new AnnotationStatistics(tags[i], child);
+                child = new AnnotationStatistics(tags[i], i, child);
                 annotationStatisticsMap.put(tags[i], child);
             }
         }
@@ -209,18 +210,21 @@ public class SampleFilterController {
         private long occurrences;
         private long samples;
         private long globalSamples;
+        private int level;
         private List<AnnotationStatistics> childrenStatistics;
 
         public AnnotationStatistics(String tag, long occurrences, long samples, long globalSamples) {
             this.tag = tag;
+            this.level = 0;
             this.occurrences = occurrences;
             this.samples = samples;
             this.globalSamples = globalSamples;
             this.childrenStatistics = new ArrayList<>();
         }
 
-        public AnnotationStatistics(String tag, AnnotationStatistics child) {
+        public AnnotationStatistics(String tag, Integer level, AnnotationStatistics child) {
             this(tag, 0, 0, 0);
+            this.level = level;
             this.childrenStatistics.add(child);
 
         }
