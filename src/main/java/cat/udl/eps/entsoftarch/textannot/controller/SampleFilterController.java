@@ -84,13 +84,14 @@ public class SampleFilterController {
         return statisticsResults;
     }
 
-    private Set<AnnotationStatistics> getAnnotationStatistics(SampleFilters filters) {
+    private List<AnnotationStatistics> getAnnotationStatistics(SampleFilters filters) {
         List<Tuple> result = queryFactory.select(QTag.tag.name, QTag.tag.treePath, QSample.sample.count(), QSample.sample.countDistinct())
                 .from(QAnnotation.annotation)
                 .innerJoin(QAnnotation.annotation.sample, QSample.sample)
                 .innerJoin(QAnnotation.annotation.tag, QTag.tag)
                 .where(getFiltersExpression(filters))
-                .groupBy(QTag.tag.name).fetch();
+                .groupBy(QTag.tag.name)
+                .orderBy(QTag.tag.id.asc()).fetch();
         List<Tuple> globalResult = queryFactory.select(QTag.tag.name, QSample.sample.countDistinct())
                 .from(QAnnotation.annotation)
                 .innerJoin(QAnnotation.annotation.sample, QSample.sample)
@@ -99,10 +100,10 @@ public class SampleFilterController {
         Map<String, Long> globalResultMap = globalResult.stream().collect(Collectors.toMap((Tuple t) -> t.get(QTag.tag.name), (Tuple t) -> t.get(1, Long.TYPE)));
         Map<String, AnnotationStatistics> annotationStatisticsMap = new HashMap<>();
 
-         Set<AnnotationStatistics> annotationStatisticsList = result.stream().map(tuple -> updateStatisticsTreeAndGetRoot(annotationStatisticsMap, tuple.get(QTag.tag.treePath),
+         List<AnnotationStatistics> annotationStatisticsList = result.stream().map(tuple -> updateStatisticsTreeAndGetRoot(annotationStatisticsMap, tuple.get(QTag.tag.treePath),
                 new AnnotationStatistics(tuple.get(QTag.tag.name), tuple.get(2, Long.class),
                         tuple.get(3, Long.class), globalResultMap.get(tuple.get(QTag.tag.name)))))
-                 .collect(Collectors.toSet());
+                 .distinct().collect(Collectors.toCollection(LinkedList::new));
          annotationStatisticsList.stream().forEach(annotationStatistics -> annotationStatistics.calculateStatistics());
         return annotationStatisticsList;
     }
@@ -201,7 +202,7 @@ public class SampleFilterController {
         private long totalSamples;
         private Map<String, Map<String, Long>> metadataStatistics;
         private Map<String, Map<String, Long>> globalMetadataStatistics;
-        private Set<AnnotationStatistics> annotationStatistics;
+        private List<AnnotationStatistics> annotationStatistics;
     }
 
     @Data
