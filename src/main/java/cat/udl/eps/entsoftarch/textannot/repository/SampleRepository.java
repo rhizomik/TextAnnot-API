@@ -2,6 +2,8 @@ package cat.udl.eps.entsoftarch.textannot.repository;
 
 import cat.udl.eps.entsoftarch.textannot.domain.Sample;
 import cat.udl.eps.entsoftarch.textannot.domain.Project;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -79,5 +81,5 @@ public interface SampleRepository extends PagingAndSortingRepository<Sample, Int
      * @param project The project that contains the Samples we want.
      * @return list of samples.
      */
-    List<Sample> findByProject(@Param("project") Project project);
+    Page<Sample> findByProject(@Param("project") Project project, Pageable pageable);
 }

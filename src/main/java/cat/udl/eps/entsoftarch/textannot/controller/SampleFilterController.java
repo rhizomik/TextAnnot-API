@@ -1,6 +1,9 @@
 package cat.udl.eps.entsoftarch.textannot.controller;
 
 import cat.udl.eps.entsoftarch.textannot.domain.*;
+import cat.udl.eps.entsoftarch.textannot.exception.NotFoundException;
+import cat.udl.eps.entsoftarch.textannot.exception.TagHierarchyValidationException;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
@@ -11,6 +14,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.Data;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +44,9 @@ public class SampleFilterController {
     private SampleRepository sampleRepository;
 
     @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
     EntityManager em;
 
     JPAQueryFactory queryFactory;
@@ -51,12 +58,15 @@ public class SampleFilterController {
 
     @GetMapping("/samples/filter")
     public @ResponseBody
-    PagedResources<PersistentEntityResource> getFilteredSamples(@RequestParam("word") String word,
+    PagedResources<PersistentEntityResource> getFilteredSamples(@RequestParam("projectId") Integer projectId,
+                                                                @RequestParam("word") String word,
                                                                 @RequestParam("tags") List<String> tags,
                                                                 @RequestParam Map<String, String> params,
                                                                 Pageable pageable, PagedResourcesAssembler resourceAssembler) {
 
-        BooleanBuilder query = getFiltersExpression(new SampleFilters(word, getMetadataMap(params), tags));
+        Project project = getProjectOrThrowException(projectId);
+
+        BooleanBuilder query = getFiltersExpression(project, new SampleFilters(word, getMetadataMap(params), tags));
         Page<Sample> samples = sampleRepository.findAll(query, pageable);
 
         if (!samples.hasContent()) {
@@ -68,34 +78,45 @@ public class SampleFilterController {
 
     @GetMapping("/samples/filter/statistics")
     public @ResponseBody
-    StatisticsResults getFilteredSamplesStatistics(@RequestParam("word") String word,
+    StatisticsResults getFilteredSamplesStatistics(@RequestParam("projectId") Integer projectId,
+                                                   @RequestParam("word") String word,
                                                    @RequestParam("tags") List<String> tags,
                                                    @RequestParam Map<String, String> params) {
+        Project project = getProjectOrThrowException(projectId);
         SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tags);
         StatisticsResults statisticsResults = new StatisticsResults();
-        statisticsResults.setMetadataStatistics(getMetadataStatistics(filters));
-        statisticsResults.setGlobalMetadataStatistics(getMetadataStatistics(new SampleFilters()));
-        Pair<Long, Long> counts = getSampleCounts(filters);
+        statisticsResults.setMetadataStatistics(getMetadataStatistics(project, filters));
+        statisticsResults.setGlobalMetadataStatistics(getMetadataStatistics(project, new SampleFilters()));
+        Pair<Long, Long> counts = getSampleCounts(project, filters);
         statisticsResults.setOccurrences(counts.getFirst());
         statisticsResults.setSamples(counts.getSecond());
-        Pair<Long, Long> globalCounts = getSampleCounts(new SampleFilters());
+        Pair<Long, Long> globalCounts = getSampleCounts(project, new SampleFilters());
         statisticsResults.setTotalSamples(globalCounts.getSecond());
-        statisticsResults.setAnnotationStatistics(getAnnotationStatistics(filters));
+        statisticsResults.setAnnotationStatistics(getAnnotationStatistics(project, filters));
         return statisticsResults;
     }
 
-    private List<AnnotationStatistics> getAnnotationStatistics(SampleFilters filters) {
+    private Project getProjectOrThrowException(Integer projectId) {
+        Optional<Project> project = projectRepository.findById(projectId);
+        if(!project.isPresent())
+            throw new NotFoundException();
+        return project.get();
+    }
+
+    private List<AnnotationStatistics> getAnnotationStatistics(Project project, SampleFilters filters) {
         List<Tuple> result = queryFactory.select(QTag.tag.name, QTag.tag.treePath, QSample.sample.count(), QSample.sample.countDistinct())
                 .from(QAnnotation.annotation)
                 .innerJoin(QAnnotation.annotation.sample, QSample.sample)
                 .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                .where(getFiltersExpression(filters))
+                .where(getFiltersExpression(project, filters))
                 .groupBy(QTag.tag.name)
                 .orderBy(QTag.tag.id.asc()).fetch();
         List<Tuple> globalResult = queryFactory.select(QTag.tag.name, QSample.sample.countDistinct())
                 .from(QAnnotation.annotation)
                 .innerJoin(QAnnotation.annotation.sample, QSample.sample)
                 .innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                .innerJoin(QSample.sample.project, QProject.project)
+                .where(QProject.project.eq(project))
                 .groupBy(QTag.tag.name).fetch();
         Map<String, Long> globalResultMap = globalResult.stream().collect(Collectors.toMap((Tuple t) -> t.get(QTag.tag.name), (Tuple t) -> t.get(1, Long.TYPE)));
         Map<String, AnnotationStatistics> annotationStatisticsMap = new HashMap<>();
@@ -131,11 +152,14 @@ public class SampleFilterController {
         params.remove("tags");
         params.remove("page");
         params.remove("size");
+        params.remove("projectId");
         return params;
     }
 
-    private BooleanBuilder getFiltersExpression(SampleFilters filters) {
+    private BooleanBuilder getFiltersExpression(Project project, SampleFilters filters) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(QSample.sample.id.in(
+                JPAExpressions.select(QSample.sample.id).from(QSample.sample).innerJoin(QSample.sample.project, QProject.project).where(QProject.project.eq(project))));
         if (filters.getWord() != null && !filters.getWord().isEmpty()) {
             List<Integer> samplesContainingWord = sampleRepository.findByTextContainingWord(filters.getWord());
             booleanBuilder = booleanBuilder.and(QSample.sample.id.in(samplesContainingWord));
@@ -156,10 +180,10 @@ public class SampleFilterController {
         return booleanBuilder;
     }
 
-    private Pair<Long, Long> getSampleCounts(SampleFilters filters) {
+    private Pair<Long, Long> getSampleCounts(Project project, SampleFilters filters) {
         final AtomicLong occurrences = new AtomicLong(0L);
         final AtomicLong samplesCount = new AtomicLong(0L);
-        Iterable<Sample> samples = sampleRepository.findAll(getFiltersExpression(filters));
+        Iterable<Sample> samples = sampleRepository.findAll(getFiltersExpression(project, filters));
         if (filters.getWord() != null && !filters.getWord().isEmpty())
             samples.forEach(sample -> {
                 samplesCount.incrementAndGet();
@@ -179,12 +203,12 @@ public class SampleFilterController {
         return sampleOccurrences;
     }
 
-    private Map<String, Map<String, Long>> getMetadataStatistics(SampleFilters filters) {
+    private Map<String, Map<String, Long>> getMetadataStatistics(Project project, SampleFilters filters) {
         List<Tuple> result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.count())
                 .from(QMetadataValue.metadataValue)
                 .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
                 .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                .where(getFiltersExpression(filters).and(QMetadataField.metadataField.includeStatistics.eq(true)))
+                .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.includeStatistics.eq(true)))
                 .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
         Map<String, Map<String, Long>> statistics = new HashMap<>();
         result.forEach(qTuple -> {
