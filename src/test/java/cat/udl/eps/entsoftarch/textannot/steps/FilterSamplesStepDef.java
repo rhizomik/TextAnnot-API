@@ -21,6 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class FilterSamplesStepDef {
 
+    private final int projectId = 1;
+
     @Autowired
     private StepDefs stepDefs;
 
@@ -44,7 +46,10 @@ public class FilterSamplesStepDef {
 
     @And("^There is a sample with text \"([^\"]*)\" with metadata$")
     public void thereIsASampleWithText(String text, DataTable metadata) throws Throwable {
-        Sample sample = sampleRepository.save(new Sample(text));
+
+        Sample sample = new Sample(text);
+        sample.setProject(projectRepository.findById(projectId).get());
+        sampleRepository.save(sample);
         for (Map.Entry<String, String> e: metadata.asMap(String.class, String.class).entrySet()) {
             MetadataField field = metadataFieldRepository.findByName(e.getKey());
             MetadataValue value = new MetadataValue();
@@ -57,7 +62,9 @@ public class FilterSamplesStepDef {
 
     @And("^There is a sample with text \"([^\"]*)\" with annotations$")
     public void thereIsASampleWithTextWithAnnotations(String text, DataTable annotations) throws Throwable {
-        Sample sample = sampleRepository.save(new Sample(text));
+        Sample sample = new Sample(text);
+        sample.setProject(projectRepository.findById(projectId).get());
+        sampleRepository.save(sample);
         for (List<String> e: annotations.asLists(String.class)) {
             Annotation annotation = new Annotation();
             annotation.setSample(sample);
@@ -75,7 +82,8 @@ public class FilterSamplesStepDef {
                 .accept(MediaType.APPLICATION_JSON)
                 .with(AuthenticationStepDefs.authenticate())
                 .param("word", word)
-                .param("tags", "")).andDo(print());
+                .param("tags", "")
+                .param("projectId", "" + projectId)).andDo(print());
     }
 
     @And("^The response contains (\\d+) sample$")
@@ -100,6 +108,7 @@ public class FilterSamplesStepDef {
         request.add("word", word);
         table.asMap(String.class, String.class).forEach(request::add);
         request.add("tags", "");
+        request.add("projectId", String.valueOf(projectId));
 
         stepDefs.result = stepDefs.mockMvc.perform(get("/samples/filter")
                 .accept(MediaType.APPLICATION_JSON)
@@ -114,6 +123,7 @@ public class FilterSamplesStepDef {
                 .accept(MediaType.APPLICATION_JSON)
                 .with(AuthenticationStepDefs.authenticate())
                 .param("word", word)
-                .param("tags", tag)).andDo(print());
+                .param("tags", tag)
+                .param("projectId", String.valueOf(projectId))).andDo(print());
     }
 }

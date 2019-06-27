@@ -3,19 +3,15 @@ Feature: Search Sample
   As a user
   I want to search a sample
 
-  Scenario: Search a sample
-    Given I login as "user" with password "password"
-    And There are some samples with text "Hola que tal" "Yo bien y tu?" and "Mas o menos"
-    When I search a sample with the word "a"
-    Then The response code is 200
-    And The samples are "Hola que tal" and "Mas o menos"
+  Background:
+    Given There is a project with name "Default" and id 1
 
   Scenario: Search a sample
     Given I login as "user" with password "password"
-    And There are some samples with text "eeeeeeeee" "eeeeaeeeeeee" and "!!!!a!!!!!!!"
-    When I search a sample with the word "a"
+    And There are some samples with text "Hola que tal" "Yo bien y tu?" and "Mas que menos"
+    When I search a sample with the word "que"
     Then The response code is 200
-    And The samples are "eeeeaeeeeeee" and "!!!!a!!!!!!!"
+    And The samples are "Hola que tal" and "Mas que menos"
 
   Scenario: Search a sample
     Given I login as "user" with password "password"

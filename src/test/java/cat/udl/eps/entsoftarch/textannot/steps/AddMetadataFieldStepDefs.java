@@ -72,6 +72,7 @@ public class AddMetadataFieldStepDefs {
     public void thereIsACreatedProjectTemplateWithName(String name) throws Throwable {
         Project project = new Project();
         project.setName(name);
+        project.setId(1);
         projectRepository.save(project);
     }
 
