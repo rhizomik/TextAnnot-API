@@ -39,7 +39,7 @@ public class SampleMetadataRelation {
     public void aSampleWithTextWithMetadataValueValueAndMetadataFieldName(String text, String value, String name) throws Throwable {
         Sample s = new Sample(text);
         MetadataValue mv = new MetadataValue(value);
-        MetadataField mf = new MetadataField(name, "type");
+        MetadataField mf = new MetadataField(name, MetadataField.FieldType.STRING);
 
         mv.setValues(mf);
         mv.setForA(s);

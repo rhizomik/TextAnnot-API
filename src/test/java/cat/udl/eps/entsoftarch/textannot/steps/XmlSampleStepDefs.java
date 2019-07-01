@@ -147,7 +147,7 @@ public class XmlSampleStepDefs {
             field.setCategory(fieldNameType.get(0));
             field.setName(fieldNameType.get(1));
             field.setXmlName(fieldNameType.get(1));
-            field.setType(fieldNameType.get(2));
+            field.setType(MetadataField.FieldType.valueOf(fieldNameType.get(2)));
             field.setPrivateField(Boolean.parseBoolean(fieldNameType.get(3)));
             field.setDefinedAt(project);
             metadataFieldRepository.save(field);

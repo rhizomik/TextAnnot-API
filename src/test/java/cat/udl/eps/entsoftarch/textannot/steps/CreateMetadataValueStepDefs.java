@@ -81,7 +81,7 @@ public class CreateMetadataValueStepDefs {
     public void thereIsACreatedMetadataFieldWithTextAndType(String name, String type) throws Throwable {
         MetadataField metadataField = new MetadataField();
         metadataField.setName(name);
-        metadataField.setType(type);
+        metadataField.setType(MetadataField.FieldType.valueOf(type));
         metadataFieldRepository.save(metadataField);
     }
 

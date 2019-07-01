@@ -6,24 +6,24 @@ Feature: Create XML Sample
   Background: Existing template
     Given there is a created Project with name "TemplateA"
     And The metadata template "TemplateA" has fields
-      | datos_generales  | número_muestra      | String             | false |
-      | datos_generales  | código_informante   | String             | false |
-      | datos_generales  | transliteración     | String             | false |
-      | datos_generales  | revisión_primera    | String             | false |
-      | datos_generales  | revisión_segunda    | String             | false |
-      | datos_generales  | etiquetado          | String             | false |
-      | datos_muestra    | fecha_recogida      | String             | false |
-      | datos_muestra    | palabras            | String             | false |
-      | datos_muestra    | género_discursivo   | String             | false |
-      | datos_muestra    | observaciones       | String             | false |
-      | datos_informante | nombre              | String             | false |
-      | datos_informante | sexo                | String             | false |
-      | datos_informante | nivel_referencia    | String             | false |
-      | datos_informante | curso               | String             | false |
-      | datos_informante | universidad         | String             | false |
-      | datos_informante | nivel_CET           | String             | false |
-      | datos_informante | estancia_España     | String             | false |
-      | datos_informante | observaciones       | String             | false |
+      | datos_generales  | número_muestra      | STRING             | false |
+      | datos_generales  | código_informante   | STRING             | false |
+      | datos_generales  | transliteración     | STRING             | false |
+      | datos_generales  | revisión_primera    | STRING             | false |
+      | datos_generales  | revisión_segunda    | STRING             | false |
+      | datos_generales  | etiquetado          | STRING             | false |
+      | datos_muestra    | fecha_recogida      | STRING             | false |
+      | datos_muestra    | palabras            | STRING             | false |
+      | datos_muestra    | género_discursivo   | STRING             | false |
+      | datos_muestra    | observaciones       | STRING             | false |
+      | datos_informante | nombre              | STRING             | false |
+      | datos_informante | sexo                | STRING             | false |
+      | datos_informante | nivel_referencia    | STRING             | false |
+      | datos_informante | curso               | STRING             | false |
+      | datos_informante | universidad         | STRING             | false |
+      | datos_informante | nivel_CET           | STRING             | false |
+      | datos_informante | estancia_España     | STRING             | false |
+      | datos_informante | observaciones       | STRING             | false |
 
   Scenario: Upload a XML file as linguist
     Given I login as "user" with password "password"

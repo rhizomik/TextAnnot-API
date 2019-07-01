@@ -97,7 +97,7 @@ public class FilterSamplesStepDef {
         MetadataField metadataField = new MetadataField();
         metadataField.setDefinedAt(metadataTemplate);
         metadataField.setName(field);
-        metadataField.setType("string");
+        metadataField.setType(MetadataField.FieldType.STRING);
         metadataFieldRepository.save(metadataField);
 
     }

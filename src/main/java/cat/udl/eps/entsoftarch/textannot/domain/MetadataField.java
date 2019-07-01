@@ -20,7 +20,9 @@ public class MetadataField extends UriEntity<Integer> {
 
     private String xmlName;
 
-    private String type;
+    public enum FieldType {STRING, INTEGER, DATE, BOOLEAN}
+
+    private FieldType type;
 
     private String category;
 
@@ -38,7 +40,7 @@ public class MetadataField extends UriEntity<Integer> {
         this.name = "";
     }
 
-    public MetadataField(String name, String type){
+    public MetadataField(String name, FieldType type){
         this.name = name;
         this.type = type;
     }

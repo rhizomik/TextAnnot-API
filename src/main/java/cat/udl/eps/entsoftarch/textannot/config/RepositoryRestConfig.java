@@ -72,7 +72,7 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
                 field.setCategory(fieldData[0]);
                 field.setName(fieldData[1]);
                 field.setXmlName(fieldData[2]);
-                field.setType(fieldData[3]);
+                field.setType(MetadataField.FieldType.valueOf(fieldData[3].toUpperCase()));
                 field.setPrivateField(Boolean.parseBoolean(fieldData[4]));
                 field.setIncludeStatistics(Boolean.parseBoolean(fieldData[5]));
                 field.setDefinedAt(project);
