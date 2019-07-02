@@ -3,13 +3,12 @@ package cat.udl.eps.entsoftarch.textannot.controller;
 import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.exception.NotFoundException;
 import cat.udl.eps.entsoftarch.textannot.exception.TagHierarchyValidationException;
+import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -45,6 +44,9 @@ public class SampleFilterController {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private MetadataFieldRepository metadataFieldRepository;
 
     @Autowired
     EntityManager em;
@@ -204,13 +206,40 @@ public class SampleFilterController {
     }
 
     private Map<String, Map<String, Long>> getMetadataStatistics(Project project, SampleFilters filters) {
+        Map<String, Map<String, Long>> statistics = new HashMap<>();
+        statistics.putAll(getStringMetadataStatistics(project, filters));
+        statistics.putAll(getIntegerMetadataStatistics(project, filters));
+        return statistics;
+    }
+
+    private Map<? extends String,? extends Map<String, Long>> getIntegerMetadataStatistics(Project project, SampleFilters filters) {
+        List<MetadataField> integerFields = metadataFieldRepository.findByTypeAndIncludeStatisticsTrue(MetadataField.FieldType.INTEGER);
+        Map<String, Map<String, Long>> statistics = new HashMap<>();
+        for (MetadataField mf: integerFields) {
+            List<String> result = queryFactory.select(QMetadataValue.metadataValue.value)
+                    .from(QMetadataValue.metadataValue)
+                    .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
+                    .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
+                    .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.eq(mf))).fetch();
+            Map<String, Long> fieldStatistics = new LinkedHashMap<>();
+            LongSummaryStatistics summaryStatistics = result.stream().mapToLong(value -> Long.parseLong(value)).summaryStatistics();
+            fieldStatistics.put("Min", summaryStatistics.getMin());
+            fieldStatistics.put("Max", summaryStatistics.getMax());
+            fieldStatistics.put("Avg", (long) summaryStatistics.getAverage());
+            statistics.put(mf.getName(), fieldStatistics);
+        }
+        return statistics;
+    }
+
+    private Map<String, Map<String, Long>> getStringMetadataStatistics(Project project, SampleFilters filters) {
+        Map<String, Map<String, Long>> statistics = new HashMap<>();
         List<Tuple> result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.count())
                 .from(QMetadataValue.metadataValue)
                 .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
                 .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.includeStatistics.eq(true)))
+                .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.includeStatistics.eq(true))
+                    .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING)))
                 .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
-        Map<String, Map<String, Long>> statistics = new HashMap<>();
         result.forEach(qTuple -> {
             if (!statistics.containsKey(qTuple.get(QMetadataField.metadataField.name)))
                 statistics.put(qTuple.get(QMetadataField.metadataField.name), new LinkedHashMap<>());

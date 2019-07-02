@@ -6,6 +6,7 @@ import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.security.access.prepost.PostFilter;
 
 import java.util.List;
@@ -34,4 +35,7 @@ public interface MetadataFieldRepository extends PagingAndSortingRepository<Meta
      */
     @PostFilter("hasRole('ROLE_ADMIN') || filterObject.privateField != null && !filterObject.privateField")
     List<MetadataField> findByDefinedAt(@Param("project") Project project);
+
+    @RestResource(exported = false)
+    List<MetadataField> findByTypeAndIncludeStatisticsTrue(MetadataField.FieldType type);
 }
