@@ -174,10 +174,9 @@ public class SampleFilterController {
             }
         }
         if (filters.getTags() != null && !filters.getTags().isEmpty()) {
-            for (String tag : filters.getTags()) {
-                booleanBuilder = booleanBuilder.and(JPAExpressions.selectFrom(QAnnotation.annotation).innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                        .where(QAnnotation.annotation.sample.id.eq(QSample.sample.id).and(QTag.tag.name.eq(tag))).exists());
-            }
+            booleanBuilder = booleanBuilder.and(JPAExpressions.selectFrom(QAnnotation.annotation).innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                    .where(QAnnotation.annotation.sample.id.eq(QSample.sample.id).and(QTag.tag.name.in(filters.getTags())))
+                    .groupBy(QAnnotation.annotation.start, QAnnotation.annotation.end).having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size()))).exists());
         }
         return booleanBuilder;
     }
