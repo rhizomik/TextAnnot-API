@@ -185,7 +185,18 @@ public class SampleFilterController {
         final AtomicLong occurrences = new AtomicLong(0L);
         final AtomicLong samplesCount = new AtomicLong(0L);
         Iterable<Sample> samples = sampleRepository.findAll(getFiltersExpression(project, filters));
-        if (filters.getWord() != null && !filters.getWord().isEmpty())
+        if (filters.getTags() != null && !filters.getTags().isEmpty()) {
+            List<Sample> samplesList = new ArrayList<>();
+            samples.forEach(samplesList::add);
+            List<Annotation> result = queryFactory.selectFrom(QAnnotation.annotation)
+                    .innerJoin(QAnnotation.annotation.sample, QSample.sample)
+                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                    .where(QSample.sample.in(samplesList).and(QTag.tag.name.in(filters.getTags())))
+                    .groupBy(QSample.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
+                    .having(QTag.tag.name.countDistinct().eq((long) filters.getTags().size())).fetch();
+            occurrences.set(result.size());
+            samplesCount.set(result.stream().map(Annotation::getSample).distinct().count());
+        } else if (filters.getWord() != null && !filters.getWord().isEmpty())
             samples.forEach(sample -> {
                 samplesCount.incrementAndGet();
                 occurrences.addAndGet(getTextOccurrences(filters.getWord(), sample.getText()));
