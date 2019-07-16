@@ -6,6 +6,7 @@ import cat.udl.eps.entsoftarch.textannot.exception.TagHierarchyValidationExcepti
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
+import cat.udl.eps.entsoftarch.textannot.service.StatisticsService;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.*;
@@ -46,7 +47,7 @@ public class SampleFilterController {
     private ProjectRepository projectRepository;
 
     @Autowired
-    private MetadataFieldRepository metadataFieldRepository;
+    private StatisticsService statisticsService;
 
     @Autowired
     EntityManager em;
@@ -68,7 +69,7 @@ public class SampleFilterController {
 
         Project project = getProjectOrThrowException(projectId);
 
-        BooleanBuilder query = getFiltersExpression(project, new SampleFilters(word, getMetadataMap(params), tags));
+        BooleanBuilder query = statisticsService.getFiltersExpression(project, new SampleFilters(word, getMetadataMap(params), tags));
         Page<Sample> samples = sampleRepository.findAll(query, pageable);
 
         if (!samples.hasContent()) {
@@ -87,12 +88,12 @@ public class SampleFilterController {
         Project project = getProjectOrThrowException(projectId);
         SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tags);
         StatisticsResults statisticsResults = new StatisticsResults();
-        statisticsResults.setMetadataStatistics(getMetadataStatistics(project, filters));
-        statisticsResults.setGlobalMetadataStatistics(getGlobalMetadataStatistics(project, filters));
-        Pair<Long, Long> counts = getSampleCounts(project, filters);
+        statisticsResults.setMetadataStatistics(statisticsService.getMetadataStatistics(project, filters));
+        statisticsResults.setGlobalMetadataStatistics(statisticsService.getGlobalMetadataStatistics(project, filters));
+        Pair<Long, Long> counts = statisticsService.getSampleCounts(project, filters);
         statisticsResults.setOccurrences(counts.getFirst());
         statisticsResults.setSamples(counts.getSecond());
-        Pair<Long, Long> globalCounts = getGlobalSampleCounts(project, filters);
+        Pair<Long, Long> globalCounts = statisticsService.getGlobalSampleCounts(project, filters);
         statisticsResults.setTotalOccurrences(globalCounts.getFirst());
         statisticsResults.setTotalSamples(globalCounts.getSecond());
         statisticsResults.setAnnotationStatistics(getAnnotationStatistics(project, filters));
@@ -111,7 +112,7 @@ public class SampleFilterController {
                 .from(QAnnotation.annotation)
                 .innerJoin(QAnnotation.annotation.sample, QSample.sample)
                 .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                .where(getFiltersExpression(project, filters))
+                .where(statisticsService.getFiltersExpression(project, filters))
                 .groupBy(QTag.tag.name)
                 .orderBy(QTag.tag.id.asc()).fetch();
         List<Tuple> globalResult = queryFactory.select(QTag.tag.name, QSample.sample.countDistinct())
@@ -159,169 +160,8 @@ public class SampleFilterController {
         return params;
     }
 
-    private BooleanBuilder getFiltersExpression(Project project, SampleFilters filters) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(QSample.sample.id.in(
-                JPAExpressions.select(QSample.sample.id).from(QSample.sample).innerJoin(QSample.sample.project, QProject.project).where(QProject.project.eq(project))));
-        if (filters.getWord() != null && !filters.getWord().isEmpty()) {
-            List<Integer> samplesContainingWord = sampleRepository.findByTextContainingWord(filters.getWord());
-            booleanBuilder = booleanBuilder.and(QSample.sample.id.in(samplesContainingWord));
-        }
-        if (filters.getMetadata() != null && !filters.getMetadata().isEmpty()) {
-            for (Map.Entry<String, String> e : filters.getMetadata().entrySet()) {
-                booleanBuilder = booleanBuilder.and(QSample.sample.id.in(JPAExpressions.select(QMetadataValue.metadataValue.forA.id).from(QMetadataValue.metadataValue)
-                        .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                        .where(QMetadataValue.metadataValue.value.eq(e.getValue()).and(QMetadataField.metadataField.name.eq(e.getKey())))));
-            }
-        }
-        if (filters.getTags() != null && !filters.getTags().isEmpty()) {
-            booleanBuilder = booleanBuilder.and(JPAExpressions.selectFrom(QAnnotation.annotation).innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                    .where(QAnnotation.annotation.sample.id.eq(QSample.sample.id).and(QTag.tag.name.in(filters.getTags())))
-                    .groupBy(QAnnotation.annotation.start, QAnnotation.annotation.end).having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size()))).exists());
-        }
-        return booleanBuilder;
-    }
-
-    private Pair<Long, Long> getSampleCounts(Project project, SampleFilters filters) {
-        final AtomicLong occurrences = new AtomicLong(0L);
-        final AtomicLong samplesCount = new AtomicLong(0L);
-        Iterable<Sample> samples = sampleRepository.findAll(getFiltersExpression(project, filters));
-        if (filters.getTags() != null && !filters.getTags().isEmpty()) {
-            List<Sample> samplesList = new ArrayList<>();
-            samples.forEach(samplesList::add);
-            List<Annotation> result = queryFactory.selectFrom(QAnnotation.annotation)
-                    .innerJoin(QAnnotation.annotation.sample, QSample.sample)
-                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                    .where(QSample.sample.in(samplesList).and(QTag.tag.name.in(filters.getTags())))
-                    .groupBy(QSample.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
-                    .having(QTag.tag.name.countDistinct().eq((long) filters.getTags().size())).fetch();
-            occurrences.set(result.size());
-            samplesCount.set(result.stream().map(Annotation::getSample).distinct().count());
-        } else if (filters.getWord() != null && !filters.getWord().isEmpty())
-            samples.forEach(sample -> {
-                samplesCount.incrementAndGet();
-                occurrences.addAndGet(getTextOccurrences(filters.getWord(), sample.getText()));
-            });
-        else
-            samplesCount.set(StreamSupport.stream(samples.spliterator(), false).count());
-        return Pair.of(new Long(occurrences.get()), new Long(samplesCount.get()));
-    }
-
-    private Pair<Long, Long> getGlobalSampleCounts(Project project, SampleFilters filters) {
-        final AtomicLong occurrences = new AtomicLong(0L);
-        final AtomicLong samplesCount = new AtomicLong(0L);
-        if (filters.getTags() != null && !filters.getTags().isEmpty()) {
-            List<Annotation> result = queryFactory.selectFrom(QAnnotation.annotation)
-                    .innerJoin(QAnnotation.annotation.sample, QSample.sample)
-                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                    .where(QTag.tag.name.in(filters.getTags()))
-                    .groupBy(QSample.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
-                    .having(QTag.tag.name.countDistinct().eq((long) filters.getTags().size())).fetch();
-            occurrences.set(result.size());
-            samplesCount.set(result.stream().map(Annotation::getSample).distinct().count());
-        } else {
-            Iterable<Sample> samples = sampleRepository.findAll(getFiltersExpression(project, filters));
-            if (filters.getWord() != null && !filters.getWord().isEmpty()) {
-                samples.forEach(sample -> {
-                    samplesCount.incrementAndGet();
-                    occurrences.addAndGet(getTextOccurrences(filters.getWord(), sample.getText()));
-                });
-            } else
-                samplesCount.set(StreamSupport.stream(samples.spliterator(), false).count());
-        }
-        return Pair.of(new Long(occurrences.get()), new Long(samplesCount.get()));
-    }
-
-    private int getTextOccurrences(String word, String text) {
-        Pattern pattern = Pattern.compile("\\b" + word + "\\b", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(text);
-        int sampleOccurrences = 0;
-        while (matcher.find())
-            sampleOccurrences++;
-        return sampleOccurrences;
-    }
-
-    private Map<String, Map<String, Long>> getMetadataStatistics(Project project, SampleFilters filters) {
-        Map<String, Map<String, Long>> statistics = new HashMap<>();
-        statistics.putAll(getStringMetadataStatistics(project, filters));
-        statistics.putAll(getIntegerMetadataStatistics(project, filters));
-        return statistics;
-    }
-
-    private Map<String, Map<String, Long>> getGlobalMetadataStatistics(Project project, SampleFilters filters) {
-        Map<String, Map<String, Long>> statistics = new HashMap<>();
-        statistics.putAll(getGlobalStringMetadataStatistics(project, filters));
-        statistics.putAll(getIntegerMetadataStatistics(project, new SampleFilters()));
-        return statistics;
-    }
-
-    private Map<? extends String,? extends Map<String, Long>> getIntegerMetadataStatistics(Project project, SampleFilters filters) {
-        List<MetadataField> integerFields = metadataFieldRepository.findByTypeAndIncludeStatisticsTrue(MetadataField.FieldType.INTEGER);
-        Map<String, Map<String, Long>> statistics = new HashMap<>();
-        for (MetadataField mf: integerFields) {
-            List<String> result = queryFactory.select(QMetadataValue.metadataValue.value)
-                    .from(QMetadataValue.metadataValue)
-                    .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
-                    .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                    .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.eq(mf))).fetch();
-            Map<String, Long> fieldStatistics = new LinkedHashMap<>();
-            LongSummaryStatistics summaryStatistics = result.stream().mapToLong(value -> Long.parseLong(value)).summaryStatistics();
-            fieldStatistics.put("Min", summaryStatistics.getMin());
-            fieldStatistics.put("Max", summaryStatistics.getMax());
-            fieldStatistics.put("Avg", (long) summaryStatistics.getAverage());
-            statistics.put(mf.getName(), fieldStatistics);
-        }
-        return statistics;
-    }
-
-    private Map<String, Map<String, Long>> getStringMetadataStatistics(Project project, SampleFilters filters) {
-        Map<String, Map<String, Long>> statistics = new HashMap<>();
-        List<Tuple> result = new ArrayList<>();
-        if (filters.getTags() != null && filters.getTags().size() == 1){
-            result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.id.count())
-                    .from(QMetadataValue.metadataValue)
-                    .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
-                    .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                    .innerJoin(QAnnotation.annotation).on(QAnnotation.annotation.sample.eq(QMetadataValue.metadataValue.forA))
-                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                    .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.includeStatistics.eq(true))
-                            .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
-                            .and(QTag.tag.name.eq(filters.getTags().get(0))))
-                    .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
-        }
-        result.forEach(qTuple -> {
-            if (!statistics.containsKey(qTuple.get(QMetadataField.metadataField.name)))
-                statistics.put(qTuple.get(QMetadataField.metadataField.name), new LinkedHashMap<>());
-            statistics.get(qTuple.get(QMetadataField.metadataField.name)).put(qTuple.get(QMetadataValue.metadataValue.value), qTuple.get(2, Long.TYPE));
-        });
-        return statistics;
-    }
-
-    private Map<String, Map<String, Long>> getGlobalStringMetadataStatistics(Project project, SampleFilters filters) {
-        Map<String, Map<String, Long>> statistics = new HashMap<>();
-        List<Tuple> result = new ArrayList<>();
-        if (filters.getTags() != null && filters.getTags().size() == 1){
-            result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.id.count())
-                    .from(QMetadataValue.metadataValue)
-                    .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
-                    .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                    .innerJoin(QAnnotation.annotation).on(QAnnotation.annotation.sample.eq(QMetadataValue.metadataValue.forA))
-                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                    .where(QMetadataField.metadataField.includeStatistics.eq(true)
-                            .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
-                            .and(QTag.tag.name.eq(filters.getTags().get(0))))
-                    .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
-        }
-        result.forEach(qTuple -> {
-            if (!statistics.containsKey(qTuple.get(QMetadataField.metadataField.name)))
-                statistics.put(qTuple.get(QMetadataField.metadataField.name), new LinkedHashMap<>());
-            statistics.get(qTuple.get(QMetadataField.metadataField.name)).put(qTuple.get(QMetadataValue.metadataValue.value), qTuple.get(2, Long.TYPE));
-        });
-        return statistics;
-    }
-
     @Data
-    private static class StatisticsResults {
+    public static class StatisticsResults {
         private long occurrences;
         private long samples;
         private long totalOccurrences;
@@ -332,7 +172,7 @@ public class SampleFilterController {
     }
 
     @Data
-    private static class AnnotationStatistics {
+    public static class AnnotationStatistics {
         private String tag;
         private long occurrences;
         private long samples;
@@ -386,7 +226,7 @@ public class SampleFilterController {
     }
 
     @Data
-    private static class SampleFilters implements Serializable {
+    public static class SampleFilters implements Serializable {
         private String word;
         private Map<String, String> metadata;
         private List<String> tags;
