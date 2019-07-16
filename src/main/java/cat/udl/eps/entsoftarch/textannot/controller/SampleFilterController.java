@@ -88,11 +88,12 @@ public class SampleFilterController {
         SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tags);
         StatisticsResults statisticsResults = new StatisticsResults();
         statisticsResults.setMetadataStatistics(getMetadataStatistics(project, filters));
-        statisticsResults.setGlobalMetadataStatistics(getMetadataStatistics(project, new SampleFilters()));
+        statisticsResults.setGlobalMetadataStatistics(getGlobalMetadataStatistics(project, filters));
         Pair<Long, Long> counts = getSampleCounts(project, filters);
         statisticsResults.setOccurrences(counts.getFirst());
         statisticsResults.setSamples(counts.getSecond());
-        Pair<Long, Long> globalCounts = getSampleCounts(project, new SampleFilters());
+        Pair<Long, Long> globalCounts = getGlobalSampleCounts(project, filters);
+        statisticsResults.setTotalOccurrences(globalCounts.getFirst());
         statisticsResults.setTotalSamples(globalCounts.getSecond());
         statisticsResults.setAnnotationStatistics(getAnnotationStatistics(project, filters));
         return statisticsResults;
@@ -206,6 +207,31 @@ public class SampleFilterController {
         return Pair.of(new Long(occurrences.get()), new Long(samplesCount.get()));
     }
 
+    private Pair<Long, Long> getGlobalSampleCounts(Project project, SampleFilters filters) {
+        final AtomicLong occurrences = new AtomicLong(0L);
+        final AtomicLong samplesCount = new AtomicLong(0L);
+        if (filters.getTags() != null && !filters.getTags().isEmpty()) {
+            List<Annotation> result = queryFactory.selectFrom(QAnnotation.annotation)
+                    .innerJoin(QAnnotation.annotation.sample, QSample.sample)
+                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                    .where(QTag.tag.name.in(filters.getTags()))
+                    .groupBy(QSample.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
+                    .having(QTag.tag.name.countDistinct().eq((long) filters.getTags().size())).fetch();
+            occurrences.set(result.size());
+            samplesCount.set(result.stream().map(Annotation::getSample).distinct().count());
+        } else {
+            Iterable<Sample> samples = sampleRepository.findAll(getFiltersExpression(project, filters));
+            if (filters.getWord() != null && !filters.getWord().isEmpty()) {
+                samples.forEach(sample -> {
+                    samplesCount.incrementAndGet();
+                    occurrences.addAndGet(getTextOccurrences(filters.getWord(), sample.getText()));
+                });
+            } else
+                samplesCount.set(StreamSupport.stream(samples.spliterator(), false).count());
+        }
+        return Pair.of(new Long(occurrences.get()), new Long(samplesCount.get()));
+    }
+
     private int getTextOccurrences(String word, String text) {
         Pattern pattern = Pattern.compile("\\b" + word + "\\b", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(text);
@@ -219,6 +245,13 @@ public class SampleFilterController {
         Map<String, Map<String, Long>> statistics = new HashMap<>();
         statistics.putAll(getStringMetadataStatistics(project, filters));
         statistics.putAll(getIntegerMetadataStatistics(project, filters));
+        return statistics;
+    }
+
+    private Map<String, Map<String, Long>> getGlobalMetadataStatistics(Project project, SampleFilters filters) {
+        Map<String, Map<String, Long>> statistics = new HashMap<>();
+        statistics.putAll(getGlobalStringMetadataStatistics(project, filters));
+        statistics.putAll(getIntegerMetadataStatistics(project, new SampleFilters()));
         return statistics;
     }
 
@@ -243,13 +276,42 @@ public class SampleFilterController {
 
     private Map<String, Map<String, Long>> getStringMetadataStatistics(Project project, SampleFilters filters) {
         Map<String, Map<String, Long>> statistics = new HashMap<>();
-        List<Tuple> result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.count())
-                .from(QMetadataValue.metadataValue)
-                .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
-                .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.includeStatistics.eq(true))
-                    .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING)))
-                .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
+        List<Tuple> result = new ArrayList<>();
+        if (filters.getTags() != null && filters.getTags().size() == 1){
+            result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.id.count())
+                    .from(QMetadataValue.metadataValue)
+                    .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
+                    .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
+                    .innerJoin(QAnnotation.annotation).on(QAnnotation.annotation.sample.eq(QMetadataValue.metadataValue.forA))
+                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                    .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.includeStatistics.eq(true))
+                            .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
+                            .and(QTag.tag.name.eq(filters.getTags().get(0))))
+                    .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
+        }
+        result.forEach(qTuple -> {
+            if (!statistics.containsKey(qTuple.get(QMetadataField.metadataField.name)))
+                statistics.put(qTuple.get(QMetadataField.metadataField.name), new LinkedHashMap<>());
+            statistics.get(qTuple.get(QMetadataField.metadataField.name)).put(qTuple.get(QMetadataValue.metadataValue.value), qTuple.get(2, Long.TYPE));
+        });
+        return statistics;
+    }
+
+    private Map<String, Map<String, Long>> getGlobalStringMetadataStatistics(Project project, SampleFilters filters) {
+        Map<String, Map<String, Long>> statistics = new HashMap<>();
+        List<Tuple> result = new ArrayList<>();
+        if (filters.getTags() != null && filters.getTags().size() == 1){
+            result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.id.count())
+                    .from(QMetadataValue.metadataValue)
+                    .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
+                    .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
+                    .innerJoin(QAnnotation.annotation).on(QAnnotation.annotation.sample.eq(QMetadataValue.metadataValue.forA))
+                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                    .where(QMetadataField.metadataField.includeStatistics.eq(true)
+                            .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
+                            .and(QTag.tag.name.eq(filters.getTags().get(0))))
+                    .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
+        }
         result.forEach(qTuple -> {
             if (!statistics.containsKey(qTuple.get(QMetadataField.metadataField.name)))
                 statistics.put(qTuple.get(QMetadataField.metadataField.name), new LinkedHashMap<>());
@@ -262,6 +324,7 @@ public class SampleFilterController {
     private static class StatisticsResults {
         private long occurrences;
         private long samples;
+        private long totalOccurrences;
         private long totalSamples;
         private Map<String, Map<String, Long>> metadataStatistics;
         private Map<String, Map<String, Long>> globalMetadataStatistics;
