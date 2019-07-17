@@ -96,7 +96,6 @@ public class SampleFilterController {
         Pair<Long, Long> globalCounts = statisticsService.getGlobalSampleCounts(project, filters);
         statisticsResults.setTotalOccurrences(globalCounts.getFirst());
         statisticsResults.setTotalSamples(globalCounts.getSecond());
-        statisticsResults.setAnnotationStatistics(getAnnotationStatistics(project, filters));
         return statisticsResults;
     }
 
@@ -105,50 +104,6 @@ public class SampleFilterController {
         if(!project.isPresent())
             throw new NotFoundException();
         return project.get();
-    }
-
-    private List<AnnotationStatistics> getAnnotationStatistics(Project project, SampleFilters filters) {
-        List<Tuple> result = queryFactory.select(QTag.tag.name, QTag.tag.treePath, QSample.sample.count(), QSample.sample.countDistinct())
-                .from(QAnnotation.annotation)
-                .innerJoin(QAnnotation.annotation.sample, QSample.sample)
-                .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                .where(statisticsService.getFiltersExpression(project, filters))
-                .groupBy(QTag.tag.name)
-                .orderBy(QTag.tag.id.asc()).fetch();
-        List<Tuple> globalResult = queryFactory.select(QTag.tag.name, QSample.sample.countDistinct())
-                .from(QAnnotation.annotation)
-                .innerJoin(QAnnotation.annotation.sample, QSample.sample)
-                .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                .innerJoin(QSample.sample.project, QProject.project)
-                .where(QProject.project.eq(project))
-                .groupBy(QTag.tag.name).fetch();
-        Map<String, Long> globalResultMap = globalResult.stream().collect(Collectors.toMap((Tuple t) -> t.get(QTag.tag.name), (Tuple t) -> t.get(1, Long.TYPE)));
-        Map<String, AnnotationStatistics> annotationStatisticsMap = new HashMap<>();
-
-         List<AnnotationStatistics> annotationStatisticsList = result.stream().map(tuple -> updateStatisticsTreeAndGetRoot(annotationStatisticsMap, tuple.get(QTag.tag.treePath),
-                new AnnotationStatistics(tuple.get(QTag.tag.name), tuple.get(2, Long.class),
-                        tuple.get(3, Long.class), globalResultMap.get(tuple.get(QTag.tag.name)))))
-                 .distinct().collect(Collectors.toCollection(LinkedList::new));
-         annotationStatisticsList.stream().forEach(annotationStatistics -> annotationStatistics.calculateStatistics());
-        return annotationStatisticsList;
-    }
-
-    private AnnotationStatistics updateStatisticsTreeAndGetRoot(Map<String, AnnotationStatistics> annotationStatisticsMap,
-                                                                String tagPath, AnnotationStatistics tagStatistics) {
-        AnnotationStatistics child = tagStatistics;
-        String[] tags = tagPath.split(";");
-        child.setLevel(tags.length - 1);
-        annotationStatisticsMap.put(tagStatistics.tag, tagStatistics);
-        for (int i = tags.length - 2; i >= 0; i--) {
-            if (annotationStatisticsMap.containsKey(tags[i])) {
-                annotationStatisticsMap.get(tags[i]).addChildStatistics(child);
-                return annotationStatisticsMap.get(tags[0]);
-            } else {
-                child = new AnnotationStatistics(tags[i], i, child);
-                annotationStatisticsMap.put(tags[i], child);
-            }
-        }
-        return child;
     }
 
     private Map<String, String> getMetadataMap(Map<String, String> params) {
@@ -168,7 +123,6 @@ public class SampleFilterController {
         private long totalSamples;
         private Map<String, Map<String, Long>> metadataStatistics;
         private Map<String, Map<String, Long>> globalMetadataStatistics;
-        private List<AnnotationStatistics> annotationStatistics;
     }
 
     @Data
