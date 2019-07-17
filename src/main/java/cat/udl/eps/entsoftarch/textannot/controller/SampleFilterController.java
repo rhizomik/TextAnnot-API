@@ -88,14 +88,16 @@ public class SampleFilterController {
         Project project = getProjectOrThrowException(projectId);
         SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tags);
         StatisticsResults statisticsResults = new StatisticsResults();
-        statisticsResults.setMetadataStatistics(statisticsService.getMetadataStatistics(project, filters));
-        statisticsResults.setGlobalMetadataStatistics(statisticsService.getGlobalMetadataStatistics(project, filters));
+        if (filters.getTags() != null && !filters.getTags().isEmpty()) {
+            statisticsResults.setMetadataStatistics(statisticsService.getMetadataStatistics(project, filters));
+            statisticsResults.setGlobalMetadataStatistics(statisticsService.getGlobalMetadataStatistics(project, filters));
+            Pair<Long, Long> globalCounts = statisticsService.getGlobalSampleCounts(project, filters);
+            statisticsResults.setTotalOccurrences(globalCounts.getFirst());
+            statisticsResults.setTotalSamples(globalCounts.getSecond());
+        }
         Pair<Long, Long> counts = statisticsService.getSampleCounts(project, filters);
         statisticsResults.setOccurrences(counts.getFirst());
         statisticsResults.setSamples(counts.getSecond());
-        Pair<Long, Long> globalCounts = statisticsService.getGlobalSampleCounts(project, filters);
-        statisticsResults.setTotalOccurrences(globalCounts.getFirst());
-        statisticsResults.setTotalSamples(globalCounts.getSecond());
         return statisticsResults;
     }
 
