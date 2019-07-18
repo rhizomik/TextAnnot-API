@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -121,7 +122,7 @@ public class StatisticsService {
         if (filters.getTags() != null && !filters.getTags().isEmpty()) {
             booleanBuilder = booleanBuilder.and(JPAExpressions.selectFrom(QAnnotation.annotation).innerJoin(QAnnotation.annotation.tag, QTag.tag)
                     .where(QAnnotation.annotation.sample.id.eq(QSample.sample.id).and(QTag.tag.name.in(filters.getTags())))
-                    .groupBy(QAnnotation.annotation.start, QAnnotation.annotation.end).having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size()))).exists());
+                    .groupBy(QAnnotation.annotation.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end).having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size()))).exists());
         }
         return booleanBuilder;
     }
@@ -159,6 +160,22 @@ public class StatisticsService {
                             .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
                             .and(QTag.tag.name.eq(filters.getTags().get(0))))
                     .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
+        } else if (filters.getTags() != null && filters.getTags().size() > 1) {
+            result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QAnnotation.annotation.id)
+                    .from(QMetadataValue.metadataValue)
+                    .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
+                    .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
+                    .innerJoin(QAnnotation.annotation).on(QAnnotation.annotation.sample.eq(QMetadataValue.metadataValue.forA))
+                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                    .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.includeStatistics.eq(true))
+                            .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
+                            .and(QTag.tag.name.in(filters.getTags())))
+                    .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value,
+                            QAnnotation.annotation.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
+                    .having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size())))
+                    .fetch();
+            return result.stream().collect(Collectors.groupingBy((Tuple tuple) -> tuple.get(QMetadataField.metadataField.name),
+                    Collectors.groupingBy((Tuple tuple) -> tuple.get(QMetadataValue.metadataValue.value), Collectors.counting())));
         }
         result.forEach(qTuple -> {
             if (!statistics.containsKey(qTuple.get(QMetadataField.metadataField.name)))
@@ -182,6 +199,22 @@ public class StatisticsService {
                             .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
                             .and(QTag.tag.name.eq(filters.getTags().get(0))))
                     .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
+        } else if (filters.getTags() != null && filters.getTags().size() > 1) {
+            result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QAnnotation.annotation.id)
+                    .from(QMetadataValue.metadataValue)
+                    .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
+                    .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
+                    .innerJoin(QAnnotation.annotation).on(QAnnotation.annotation.sample.eq(QMetadataValue.metadataValue.forA))
+                    .innerJoin(QAnnotation.annotation.tag, QTag.tag)
+                    .where(QMetadataField.metadataField.includeStatistics.eq(true)
+                            .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
+                            .and(QTag.tag.name.in(filters.getTags())))
+                    .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value,
+                            QAnnotation.annotation.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
+                    .having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size())))
+                    .fetch();
+            return result.stream().collect(Collectors.groupingBy((Tuple tuple) -> tuple.get(QMetadataField.metadataField.name),
+                    Collectors.groupingBy((Tuple tuple) -> tuple.get(QMetadataValue.metadataValue.value), Collectors.counting())));
         }
         result.forEach(qTuple -> {
             if (!statistics.containsKey(qTuple.get(QMetadataField.metadataField.name)))
