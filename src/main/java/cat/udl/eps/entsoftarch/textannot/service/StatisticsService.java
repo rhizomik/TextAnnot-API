@@ -109,7 +109,7 @@ public class StatisticsService {
         booleanBuilder.and(QSample.sample.id.in(
                 JPAExpressions.select(QSample.sample.id).from(QSample.sample).innerJoin(QSample.sample.project, QProject.project).where(QProject.project.eq(project))));
         if (filters.getWord() != null && !filters.getWord().isEmpty()) {
-            List<Integer> samplesContainingWord = sampleRepository.findByTextContainingWord(filters.getWord().replace("*", "\\w*"));
+            List<Integer> samplesContainingWord = sampleRepository.findByTextContainingWord(filters.getWord().replace("*", "[A-Za-zÀ-ÖØ-öø-ÿ]*"));
             booleanBuilder = booleanBuilder.and(QSample.sample.id.in(samplesContainingWord));
         }
         if (filters.getMetadata() != null && !filters.getMetadata().isEmpty()) {
@@ -225,7 +225,7 @@ public class StatisticsService {
     }
 
     private int getTextOccurrences(String word, String text) {
-        Pattern pattern = Pattern.compile("\\b" + word.replace("*", "\\w*") + "\\b", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile("\\b" + word.replace("*", "[A-Za-zÀ-ÖØ-öø-ÿ]*") + "\\b", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(text);
         int sampleOccurrences = 0;
         while (matcher.find())
