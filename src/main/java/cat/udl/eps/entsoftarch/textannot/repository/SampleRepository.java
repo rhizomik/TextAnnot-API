@@ -11,6 +11,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 @RepositoryRestResource
 public interface SampleRepository extends PagingAndSortingRepository<Sample, Integer>, QuerydslPredicateExecutor<Sample> {
@@ -89,4 +90,11 @@ public interface SampleRepository extends PagingAndSortingRepository<Sample, Int
             "not exists (select a.id from annotation a where a.sample_id = s.id)",
     nativeQuery = true)
     Page<Sample> findByProjectAndNotAnnotated(@Param("project") Project project, Pageable pageable);
+
+    @Query("select sum(s.wordCount) from Sample s where s.project.id = ?#{#project.id}")
+    @RestResource(exported = false)
+    Integer getTotalWordsCount(@Param("project") Project project);
+
+    @RestResource(exported = false)
+    Integer countByProject(Project project);
 }
