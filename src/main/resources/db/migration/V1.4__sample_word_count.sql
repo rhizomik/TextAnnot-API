@@ -1,0 +1,1 @@
+alter table sample add column word_count int null;

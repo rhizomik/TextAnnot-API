@@ -33,6 +33,7 @@ public class Sample extends UriEntity<Integer>{
     @Type(type = "text")
     private String text;
 
+    private Integer wordCount;
 
     /**
      * Linking Sample with Project.
@@ -46,5 +47,9 @@ public class Sample extends UriEntity<Integer>{
     }
 
     public Sample() {
+    }
+
+    public void countWords() {
+        wordCount = text.split("[\\s\\n]").length;
     }
 }

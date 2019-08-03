@@ -95,6 +95,7 @@ public class XMLIngestionService {
 
         @Override
         public void endDocument() throws SAXException {
+            xmlSample.countWords();
             xmlSampleRepository.save(this.xmlSample);
             metadataValues.forEach(metadataValue -> metadataValueRepository.save(metadataValue));
         }

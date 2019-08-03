@@ -20,14 +20,16 @@ public class SampleEventHandler {
 
     @HandleBeforeCreate
     @Transactional
-    public void handleSamplePreCreate(Sample Sample) {
-        logger.info("Before creating: {}", Sample.toString());
+    public void handleSamplePreCreate(Sample sample) {
+        logger.info("Before creating: {}", sample.toString());
+        sample.countWords();
     }
 
     @HandleBeforeSave
     @Transactional
-    public void handleSamplePreSave(Sample Sample){
-        logger.info("Before updating: {}", Sample.toString());
+    public void handleSamplePreSave(Sample sample){
+        logger.info("Before updating: {}", sample.toString());
+        sample.countWords();
     }
 
     @HandleBeforeDelete
