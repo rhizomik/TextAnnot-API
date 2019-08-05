@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,7 +29,7 @@ public class Sample extends UriEntity<Integer>{
     /**
      * The text contained in the Sample. It is limited to 16KB and it can't be null.
      */
-    @NotNull
+    @NotNull @NotBlank
     @Lob
     @Type(type = "text")
     private String text;
@@ -50,6 +51,7 @@ public class Sample extends UriEntity<Integer>{
     }
 
     public void countWords() {
-        wordCount = text.split("[\\s\\n]").length;
+        if (text != null)
+            wordCount = text.split("[\\s\\n]").length;
     }
 }
