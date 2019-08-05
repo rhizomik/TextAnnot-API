@@ -47,6 +47,25 @@ public class StatisticsService {
         return statistics;
     }
 
+    public Map<String, Map<String, Long>> getProjectMetadataStatistics(Project project) {
+        Map<String, Map<String, Long>> statistics = new HashMap<>();
+        List<Tuple> result;
+        result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QSample.sample.id.count())
+                .from(QMetadataValue.metadataValue)
+                .innerJoin(QMetadataValue.metadataValue.forA, QSample.sample)
+                .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
+                .where(QMetadataField.metadataField.includeStatistics.eq(true)
+                        .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING)))
+                .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
+
+        result.forEach(qTuple -> {
+            if (!statistics.containsKey(qTuple.get(QMetadataField.metadataField.name)))
+                statistics.put(qTuple.get(QMetadataField.metadataField.name), new LinkedHashMap<>());
+            statistics.get(qTuple.get(QMetadataField.metadataField.name)).put(qTuple.get(QMetadataValue.metadataValue.value), qTuple.get(2, Long.TYPE));
+        });
+        return statistics;
+    }
+
     public Map<String, Map<String, Long>> getGlobalMetadataStatistics(Project project, SampleFilterController.SampleFilters filters) {
         Map<String, Map<String, Long>> statistics = new HashMap<>();
         statistics.putAll(getGlobalStringMetadataStatistics(project, filters));
