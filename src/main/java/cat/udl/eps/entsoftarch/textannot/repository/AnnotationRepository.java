@@ -39,5 +39,9 @@ public interface AnnotationRepository extends PagingAndSortingRepository<Annotat
     @RestResource(exported = false)
     @Transactional
     void deleteByTagProject(Project project);
+
+    @Query("select count(a.id) from Annotation a inner join a.sample s where s.project.id = ?#{#project.id}")
+    @RestResource(exported = false)
+    Integer countAnnotationsByProject(@Param("project") Project project);
 }
 

@@ -2,6 +2,7 @@ package cat.udl.eps.entsoftarch.textannot.controller;
 
 import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import cat.udl.eps.entsoftarch.textannot.exception.NotFoundException;
+import cat.udl.eps.entsoftarch.textannot.repository.AnnotationRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
 import lombok.Data;
@@ -24,6 +25,9 @@ public class ProjectStatisticsController {
     @Autowired
     private SampleRepository sampleRepository;
 
+    @Autowired
+    private AnnotationRepository annotationRepository;
+
     @GetMapping("projects/{id}/statistics")
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody ProjectStatistics getProjectStatistics(@PathVariable("id") Integer projectId) {
@@ -31,6 +35,8 @@ public class ProjectStatisticsController {
         ProjectStatistics statistics = new ProjectStatistics();
         statistics.setTotalSamples(sampleRepository.countByProject(project));
         statistics.setTotalWords(sampleRepository.getTotalWordsCount(project));
+        statistics.setAnnotatedSamples(sampleRepository.countAnnotatedSamples(project));
+        statistics.setTotalAnnotations(annotationRepository.countAnnotationsByProject(project));
         return statistics;
     }
 
@@ -45,5 +51,7 @@ public class ProjectStatisticsController {
     private static class ProjectStatistics {
         private long totalSamples;
         private long totalWords;
+        private long annotatedSamples;
+        private long totalAnnotations;
     }
 }

@@ -91,10 +91,14 @@ public interface SampleRepository extends PagingAndSortingRepository<Sample, Int
     nativeQuery = true)
     Page<Sample> findByProjectAndNotAnnotated(@Param("project") Project project, Pageable pageable);
 
-    @Query("select sum(s.wordCount) from Sample s where s.project.id = ?#{#project.id}")
+    @Query("select coalesce(sum(s.wordCount), 0) from Sample s where s.project.id = ?#{#project.id}")
     @RestResource(exported = false)
     Integer getTotalWordsCount(@Param("project") Project project);
 
     @RestResource(exported = false)
     Integer countByProject(Project project);
+
+    @Query("select count(distinct a.sample.id) from Annotation a inner join a.sample s where s.project.id = ?#{#project.id}")
+    @RestResource(exported = false)
+    Integer countAnnotatedSamples(@Param("project") Project project);
 }
