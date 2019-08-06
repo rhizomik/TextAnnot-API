@@ -75,6 +75,23 @@ public class TagsController {
         tagHierarchyPrecalcService.recalculateTagHierarchyTree(project.get());
     }
 
+    @PostMapping(value = "project/{projectId}/tags/use-default")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public void useDefaultTags(
+            @PathVariable("projectId") Integer projectId) throws IOException {
+
+        Optional<Project> project = projectRepository.findById(projectId);
+        if (!project.isPresent())
+            throw new TagHierarchyValidationException();
+
+        InputStream tagsInputStream = getClass()
+                .getClassLoader().getResourceAsStream("tags.csv");
+        readCSVAndSaveTags(tagsInputStream, project.get());
+
+        tagHierarchyPrecalcService.recalculateTagHierarchyTree(project.get());
+    }
+
     private void createTag(TagHierarchyPrecalcService.TagJson tagJson, Tag parent, Project project, List<Tag> treeHierarchy) {
         if (isNullOrEmpty(tagJson.getName()))
             throw new TagHierarchyValidationException();
@@ -122,7 +139,7 @@ public class TagsController {
         PersistentEntityResourceAssembler resourceAssembler) throws IOException {
 
         Optional<Project> project = projectRepository.findById(id);
-        if (!project.isPresent() || project.get().getPrecalculatedTagTree() != null)
+        if (!project.isPresent())
             throw new TagHierarchyValidationException();
 
         readCSVAndSaveTags(request.getBody(), project.get());
