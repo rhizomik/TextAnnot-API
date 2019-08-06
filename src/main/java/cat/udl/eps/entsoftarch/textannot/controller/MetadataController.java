@@ -1,16 +1,17 @@
 package cat.udl.eps.entsoftarch.textannot.controller;
 
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.MetadataValue;
-import cat.udl.eps.entsoftarch.textannot.domain.QMetadataField;
-import cat.udl.eps.entsoftarch.textannot.domain.QMetadataValue;
+import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.exception.NotFoundException;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
+import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
+import javassist.tools.web.BadHttpRequest;
 import lombok.Data;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.http.HttpStatus;
@@ -21,9 +22,16 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 @BasePathAwareController
 public class MetadataController {
@@ -33,6 +41,9 @@ public class MetadataController {
 
     @Autowired
     MetadataFieldRepository metadataFieldRepository;
+
+    @Autowired
+    ProjectRepository projectRepository;
 
     JPAQueryFactory queryFactory;
 
@@ -87,6 +98,36 @@ public class MetadataController {
                         .where(QMetadataField.metadataField.name.eq(name)).fetch());
         return values;
     }
+
+    @PostMapping("/project/{projectId}/metadata/use-default")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public void useDefaultMetadata(
+            @PathVariable("projectId") Integer projectId) throws IOException {
+        Optional<Project> project = projectRepository.findById(projectId);
+        if (!project.isPresent())
+            throw new NotFoundException();
+
+        readMetadataCsv(getClass().getClassLoader().getResourceAsStream("metadata.csv"), project.get());
+
+    }
+
+    private void readMetadataCsv(InputStream metadataCsv, Project project) throws IOException {
+        CSVFormat excelCSV = CSVFormat.newFormat(';').withRecordSeparator('\n').withFirstRecordAsHeader();
+        CSVParser parser = CSVParser.parse(metadataCsv, StandardCharsets.UTF_8, excelCSV);
+        parser.getRecords().forEach(record -> {
+            MetadataField metadataField = new MetadataField();
+            metadataField.setDefinedAt(project);
+            metadataField.setCategory(record.get(0));
+            metadataField.setName(record.get(1));
+            metadataField.setXmlName(record.get(2));
+            metadataField.setType(MetadataField.FieldType.valueOf(record.get(3).toUpperCase()));
+            metadataField.setPrivateField(Boolean.valueOf(record.get(4)));
+            metadataField.setIncludeStatistics(Boolean.valueOf(record.get(5)));
+            metadataFieldRepository.save(metadataField);
+        });
+    }
+
 
     @Data
     private static class MetadataFieldValueCounts {

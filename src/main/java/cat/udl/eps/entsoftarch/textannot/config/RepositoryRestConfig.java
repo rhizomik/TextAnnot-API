@@ -43,41 +43,6 @@ public class RepositoryRestConfig extends RepositoryRestConfigurerAdapter {
             Project project = new Project();
             project.setName("default");
             projectRepository.save(project);
-
-            // Following values corresponds to:
-            //   category - name - xmlName - type - privateField - includeStatistics
-            String[][] defaultTemplateFields = {
-                {"datos_generales", "Número Muestra", "número_muestra", "String", "true", "false"},
-                {"datos_generales", "Código Informante", "código_informante", "String", "true", "false"},
-                {"datos_generales", "Transliteración", "transliteración", "String", "true", "false"},
-                {"datos_generales", "Primera Revisión", "revisión_primera", "String", "true", "false"},
-                {"datos_generales", "Segunda Revisión", "revisión_segunda", "String", "true", "false"},
-                {"datos_generales", "Etiquetado", "etiquetado", "String", "true", "false"},
-                {"datos_muestra", "Fecha Recogida", "fecha_recogida", "String", "false", "false"},
-                {"datos_muestra", "Número Palabras", "palabras", "String", "false", "false"},
-                {"datos_muestra", "Género Discursivo", "género_discursivo", "String", "false", "true"},
-                {"datos_muestra", "Observaciones", "observaciones", "String", "true", "false"},
-                {"datos_informante", "Nombre", "nombre", "String", "false", "true"},
-                {"datos_informante", "Sexo", "sexo", "String", "false", "true"},
-                {"datos_informante", "Nivel Referencia", "nivel_referencia", "String", "false", "true"},
-                {"datos_informante", "Curso", "curso", "String", "false", "true"},
-                {"datos_informante", "Universidad", "universidad", "String", "false", "true"},
-                {"datos_informante", "Nivel CET", "nivel_CET", "String", "false", "true"},
-                {"datos_informante", "Estancia España", "estancia_España", "String", "false", "true"},
-                {"datos_informante", "Observaciones", "observaciones", "String", "true", "false"},
-            };
-
-            for (String[] fieldData : defaultTemplateFields) {
-                MetadataField field = new MetadataField();
-                field.setCategory(fieldData[0]);
-                field.setName(fieldData[1]);
-                field.setXmlName(fieldData[2]);
-                field.setType(MetadataField.FieldType.valueOf(fieldData[3].toUpperCase()));
-                field.setPrivateField(Boolean.parseBoolean(fieldData[4]));
-                field.setIncludeStatistics(Boolean.parseBoolean(fieldData[5]));
-                field.setDefinedAt(project);
-                metadataFieldRepository.save(field);
-            }
         }
     }
 
