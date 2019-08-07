@@ -99,7 +99,7 @@ public class MetadataController {
         return values;
     }
 
-    @PostMapping("/project/{projectId}/metadata/use-default")
+    @PostMapping("/projects/{projectId}/metadataFields/use-default")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public void useDefaultMetadata(
