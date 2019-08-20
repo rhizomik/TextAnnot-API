@@ -1,0 +1,22 @@
+allowed-origins: http://localhost:4200
+default-password: password
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3307/test
+    username: root
+    password:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+      use-new-id-generator-mappings: true
+  flyway:
+    enabled: false
+
+#Location of db files. delete this directory if you need to recreate from scratch
+mariaDB4j:
+  dataDir:
+
+  #Default is 3306, so using 3307 just in case it is already running on this machine
+  port: 3307
