@@ -2,38 +2,11 @@
 
 [![Build Status](https://travis-ci.org/rhizomik/TextAnnot-API.svg?branch=master)](https://travis-ci.org/rhizomik/TextAnnot-API/branches) 
 
-## Vision
-
-**For** linguists **who** want to manage written corpus samples for language learners, annotate error and analise them
-
-**the project** TextAnnot **is a** written corpus management and annotation tool
-
-**that** allows them to upload text samples (XML or using Web form), annotate errors, list samples, search samples, review annotations and analyse errors.
-Moreover, authorised users can define samples metadata and the error tags hierarchy.
-
-**Unlike** existing tools TextAnnot focuses on errors annotation and is highly customisable.
-
-
-## Features per Stakeholder
-
-| Linguist                      | Admin                           |
-| ------------------------------| --------------------------------|
-| Create Sample for Template    | Register Linguist               |
-| Edit Sample Metadata          | Create Metadata Template        |
-| List Metadata Templates       | Add/Delete/Edit Metadata Field  |
-| Upload XML Samples            | Create Annotation Hierarchy     |
-| List/Search Samples           | Add/Delete/Edit Annotation Tag  |
-| List Annotation Hierarchies   |                                 |
-| Start Sample Annotation       |                                 |
-| Tag Sample Text Error         |                                 |
-| Review Annotation             |                                 |
-| List/Search Annotations       |                                 |
-| List/Search/Count Error Tags  |                                 |
-|                               |                                 |
+This is the API part of the TextAnnot tool. The API provides access to the entity model presented below. More details about TextAnnot features, and how to deploy it, are available from the repository for the client part: [TextAnnot](https://github.com/rhizomik/TextAnnot) 
 
 ## Entities Model
 
-![Entities Model Diagram](http://www.plantuml.com/plantuml/svg/5Sqn3W8X44RXtbFe0M1wgwMmCB7OPDq388n20iDc-8bwUzVgDL_ofWwl6BKSJbb26P67bcC2jducKl-shumq7gEpXYPWWGsjqXflvZ8lPcbFE0s9xlo14samRhvIzHsijEkChwajSh7R_pAnnBq_?v=1)
+![Entities Model Diagram](http://www.plantuml.com/plantuml/svg/5SozaG8n30RG_Aeu2bWh9zeDoGXemDWQxC6ITkHFmq_rGFIojqvaHyZuEtGj8og7Z_y6xFD8vFcHRXqjhZ7PYobOaOe9UUjlatwd2p-ngHgMxNmYoHFin8gEro9MUQJzjw-izUi7)
 
 ## Notes
 
