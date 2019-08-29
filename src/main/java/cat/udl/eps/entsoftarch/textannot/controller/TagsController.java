@@ -60,7 +60,7 @@ public class TagsController {
             PersistentEntityResourceAssembler resourceAssembler) throws JsonProcessingException {
 
         Optional<Project> project = projectRepository.findById(projectId);
-        if (!project.isPresent() || project.get().getPrecalculatedTagTree() != null)
+        if (!project.isPresent())
             throw new TagHierarchyValidationException();
 
         List<Tag> treeHierarchy = new ArrayList<>();
