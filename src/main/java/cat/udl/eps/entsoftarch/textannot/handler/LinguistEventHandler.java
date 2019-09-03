@@ -2,6 +2,8 @@ package cat.udl.eps.entsoftarch.textannot.handler;
 
 import cat.udl.eps.entsoftarch.textannot.domain.Linguist;
 import cat.udl.eps.entsoftarch.textannot.repository.LinguistRepository;
+
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,16 +27,24 @@ public class LinguistEventHandler {
     @Autowired
     LinguistRepository linguistRepository;
 
+    @Autowired
+    EntityManager entityManager;
+
     @HandleBeforeCreate
     @Transactional
     public void handleLinguistPreCreate(Linguist linguist) {
         logger.info("Before creating: {}", linguist.toString());
+        linguist.encodePassword();
     }
 
     @HandleBeforeSave
     @Transactional
     public void handleLinguistPreSave(Linguist linguist){
         logger.info("Before updating: {}", linguist.toString());
+        entityManager.detach(linguist);
+        Linguist oldLinguist = linguistRepository.findById(linguist.getUsername()).get();
+        if (!oldLinguist.getPassword().equals(linguist.getPassword()))
+            linguist.encodePassword();
     }
 
     @HandleBeforeDelete
@@ -52,16 +62,12 @@ public class LinguistEventHandler {
     @Transactional
     public void handleLinguistPostCreate(Linguist linguist){
         logger.info("After creating: {}", linguist.toString());
-        linguist.encodePassword();
-        linguistRepository.save(linguist);
     }
 
     @HandleAfterSave
     @Transactional
     public void handleLinguistPostSave(Linguist linguist){
         logger.info("After updating: {}", linguist.toString());
-        linguist.encodePassword();
-        linguistRepository.save(linguist);
     }
 
     @HandleAfterDelete
