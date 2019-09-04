@@ -26,16 +26,11 @@ public class AdminEventHandler {
     @Transactional
     public void handleAdminPreCreate(Admin admin){
         logger.info("Before creating: {}", admin.toString());
-        admin.encodePassword();
     }
 
     @HandleBeforeSave
     @Transactional
     public void handleAdminPreSave(Admin admin){
         logger.info("Before updating: {}", admin.toString());
-        entityManager.detach(admin);
-        Admin oldAdmin = adminRepository.findById(admin.getUsername()).get();
-        if (!admin.getPassword().equals(oldAdmin.getPassword()))
-            admin.encodePassword();
     }
 }
