@@ -2,10 +2,13 @@ package cat.udl.eps.entsoftarch.textannot.handler;
 
 import cat.udl.eps.entsoftarch.textannot.domain.Linguist;
 import cat.udl.eps.entsoftarch.textannot.repository.LinguistRepository;
+
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterDelete;
 import org.springframework.data.rest.core.annotation.HandleAfterLinkSave;
@@ -25,16 +28,33 @@ public class LinguistEventHandler {
     @Autowired
     LinguistRepository linguistRepository;
 
+    @Autowired
+    EntityManager entityManager;
+
+    @Value("${default-password}")
+    String defaultPassword;
+
+
     @HandleBeforeCreate
     @Transactional
     public void handleLinguistPreCreate(Linguist linguist) {
         logger.info("Before creating: {}", linguist.toString());
+        linguist.setPassword(defaultPassword);
+        linguist.encodePassword();
     }
 
     @HandleBeforeSave
     @Transactional
     public void handleLinguistPreSave(Linguist linguist){
         logger.info("Before updating: {}", linguist.toString());
+        entityManager.detach(linguist);
+        Linguist oldLinguist = linguistRepository.findById(linguist.getUsername()).get();
+        if (!oldLinguist.getPassword().equals(linguist.getPassword()))
+            linguist.encodePassword();
+        else if (linguist.isResetPassword()) {
+            linguist.setPassword(defaultPassword);
+            linguist.encodePassword();
+        }
     }
 
     @HandleBeforeDelete
@@ -52,16 +72,12 @@ public class LinguistEventHandler {
     @Transactional
     public void handleLinguistPostCreate(Linguist linguist){
         logger.info("After creating: {}", linguist.toString());
-        linguist.encodePassword();
-        linguistRepository.save(linguist);
     }
 
     @HandleAfterSave
     @Transactional
     public void handleLinguistPostSave(Linguist linguist){
         logger.info("After updating: {}", linguist.toString());
-        linguist.encodePassword();
-        linguistRepository.save(linguist);
     }
 
     @HandleAfterDelete
