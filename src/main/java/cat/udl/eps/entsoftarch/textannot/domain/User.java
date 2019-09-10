@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -48,6 +49,10 @@ public abstract class User extends UriEntity<String> implements UserDetails {
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @NotBlank @Length(min=8, max=256)
   private String password;
+
+  @Transient
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+  private boolean resetPassword;
 
 
   @Override

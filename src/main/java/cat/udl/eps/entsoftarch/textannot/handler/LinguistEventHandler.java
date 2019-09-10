@@ -51,6 +51,10 @@ public class LinguistEventHandler {
         Linguist oldLinguist = linguistRepository.findById(linguist.getUsername()).get();
         if (!oldLinguist.getPassword().equals(linguist.getPassword()))
             linguist.encodePassword();
+        else if (linguist.isResetPassword()) {
+            linguist.setPassword(defaultPassword);
+            linguist.encodePassword();
+        }
     }
 
     @HandleBeforeDelete
