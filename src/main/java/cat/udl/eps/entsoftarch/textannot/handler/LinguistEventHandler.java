@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.annotation.HandleAfterCreate;
 import org.springframework.data.rest.core.annotation.HandleAfterDelete;
 import org.springframework.data.rest.core.annotation.HandleAfterLinkSave;
@@ -30,10 +31,15 @@ public class LinguistEventHandler {
     @Autowired
     EntityManager entityManager;
 
+    @Value("${default-password}")
+    String defaultPassword;
+
+
     @HandleBeforeCreate
     @Transactional
     public void handleLinguistPreCreate(Linguist linguist) {
         logger.info("Before creating: {}", linguist.toString());
+        linguist.setPassword(defaultPassword);
         linguist.encodePassword();
     }
 
