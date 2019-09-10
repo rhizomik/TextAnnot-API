@@ -22,13 +22,12 @@ public class RegisterLinguistStepDef {
   @Autowired
   private StepDefs stepDefs;
 
-  @When("^I register a new linguist with username \"([^\"]*)\", email \"([^\"]*)\" and password \"([^\"]*)\"$")
-  public void iRegisterANewLinguist(String username, String email, String password) throws Throwable {
+  @When("^I register a new linguist with username \"([^\"]*)\" and email \"([^\"]*)\"$")
+  public void iRegisterANewLinguist(String username, String email) throws Throwable {
     // Write code here that turns the phrase above into concrete actions
     JSONObject linguist = new JSONObject();
     linguist.put("username", username);
     linguist.put("email", email);
-    linguist.put("password", password);
     stepDefs.result = stepDefs.mockMvc.perform(
         post("/linguists")
             .contentType(MediaType.APPLICATION_JSON)
