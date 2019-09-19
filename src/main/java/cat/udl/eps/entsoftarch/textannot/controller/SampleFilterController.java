@@ -3,6 +3,7 @@ package cat.udl.eps.entsoftarch.textannot.controller;
 import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.exception.NotFoundException;
 import cat.udl.eps.entsoftarch.textannot.exception.TagHierarchyValidationException;
+import cat.udl.eps.entsoftarch.textannot.exception.UnauthorizedException;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
@@ -23,6 +24,8 @@ import org.springframework.data.rest.webmvc.PersistentEntityResource;
 import org.springframework.data.util.Pair;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,6 +69,9 @@ public class SampleFilterController {
                                                                 @RequestParam("tags") List<String> tags,
                                                                 @RequestParam Map<String, String> params,
                                                                 Pageable pageable, PagedResourcesAssembler resourceAssembler) {
+        if(tags != null && !tags.isEmpty() &&
+                SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)
+            throw new UnauthorizedException();
 
         Project project = getProjectOrThrowException(projectId);
 
