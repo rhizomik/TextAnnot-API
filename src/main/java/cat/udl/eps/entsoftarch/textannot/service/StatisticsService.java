@@ -33,6 +33,9 @@ public class StatisticsService {
     @Autowired
     private MetadataFieldRepository metadataFieldRepository;
 
+    @Autowired
+    private ControllerUtilities controllerUtilities;
+
     JPAQueryFactory queryFactory;
 
     @PostConstruct
@@ -83,7 +86,7 @@ public class StatisticsService {
             List<Annotation> result = queryFactory.selectFrom(QAnnotation.annotation)
                     .innerJoin(QAnnotation.annotation.sample, QSample.sample)
                     .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                    .where(QSample.sample.in(samplesList).and(QTag.tag.name.in(filters.getTags())))
+                    .where(QSample.sample.in(samplesList).and(controllerUtilities.getTagQuery(filters.getTags())))
                     .groupBy(QSample.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
                     .having(QTag.tag.name.countDistinct().eq((long) filters.getTags().size())).fetch();
             occurrences.set(result.size());
@@ -105,7 +108,7 @@ public class StatisticsService {
             List<Annotation> result = queryFactory.selectFrom(QAnnotation.annotation)
                     .innerJoin(QAnnotation.annotation.sample, QSample.sample)
                     .innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                    .where(QTag.tag.name.in(filters.getTags()))
+                    .where(controllerUtilities.getTagQuery(filters.getTags()))
                     .groupBy(QSample.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
                     .having(QTag.tag.name.countDistinct().eq((long) filters.getTags().size())).fetch();
             occurrences.set(result.size());
@@ -140,7 +143,7 @@ public class StatisticsService {
         }
         if (filters.getTags() != null && !filters.getTags().isEmpty()) {
             booleanBuilder = booleanBuilder.and(JPAExpressions.selectFrom(QAnnotation.annotation).innerJoin(QAnnotation.annotation.tag, QTag.tag)
-                    .where(QAnnotation.annotation.sample.id.eq(QSample.sample.id).and(QTag.tag.name.in(filters.getTags())))
+                    .where(QAnnotation.annotation.sample.id.eq(QSample.sample.id).and(controllerUtilities.getTagQuery(filters.getTags())))
                     .groupBy(QAnnotation.annotation.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end).having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size()))).exists());
         }
         return booleanBuilder;
@@ -177,7 +180,7 @@ public class StatisticsService {
                     .innerJoin(QAnnotation.annotation.tag, QTag.tag)
                     .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.includeStatistics.eq(true))
                             .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
-                            .and(QTag.tag.name.eq(filters.getTags().get(0))))
+                            .and(QTag.tag.treePath.contains(filters.getTags().get(0).getTreePath())))
                     .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
         } else if (filters.getTags() != null && filters.getTags().size() > 1) {
             result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QAnnotation.annotation.id)
@@ -188,7 +191,7 @@ public class StatisticsService {
                     .innerJoin(QAnnotation.annotation.tag, QTag.tag)
                     .where(getFiltersExpression(project, filters).and(QMetadataField.metadataField.includeStatistics.eq(true))
                             .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
-                            .and(QTag.tag.name.in(filters.getTags())))
+                            .and(controllerUtilities.getTagQuery(filters.getTags())))
                     .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value,
                             QAnnotation.annotation.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
                     .having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size())))
@@ -216,7 +219,7 @@ public class StatisticsService {
                     .innerJoin(QAnnotation.annotation.tag, QTag.tag)
                     .where(QMetadataField.metadataField.includeStatistics.eq(true)
                             .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
-                            .and(QTag.tag.name.eq(filters.getTags().get(0))))
+                            .and(QTag.tag.treePath.contains(filters.getTags().get(0).getTreePath())))
                     .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value).fetch();
         } else if (filters.getTags() != null && filters.getTags().size() > 1) {
             result = queryFactory.select(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value, QAnnotation.annotation.id)
@@ -227,7 +230,7 @@ public class StatisticsService {
                     .innerJoin(QAnnotation.annotation.tag, QTag.tag)
                     .where(QMetadataField.metadataField.includeStatistics.eq(true)
                             .and(QMetadataField.metadataField.type.eq(MetadataField.FieldType.STRING))
-                            .and(QTag.tag.name.in(filters.getTags())))
+                            .and(controllerUtilities.getTagQuery(filters.getTags())))
                     .groupBy(QMetadataField.metadataField.name, QMetadataValue.metadataValue.value,
                             QAnnotation.annotation.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
                     .having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size())))

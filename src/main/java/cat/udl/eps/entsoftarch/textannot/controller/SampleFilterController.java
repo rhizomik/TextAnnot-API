@@ -2,20 +2,14 @@ package cat.udl.eps.entsoftarch.textannot.controller;
 
 import cat.udl.eps.entsoftarch.textannot.domain.*;
 import cat.udl.eps.entsoftarch.textannot.exception.NotFoundException;
-import cat.udl.eps.entsoftarch.textannot.exception.TagHierarchyValidationException;
 import cat.udl.eps.entsoftarch.textannot.exception.UnauthorizedException;
-import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.SampleRepository;
+import cat.udl.eps.entsoftarch.textannot.service.ControllerUtilities;
 import cat.udl.eps.entsoftarch.textannot.service.StatisticsService;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.dsl.*;
-import com.querydsl.jpa.JPAExpressions;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.Data;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,19 +20,12 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
-import java.io.File;
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @BasePathAwareController
 public class SampleFilterController {
@@ -51,6 +38,9 @@ public class SampleFilterController {
 
     @Autowired
     private StatisticsService statisticsService;
+
+    @Autowired
+    private ControllerUtilities controllerUtilities;
 
     @Autowired
     EntityManager em;
@@ -75,7 +65,9 @@ public class SampleFilterController {
 
         Project project = getProjectOrThrowException(projectId);
 
-        BooleanBuilder query = statisticsService.getFiltersExpression(project, new SampleFilters(word, getMetadataMap(params), tags));
+        List<Tag> tagList = controllerUtilities.getTagsFromIds(tags);
+
+        BooleanBuilder query = statisticsService.getFiltersExpression(project, new SampleFilters(word, getMetadataMap(params), tagList));
         Page<Sample> samples = sampleRepository.findAll(query, pageable);
 
         if (!samples.hasContent()) {
@@ -92,7 +84,8 @@ public class SampleFilterController {
                                                    @RequestParam("tags") List<String> tags,
                                                    @RequestParam Map<String, String> params) {
         Project project = getProjectOrThrowException(projectId);
-        SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tags);
+        List<Tag> tagList = controllerUtilities.getTagsFromIds(tags);
+        SampleFilters filters = new SampleFilters(word, getMetadataMap(params), tagList);
         StatisticsResults statisticsResults = new StatisticsResults();
         if (filters.getTags() != null && !filters.getTags().isEmpty()) {
             statisticsResults.setMetadataStatistics(statisticsService.getMetadataStatistics(project, filters));
@@ -191,12 +184,12 @@ public class SampleFilterController {
     public static class SampleFilters implements Serializable {
         private String word;
         private Map<String, String> metadata;
-        private List<String> tags;
+        private List<Tag> tags;
 
         public SampleFilters() {
         }
 
-        public SampleFilters(String word, Map<String, String> metadata, List<String> tags) {
+        public SampleFilters(String word, Map<String, String> metadata, List<Tag> tags) {
             this.word = word;
             this.metadata = metadata;
             this.tags = tags;
