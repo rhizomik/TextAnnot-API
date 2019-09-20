@@ -88,7 +88,7 @@ public class StatisticsService {
                     .innerJoin(QAnnotation.annotation.tag, QTag.tag)
                     .where(QSample.sample.in(samplesList).and(controllerUtilities.getTagQuery(filters.getTags())))
                     .groupBy(QSample.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end)
-                    .having(QTag.tag.name.countDistinct().eq((long) filters.getTags().size())).fetch();
+                    .having(QTag.tag.name.countDistinct().goe((long) filters.getTags().size())).fetch();
             occurrences.set(result.size());
             samplesCount.set(result.stream().map(Annotation::getSample).distinct().count());
         } else if (filters.getWord() != null && !filters.getWord().isEmpty())
@@ -144,7 +144,7 @@ public class StatisticsService {
         if (filters.getTags() != null && !filters.getTags().isEmpty()) {
             booleanBuilder = booleanBuilder.and(JPAExpressions.selectFrom(QAnnotation.annotation).innerJoin(QAnnotation.annotation.tag, QTag.tag)
                     .where(QAnnotation.annotation.sample.id.eq(QSample.sample.id).and(controllerUtilities.getTagQuery(filters.getTags())))
-                    .groupBy(QAnnotation.annotation.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end).having(QTag.tag.name.countDistinct().eq(((long) filters.getTags().size()))).exists());
+                    .groupBy(QAnnotation.annotation.sample.id, QAnnotation.annotation.start, QAnnotation.annotation.end).having(QTag.tag.name.countDistinct().goe(((long) filters.getTags().size()))).exists());
         }
         return booleanBuilder;
     }

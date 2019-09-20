@@ -47,7 +47,7 @@ public class AnnotationController {
                 .where(QAnnotation.annotation.sample.id.eq(sampleId)
                         .and(controllerUtilities.getTagQuery(tags)))
                 .groupBy(QAnnotation.annotation.start, QAnnotation.annotation.end)
-                .having(QAnnotation.annotation.countDistinct().eq(Long.valueOf(tags.size()))).fetch();
+                .having(QAnnotation.annotation.countDistinct().goe(Long.valueOf(tags.size()))).fetch();
 
         return new Resources<>(annotations.stream().map(assembler::toResource).collect(Collectors.toList()));
     }
