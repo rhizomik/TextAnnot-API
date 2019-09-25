@@ -65,4 +65,10 @@ Linguist "1 annotatedBy" -- "many annotates" Annotation
 class Admin <<User>> extends User {
 }
 
+class AnnotationStatus <<Annotation>> {
+    String name
+}
+AnnotationStatus "many" -- "1" Project
+AnnotationStatus "many" -- "many" Sample
+
 @enduml
