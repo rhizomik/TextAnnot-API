@@ -49,6 +49,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers(HttpMethod.PATCH, "/metadataFields*/*").hasRole("ADMIN")
         .antMatchers(HttpMethod.DELETE, "/metadataFields*/**").hasRole("ADMIN")
 
+        .antMatchers(HttpMethod.POST, "/annotationStatus*/**").hasRole("ADMIN")
+        .antMatchers(HttpMethod.PUT, "/annotationStatus*/**").hasRole("ADMIN")
+        .antMatchers(HttpMethod.PATCH, "/annotationStatus*/*").hasRole("ADMIN")
+        .antMatchers(HttpMethod.DELETE, "/annotationStatus*/**").hasRole("ADMIN")
+
         .antMatchers(HttpMethod.POST, "/**/*").authenticated()
         .antMatchers(HttpMethod.PUT, "/**/*").authenticated()
         .antMatchers(HttpMethod.PATCH, "/**/*").authenticated()

@@ -117,4 +117,25 @@ public class AnnotationStatusStepdefs {
         Sample sample = sampleRepository.findByText(text);
         assertTrue(sample.getAnnotationStatuses().stream().noneMatch(annotationStatus -> annotationStatus.getName().equals(status)));
     }
+
+    @When("^I retrieve the Samples associated with the Annotation status \"([^\"]*)\"$")
+    public void iRetrieveTheSamplesAssociatedWithTheAnnotationStatus(String annotStatus) throws Throwable {
+        AnnotationStatus annotationStatus = annotationStatusRepository.findByNameAndDefinedAt(annotStatus, project);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                get("/samples/search/findByAnnotationStatuses?annotationStatus={annotStatusURI}", annotationStatus.getUri())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
+
+    @When("^I delete the Annotation status \"([^\"]*)\"$")
+    public void iDeleteTheAnnotationStatus(String annotStatus) throws Throwable {
+        AnnotationStatus annotationStatus = annotationStatusRepository.findByNameAndDefinedAt(annotStatus, project);
+
+        stepDefs.result = stepDefs.mockMvc.perform(
+                delete(annotationStatus.getUri())
+                        .with(AuthenticationStepDefs.authenticate()))
+                .andDo(print());
+    }
 }

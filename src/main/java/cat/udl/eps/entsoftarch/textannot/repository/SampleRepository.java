@@ -1,5 +1,6 @@
 package cat.udl.eps.entsoftarch.textannot.repository;
 
+import cat.udl.eps.entsoftarch.textannot.domain.AnnotationStatus;
 import cat.udl.eps.entsoftarch.textannot.domain.Sample;
 import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import org.springframework.data.domain.Page;
@@ -101,4 +102,6 @@ public interface SampleRepository extends PagingAndSortingRepository<Sample, Int
     @Query("select count(distinct a.sample.id) from Annotation a inner join a.sample s where s.project.id = ?#{#project.id}")
     @RestResource(exported = false)
     Integer countAnnotatedSamples(@Param("project") Project project);
+
+    Page<Sample> findByAnnotationStatuses(@Param("annotationStatus")AnnotationStatus annotationStatus, Pageable pageable);
 }

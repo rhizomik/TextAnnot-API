@@ -23,11 +23,20 @@ Feature: Mark Sample with Annotation Status
     And The sample with text "lalala" has annotation status "default"
     And The sample with text "lalala" has annotation status "default2"
 
+  Scenario: Mark Sample with Annotation Status unauthenticated
+    When I attach the Sample with text "lalala" to the Annotation Status "default"
+    Then The response code is 401
+
   Scenario: Delete Annotation Status from Sample
     Given I login as "user" with password "password"
     And The sample with text "lalala" is marked with Annotation status "default"
     When I remove the association of Sample with text "lalala" with Annotation status "default"
     Then The response code is 204
     And The sample with text "lalala" does not have status "default"
+
+  Scenario: Delete Annotation Status from Sample unauthenticated
+    And The sample with text "lalala" is marked with Annotation status "default"
+    When I remove the association of Sample with text "lalala" with Annotation status "default"
+    Then The response code is 401
 
     
