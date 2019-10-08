@@ -86,9 +86,11 @@ public interface SampleRepository extends PagingAndSortingRepository<Sample, Int
     Page<Sample> findByProject(@Param("project") Project project, Pageable pageable);
 
     @Query(value = "select s.* from sample s where s.project_id = ?#{#project.id} and " +
-            "not exists (select a.id from annotation a where a.sample_id = s.id)",
+            "not exists (select a.id from annotation a where a.sample_id = s.id) and " +
+            "not exists (select sas.sample_id from sample_annotation_statuses sas where sas.sample_id = s.id)",
     countQuery = "select count(s.id) from sample s where s.project_id = ?#{#project.id} and " +
-            "not exists (select a.id from annotation a where a.sample_id = s.id)",
+            "not exists (select a.id from annotation a where a.sample_id = s.id) and " +
+            "not exists (select sas.sample_id from sample_annotation_statuses sas where sas.sample_id = s.id)",
     nativeQuery = true)
     Page<Sample> findByProjectAndNotAnnotated(@Param("project") Project project, Pageable pageable);
 
