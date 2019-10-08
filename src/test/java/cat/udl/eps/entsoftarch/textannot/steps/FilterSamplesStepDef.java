@@ -117,13 +117,14 @@ public class FilterSamplesStepDef {
     }
 
     @When("^I filter the samples having the word \"([^\"]*)\" and annotated by the tag \"([^\"]*)\"$")
-    public void iFilterTheSamplesHavingTheWordAndAnnotatedByTheTag(String word, String tag) throws Throwable {
+    public void iFilterTheSamplesHavingTheWordAndAnnotatedByTheTag(String word, String tagName) throws Throwable {
+        Tag tag = tagRepository.findByName(tagName);
 
         stepDefs.result = stepDefs.mockMvc.perform(get("/samples/filter")
                 .accept(MediaType.APPLICATION_JSON)
                 .with(AuthenticationStepDefs.authenticate())
                 .param("word", word)
-                .param("tags", tag)
+                .param("tags", String.valueOf(tag.getId()))
                 .param("projectId", String.valueOf(projectId))).andDo(print());
     }
 }

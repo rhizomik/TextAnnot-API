@@ -73,8 +73,10 @@ public class TagStepDefs {
     public void existsATagWithName(String tagName, String tagHierarchyName) throws Throwable {
         Project project = existsATagHierarchyWithName(tagHierarchyName);
         tag = tagRepository.findByName(tagName);
-        if(tag == null)
+        if(tag == null) {
             tag = new Tag(tagName);
+            tag.setTreePath(tagName);
+        }
 
         tag.setProject(project);
         tagRepository.save(tag);
