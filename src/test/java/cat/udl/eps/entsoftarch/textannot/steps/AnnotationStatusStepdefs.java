@@ -76,7 +76,7 @@ public class AnnotationStatusStepdefs {
 
 
         stepDefs.result = stepDefs.mockMvc.perform(
-                post("/samples/{sample_id}/annotationStatuses", sample.getId())
+                patch("/samples/{sample_id}/annotationStatuses", sample.getId())
                         .contentType("text/uri-list")
                         .content(annotationStatus.getUri())
                         .accept(MediaType.APPLICATION_JSON)
