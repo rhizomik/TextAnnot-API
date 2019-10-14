@@ -1,19 +1,19 @@
 category;name;xmlName;type;privateField;includeStatistics
-datos_generales;Número Muestra;número_muestra;String;true;false
-datos_generales;Código Informante;código_informante;String;true;false
+datos_generales;Número de muestra;número_muestra;String;true;false
+datos_generales;Código de informante;código_informante;String;true;false
 datos_generales;Transliteración;transliteración;String;true;false
-datos_generales;Primera Revisión;revisión_primera;String;true;false
-datos_generales;Segunda Revisión;revisión_segunda;String;true;false
+datos_generales;Primera revisión;revisión_primera;String;true;false
+datos_generales;Segunda revisión;revisión_segunda;String;true;false
 datos_generales;Etiquetado;etiquetado;String;true;false
-datos_muestra;Fecha Recogida;fecha_recogida;String;false;false
-datos_muestra;Número Palabras;palabras;String;false;false
-datos_muestra;Género Discursivo;género_discursivo;String;false;true
+datos_muestra;Fecha de recogida;fecha_recogida;String;false;false
+datos_muestra;Número de palabras;palabras;String;false;false
+datos_muestra;Género discursivo;género_discursivo;String;false;true
 datos_muestra;Observaciones;observaciones;String;true;false
-datos_informante;Nombre;nombre;String;false;true
+datos_informante;Nombre;nombre;String;true;false
 datos_informante;Sexo;sexo;String;false;true
-datos_informante;Nivel Referencia;nivel_referencia;String;false;true
+datos_informante;Nivel de referencia;nivel_referencia;String;false;true
 datos_informante;Curso;curso;String;false;true
 datos_informante;Universidad;universidad;String;false;true
 datos_informante;Nivel CET;nivel_CET;String;false;true
-datos_informante;Estancia España;estancia_España;String;false;true
+datos_informante;Estancia en España;estancia_España;String;false;true
 datos_informante;Observaciones;observaciones;String;true;false
