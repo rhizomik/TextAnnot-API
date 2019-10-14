@@ -9,7 +9,7 @@ datos_muestra;Fecha de recogida;fecha_recogida;String;false;false
 datos_muestra;Número de palabras;palabras;String;false;false
 datos_muestra;Género discursivo;género_discursivo;String;false;true
 datos_muestra;Observaciones;observaciones;String;true;false
-datos_informante;Nombre;nombre;String;false;true
+datos_informante;Nombre;nombre;String;true;false
 datos_informante;Sexo;sexo;String;false;true
 datos_informante;Nivel de referencia;nivel_referencia;String;false;true
 datos_informante;Curso;curso;String;false;true
