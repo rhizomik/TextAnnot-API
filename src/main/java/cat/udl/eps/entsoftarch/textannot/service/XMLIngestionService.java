@@ -75,9 +75,9 @@ public class XMLIngestionService {
                 return;
             } else if (currentField.equals("texto"))  {
                 if (xmlSample.getText() == null || xmlSample.getText().equals("")) {
-                    xmlSample.setText(value.trim());
+                    xmlSample.setText("<p>" + value.trim() + "</p>");
                 } else {
-                    xmlSample.setText(xmlSample.getText() + "\n" + value.trim());
+                    xmlSample.setText(xmlSample.getText() + "<p>" +  value.trim() + "</p>");
                 }
                 return;
             }
