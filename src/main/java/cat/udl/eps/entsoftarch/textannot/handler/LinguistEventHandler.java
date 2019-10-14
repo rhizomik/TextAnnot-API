@@ -1,5 +1,6 @@
 package cat.udl.eps.entsoftarch.textannot.handler;
 
+import cat.udl.eps.entsoftarch.textannot.domain.Admin;
 import cat.udl.eps.entsoftarch.textannot.domain.Linguist;
 import cat.udl.eps.entsoftarch.textannot.repository.LinguistRepository;
 
@@ -38,22 +39,26 @@ public class LinguistEventHandler {
     @HandleBeforeCreate
     @Transactional
     public void handleLinguistPreCreate(Linguist linguist) {
-        logger.info("Before creating: {}", linguist.toString());
-        linguist.setPassword(defaultPassword);
-        linguist.encodePassword();
+        if (!(linguist instanceof Admin)) {
+            logger.info("Before creating: {}", linguist.toString());
+            linguist.setPassword(defaultPassword);
+            linguist.encodePassword();
+        }
     }
 
     @HandleBeforeSave
     @Transactional
     public void handleLinguistPreSave(Linguist linguist){
-        logger.info("Before updating: {}", linguist.toString());
-        entityManager.detach(linguist);
-        Linguist oldLinguist = linguistRepository.findById(linguist.getUsername()).get();
-        if (!oldLinguist.getPassword().equals(linguist.getPassword()))
-            linguist.encodePassword();
-        else if (linguist.isResetPassword()) {
-            linguist.setPassword(defaultPassword);
-            linguist.encodePassword();
+        if (!(linguist instanceof Admin)) {
+            logger.info("Before updating: {}", linguist.toString());
+            entityManager.detach(linguist);
+            Linguist oldLinguist = linguistRepository.findById(linguist.getUsername()).get();
+            if (!oldLinguist.getPassword().equals(linguist.getPassword()))
+                linguist.encodePassword();
+            else if (linguist.isResetPassword()) {
+                linguist.setPassword(defaultPassword);
+                linguist.encodePassword();
+            }
         }
     }
 

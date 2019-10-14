@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Admin extends User {
+public class Admin extends Linguist {
 
     @Override
     @Transient
