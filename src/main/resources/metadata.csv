@@ -1,6 +1,6 @@
 category;name;xmlName;type;privateField;includeStatistics
 datos_generales;Número de muestra;número_muestra;String;true;false
-datos_generales;Código de informante;código_informante;String;true;false
+datos_generales;Código de informante;código_informante;String;false;false
 datos_generales;Transliteración;transliteración;String;true;false
 datos_generales;Primera revisión;revisión_primera;String;true;false
 datos_generales;Segunda revisión;revisión_segunda;String;true;false
