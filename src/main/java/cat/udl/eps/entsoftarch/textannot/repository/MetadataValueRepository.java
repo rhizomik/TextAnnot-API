@@ -1,14 +1,14 @@
 package cat.udl.eps.entsoftarch.textannot.repository;
 
-import cat.udl.eps.entsoftarch.textannot.domain.*;
+import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
+import cat.udl.eps.entsoftarch.textannot.domain.MetadataValue;
+import cat.udl.eps.entsoftarch.textannot.domain.Sample;
 import cat.udl.eps.entsoftarch.textannot.domain.projections.MetadataValueProjection;
-import org.springframework.data.jpa.repository.Query;
+import java.util.List;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.security.access.prepost.PostFilter;
-
-import java.util.List;
 
 @RepositoryRestResource(excerptProjection = MetadataValueProjection.class)
 public interface MetadataValueRepository extends PagingAndSortingRepository<MetadataValue, Integer> {
@@ -38,6 +38,7 @@ public interface MetadataValueRepository extends PagingAndSortingRepository<Meta
      * @param sample The given sample of a group of metadataValues
      * @return list of metadataValues.
      */
-    @PostFilter("hasRole('ADMIN') || filterObject.values.privateField != null && !filterObject.values.privateField")
+    @PostFilter("hasRole('ADMIN') || hasRole('LINGUIST') || "
+        + "filterObject.values.privateField != null && !filterObject.values.privateField")
     List<MetadataValue> findByForA(@Param("sample") Sample sample);
 }
