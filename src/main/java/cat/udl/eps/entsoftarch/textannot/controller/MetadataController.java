@@ -1,37 +1,37 @@
 package cat.udl.eps.entsoftarch.textannot.controller;
 
-import cat.udl.eps.entsoftarch.textannot.domain.*;
+import cat.udl.eps.entsoftarch.textannot.domain.MetadataField;
+import cat.udl.eps.entsoftarch.textannot.domain.Project;
+import cat.udl.eps.entsoftarch.textannot.domain.QMetadataField;
+import cat.udl.eps.entsoftarch.textannot.domain.QMetadataValue;
 import cat.udl.eps.entsoftarch.textannot.exception.NotFoundException;
 import cat.udl.eps.entsoftarch.textannot.repository.MetadataFieldRepository;
 import cat.udl.eps.entsoftarch.textannot.repository.ProjectRepository;
 import com.querydsl.core.Tuple;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.jpa.impl.JPAUpdateClause;
-import javassist.tools.web.BadHttpRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
 import lombok.Data;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManager;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static com.google.common.base.Strings.isNullOrEmpty;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @BasePathAwareController
 public class MetadataController {
@@ -54,8 +54,7 @@ public class MetadataController {
 
     @GetMapping("/metadataFields/{id}/value-counts")
     public @ResponseBody
-    MetadataFieldValueCounts
-    getMetadataFieldValuesCount(@PathVariable("id") Integer id) {
+    MetadataFieldValueCounts getMetadataFieldValuesCount(@PathVariable("id") Integer id) {
         MetadataField metadataField = metadataFieldRepository.findById(id).orElse(null);
         if (metadataField == null)
             throw new NotFoundException();
@@ -93,9 +92,10 @@ public class MetadataController {
         MetadataDistinctValues values = new MetadataDistinctValues();
         values.setValues(
                 queryFactory.selectDistinct(QMetadataValue.metadataValue.value)
-                .from(QMetadataValue.metadataValue)
-                        .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
-                        .where(QMetadataField.metadataField.name.eq(name)).fetch());
+                    .from(QMetadataValue.metadataValue)
+                    .innerJoin(QMetadataValue.metadataValue.values, QMetadataField.metadataField)
+                    .where(QMetadataField.metadataField.name.eq(name))
+                    .orderBy(QMetadataValue.metadataValue.value.asc()).fetch());
         return values;
     }
 
@@ -107,9 +107,7 @@ public class MetadataController {
         Optional<Project> project = projectRepository.findById(projectId);
         if (!project.isPresent())
             throw new NotFoundException();
-
         readMetadataCsv(getClass().getClassLoader().getResourceAsStream("metadata.csv"), project.get());
-
     }
 
     private void readMetadataCsv(InputStream metadataCsv, Project project) throws IOException {
