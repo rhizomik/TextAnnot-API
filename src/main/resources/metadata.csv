@@ -12,9 +12,9 @@ datos_muestra;Tema;tema;String;false;true
 datos_muestra;Observaciones;observaciones;String;true;false
 datos_informante;Nombre;nombre;String;true;false
 datos_informante;Sexo;sexo;String;false;true
-datos_informante;Nivel de referencia;nivel_referencia;String;false;true
+datos_informante;Nivel de referencia del MCER;nivel_referencia;String;false;true
 datos_informante;Curso;curso;String;false;true
 datos_informante;Universidad;universidad;String;false;true
-datos_informante;Nivel CET;nivel_CET;String;false;true
+datos_informante;Nivel de inglés (CET);nivel_CET;String;false;true
 datos_informante;Estancia en España;estancia_España;String;false;true
 datos_informante;Observaciones;observaciones;String;true;false
