@@ -33,7 +33,7 @@ public interface MetadataFieldRepository extends PagingAndSortingRepository<Meta
      * @param project The given metadataTemplate that contains metadataFields that we want.
      * @return a list of metadataFields.
      */
-    @PostFilter("hasRole('ROLE_ADMIN') || hasRole('LINGUIST') || "
+    @PostFilter("hasRole('ADMIN') || hasRole('LINGUIST') || "
         + "filterObject.privateField != null && !filterObject.privateField")
     List<MetadataField> findByDefinedAt(@Param("project") Project project);
 
