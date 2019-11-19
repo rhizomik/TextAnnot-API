@@ -1,6 +1,5 @@
 package cat.udl.eps.entsoftarch.textannot.repository;
 
-import cat.udl.eps.entsoftarch.textannot.domain.Annotation;
 import cat.udl.eps.entsoftarch.textannot.domain.AnnotationStatus;
 import cat.udl.eps.entsoftarch.textannot.domain.Project;
 import org.springframework.data.repository.PagingAndSortingRepository;

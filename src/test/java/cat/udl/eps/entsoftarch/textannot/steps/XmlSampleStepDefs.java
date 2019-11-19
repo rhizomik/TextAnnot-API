@@ -13,7 +13,6 @@ import cat.udl.eps.entsoftarch.textannot.repository.*;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
