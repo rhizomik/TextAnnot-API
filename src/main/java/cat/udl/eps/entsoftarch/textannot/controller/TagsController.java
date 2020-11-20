@@ -157,16 +157,16 @@ public class TagsController {
                 tagPath.append(tagName + ";");
                 if (isNullOrEmpty(tagName))
                     continue;
-                if (!processedTags.containsKey(tagName)) {
+                if (!processedTags.containsKey(tagPath.toString())) {
                     Tag tag = new Tag(tagName);
                     tag.setParent(parent);
                     tag.setProject(project);
                     tag.setTreePath(tagPath.toString());
-                    processedTags.put(tagName, tagRepository.save(tag));
+                    processedTags.put(tagPath.toString(), tagRepository.save(tag));
                     parent = tag;
                 }
                 else {
-                    parent = processedTags.get(tagName);
+                    parent = processedTags.get(tagPath.toString());
                 }
             }
         });
