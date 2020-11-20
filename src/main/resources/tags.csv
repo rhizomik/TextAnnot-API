@@ -1,198 +1,424 @@
-Nivel 1;Nivel 2;Nivel 3;Nivel 4;Nivel 5;Nivel 6;Ejemplos
-ORTOGRAFÍA;Grafía;Letra;Vocal;Adición;;Mi madre es profesoara
-ORTOGRAFÍA;Grafía;Letra;Vocal;Omisión;;un piso bonito y lumnoso
-ORTOGRAFÍA;Grafía;Letra;Vocal;Sustitución;;Mi case es grande. Somos una familia filiz.
-ORTOGRAFÍA;Grafía;Letra;Vocal;Permutación;;Mi madre tiene pelo razido.
-ORTOGRAFÍA;Grafía;Letra;Consonante;Adición;;hortiga
-ORTOGRAFÍA;Grafía;Letra;Consonante;Omisión;;Todos piesan en ellos.
-ORTOGRAFÍA;Grafía;Letra;Consonante;Omisión grupo consonántico;;costrucción
-ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;;
-ORTOGRAFÍA;Grafía;Letra;Consonante;Confusión b/v;;
-ORTOGRAFÍA;Grafía;Letra;Consonante;Confusión c/z;;cereca, zelo
-ORTOGRAFÍA;Grafía;Letra;Consonante;Confusión c/qu/k;;
-ORTOGRAFÍA;Grafía;Letra;Consonante;Confusión g/gu;;
-ORTOGRAFÍA;Grafía;Letra;Consonante;Confusión g/j;;cojer
-ORTOGRAFÍA;Grafía;Letra;Consonante;Confusión y/ll;;
-ORTOGRAFÍA;Grafía;Letra;Consonante;Confusión x/s;;ésito
-ORTOGRAFÍA;Grafía;Letra;Consonante;Permutación;;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Simple;Adición;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Simple;Omisión;Mi padre trabaja mucho en fábica.
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Simple;Sustitución;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Simple;Sustitución r > l;El sendelo era largo.
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Simple;Permutación;Mi parde es médico.
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Múltiple;Adición;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Múltiple;Omisión;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Múltiple;Sustitución;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Múltiple;Sustitución rr>r;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Múltiple;Sustitución rr>l;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Múltiple;Permutación;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Adición;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Omisión;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Sustitución;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Sustitución l>r;El mar tenía muchas oras.
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Sustitución l>ll;Todos los días nos llevantamos muy apretado.
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Permutación;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Palatal;Adición;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Palatal;Omisión;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Palatal;Sustitución;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Palatal;Permutación;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Labiales;Omisión b;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Labiales;Omisión p;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Labiales;Sustitución b>p;Era el mes de april.
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Labiales;Sustitución p>b;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Labiales;Permutación;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Dentales;Omisión d;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Dentales;Omisión t;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Dentales;Sustitución d>t;He comprato un libro.
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Dentales;Sustitución t>d;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Dentales;Permutación;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Velares;Omisión g;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Velares;Omisión k;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Velares;Sustitución g>k;encender el fueco.
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Velares;Sustitución k>g;
-ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Velares;Permutación;
-ORTOGRAFÍA;Tilde;Palabras simples;Acento prosódico;Adición;;
-ORTOGRAFÍA;Tilde;Palabras simples;Acento prosódico;Omisión;;No hace frio.
-ORTOGRAFÍA;Tilde;Palabras simples;Acento prosódico;Sustitución;;
-ORTOGRAFÍA;Tilde;Palabras simples;Acento prosódico;Permutación;;
-ORTOGRAFÍA;Tilde;Palabras simples;Acento diacrítico;Adición;;
-ORTOGRAFÍA;Tilde;Palabras simples;Acento diacrítico;Omisión;;
-ORTOGRAFÍA;Tilde;Palabras simples;Acento diacrítico;Sustitución;;
-ORTOGRAFÍA;Tilde;Palabras simples;Acento diacrítico;Permutación;;
-ORTOGRAFÍA;Tilde;Palabras derivadas;Acento prosódico;Adición;;
-ORTOGRAFÍA;Tilde;Palabras derivadas;Acento prosódico;Omisión;;
-ORTOGRAFÍA;Tilde;Palabras derivadas;Acento prosódico;Sustitución;;
-ORTOGRAFÍA;Tilde;Palabras derivadas;Acento prosódico;Permutación;;
-ORTOGRAFÍA;Tilde;Palabras derivadas;Acento diacrítico;Adición;;
-ORTOGRAFÍA;Tilde;Palabras derivadas;Acento diacrítico;Omisión;;
-ORTOGRAFÍA;Tilde;Palabras derivadas;Acento diacrítico;Sustitución;;
-ORTOGRAFÍA;Tilde;Palabras derivadas;Acento diacrítico;Permutación;;
-ORTOGRAFÍA;Tilde;Palabras compuestas;Acento prosódico;Adición;;
-ORTOGRAFÍA;Tilde;Palabras compuestas;Acento prosódico;Omisión;;
-ORTOGRAFÍA;Tilde;Palabras compuestas;Acento prosódico;Sustitución;;
-ORTOGRAFÍA;Tilde;Palabras compuestas;Acento prosódico;Permutación;;
-ORTOGRAFÍA;Tilde;Palabras compuestas;Acento diacrítico;Adición;;
-ORTOGRAFÍA;Tilde;Palabras compuestas;Acento diacrítico;Omisión;;
-ORTOGRAFÍA;Tilde;Palabras compuestas;Acento diacrítico;Sustitución;;
-ORTOGRAFÍA;Tilde;Palabras compuestas;Acento diacrítico;Permutación;;
-ORTOGRAFÍA;Tilde;Extranjerismos;Adición;;;
-ORTOGRAFÍA;Tilde;Extranjerismos;Omisión;;;
-ORTOGRAFÍA;Tilde;Extranjerismos;Sustitución;;;
-ORTOGRAFÍA;Tilde;Extranjerismos;Permutación;;;
-ORTOGRAFÍA;Mayúsculas;Adición;;;;Vivo en una Ciudad grande.
-ORTOGRAFÍA;Mayúsculas;Omisión;Nombre propio;;;Vivo en binhai.
-ORTOGRAFÍA;Mayúsculas;Omisión;Inicio de frase;;;
-ORTOGRAFÍA;Separación palabras;Prefijos;Adición (se separan);;;
-ORTOGRAFÍA;Separación palabras;Prefijos;Omisión (se juntan);;;
-ORTOGRAFÍA;Separación palabras;Secuencias;Adición (se separan);;;si no, por que, con que
-ORTOGRAFÍA;Separación palabras;Secuencias;Omisión (se juntan);;;sino, porque, conque
-ORTOGRAFÍA;Separación palabras;Numerales;Adición (se separan);;;
-ORTOGRAFÍA;Separación palabras;Numerales;Omisión (se juntan);;;
-ORTOGRAFÍA;Otros casos;;;;;Ha llobido mucho pero no ace frío.
-MORFOLOGÍA;Artículo ;Definido;Adición;;;Mi madre es la profesora y mi padre el médico.
-MORFOLOGÍA;Artículo ;Definido;Omisión;;;Estudio en ê universidad.
-MORFOLOGÍA;Artículo ;Definido;Sustitución por indefinido;;;
-MORFOLOGÍA;Artículo ;Indefinido;Adición;;;Mi madre es una profesora.
-MORFOLOGÍA;Artículo ;Indefinido;Omisión;;;Mi padre es policía, trabaja en ê oficina.
-MORFOLOGÍA;Artículo ;Indefinido;Sustitución por definido;;;
-MORFOLOGÍA;Artículo ;Indefinido;Forma plena;;;Tengo uno amigo que…
-MORFOLOGÍA;Artículo ;Contracción;Adición;;;La lectura del Lazarillo
-MORFOLOGÍA;Artículo ;Contracción;Omisión;;;Se lo dio a el niño
-MORFOLOGÍA;Pronombre;Personal;Tónico ;Adición;;
-MORFOLOGÍA;Pronombre;Personal;Tónico ;Omisión;;
-MORFOLOGÍA;Pronombre;Personal;Tónico ;Sustitución;;Mi padre, mi madre y me.  Lo siento, mis abuelos no están ahora. Todos piensan en se.
-MORFOLOGÍA;Pronombre;Personal;Tónico ;Permutación ;;
-MORFOLOGÍA;Pronombre;Personal;Tónico ;Duplicación;;
-MORFOLOGÍA;Pronombre;Personal;Tónico ;Discordancia;;No doy más de sí.
-MORFOLOGÍA;Pronombre;Personal;Átono;Adición (con verbo no pronominal);;Me quiero mi familia mucho.
-MORFOLOGÍA;Pronombre;Personal;Átono;Omisión (con verbo pronominal);;Mi madre es ama de casa. También ê levanta temprano.
-MORFOLOGÍA;Pronombre;Personal;Átono;Sustitución ;leísmo;
-MORFOLOGÍA;Pronombre;Personal;Átono;Sustitución ;laísmo;
-MORFOLOGÍA;Pronombre;Personal;Átono;Sustitución ;loísmo;
-MORFOLOGÍA;Pronombre;Personal;Átono;Sustitución ;otros casos;Se quiero [a mis padres] y me quieren.
-MORFOLOGÍA;Pronombre;Personal;Átono;Permutación;;Me sellevó.
-MORFOLOGÍA;Pronombre;Personal;Átono;Duplicación;;
-MORFOLOGÍA;Pronombre;Personal;Átono;Discordancia;;Le aseguro a ustedes
-MORFOLOGÍA;Pronombre;Relativos;Omisión;;;Yangquan, una ciudad ê está en el centro.
-MORFOLOGÍA;Pronombre;Relativos;Sustitución;en general (¿¿??);;
-MORFOLOGÍA;Pronombre;Relativos;Sustitución;QUE SU por CUYO;;
-MORFOLOGÍA;Sustantivo;Derivación;Prefijación inadecuada;;;antidiluviano
-MORFOLOGÍA;Sustantivo;Derivación;Lexema inadecuado;;;vueladura
-MORFOLOGÍA;Sustantivo;Derivación;Sufijación inadecuada;;;explosionamiento, antiguísimo
-MORFOLOGÍA;Sustantivo;Composición;Adición;;;
-MORFOLOGÍA;Sustantivo;Composición;Omisión;;;
-MORFOLOGÍA;Sustantivo;Género;Formación inadecuada;;;la sacerdota, la actora
-MORFOLOGÍA;Sustantivo;Género;Atribución inadecuada;;;el pelota
-MORFOLOGÍA;Sustantivo;Número;Formación inadecuada;;;tres cafeses
-MORFOLOGÍA;Sustantivo;Número;Atribución inadecuada;;;gran cantidad de niño, profesores de chinos
-MORFOLOGÍA;Adjetivo;Calificativo;Sustitución por sustantivo;;;Tiene café ojos.
-MORFOLOGÍA;Adjetivo;Calificativo;Sustitución por adverbio;;;Mi menos hermano
-MORFOLOGÍA;Adjetivo;Posesivo;Adición ;;;Su hermano de mi padre...
-MORFOLOGÍA;Adjetivo;Posesivo;Omisión;;;Somos mi padre, ê madre, ê abuelo y yo.
-MORFOLOGÍA;Adjetivo;Posesivo;Sustitución de DE+pr. pers.;;;delante mío
-MORFOLOGÍA;Adjetivo;Posesivo;Sustitución por DE+pr. pers.;;;La casa de mí tiene...
-MORFOLOGÍA;Adjetivo;Posesivo;Uso pleno del enclítico;;;mía casa
-MORFOLOGÍA;Adjetivo;Demostrativo;Sustituciónde ESE por ESTE;;;Dame este libro.
-MORFOLOGÍA;Adjetivo;Demostrativo;Sustitución de ESTE por EL;;;
-MORFOLOGÍA;Adjetivo;Indefinidos;Problemas con SENDOS;;;
-MORFOLOGÍA;Adjetivo;Indefinidos;Problemas con CUALQUIERA;;;
-MORFOLOGÍA;Adjetivo;Numerales;Sustitución de ordinal por partitivo;;;la veinteava vez
-MORFOLOGÍA;Adjetivo;Numerales;Enclítico;Sustitución del apocopado por el pleno;;primero libro
-MORFOLOGÍA;Adjetivo;Numerales;Enclítico;Sustitución del pleno por el apocopado;;la tercer vez
-MORFOLOGÍA;Adjetivo;Numerales;Problemas con AMBOS;;;
-MORFOLOGÍA;Adjetivo;Numerales;Confusión CIEN/CIENTO;;;
-MORFOLOGÍA;Adjetivo;Numerales;Confusión MIL/MILLAR;;;
-MORFOLOGÍA;Verbo;Pronominalización;Adición (pronominal cuando no lo es);;;Me quiero mi familia mucho.
-MORFOLOGÍA;Verbo;Pronominalización;Omisión (no pronominal cuando lo es);;;
-MORFOLOGÍA;Verbo;Regularización;Adición (regular cuando no lo es);;;
-MORFOLOGÍA;Verbo;Regularización;Omisión (irregular cuando lo es);;;
-MORFOLOGÍA;Verbo;Persona (6 personas);Formas no personales;Sustitución Infinitivo;;Yo gusto trabajo en la revista.
-MORFOLOGÍA;Verbo;Persona;Formas no personales;Gerundio no simultáneo;;
-MORFOLOGÍA;Verbo;Persona;Sustitución (falta de concordancia);;;
-MORFOLOGÍA;Verbo;Tiempo;Imperfecto por Indefinido;;;
-MORFOLOGÍA;Verbo;Tiempo;Indefinido por Imperfecto;;;
-MORFOLOGÍA;Verbo;Tiempo;P.Perfecto por Indefinido;;;
-MORFOLOGÍA;Verbo;Tiempo;Indefinido por P.Perfecto (¿¿??);;;
-MORFOLOGÍA;Verbo;Tiempo;Correlación temporal;;;
-MORFOLOGÍA;Verbo;Modo;Indicativo por Subjuntivo;;;
-MORFOLOGÍA;Verbo;Modo;Subjuntivo por Indicativo;;;
-MORFOLOGÍA;Verbo;Modo;Condicional por Subjuntivo;;;
-MORFOLOGÍA;Verbo;Copulativo;Omisión (falta el verbo);;;Tengo dos sobrinas, una es estudiante de la universidad y otro todavía ê en la segundaria. Yo gusto trabajar en la revista, porque quiero ê escribita.
-MORFOLOGÍA;Verbo;Copulativo;Sustitución ESTAR por SER;;;Mis abuelos son muy mayores, son jubilados, no trabajan. Soy ocupado pero muy contento todos los días.
-MORFOLOGÍA;Verbo;Copulativo;Sustitución SER por ESTAR;;;
-MORFOLOGÍA;Verbo;Copulativo;Sustitución SER por TENER;;;Mi padre tiene un poco de gordo.
-MORFOLOGÍA;Verbo;Otros fenómenos;;;;
-MORFOLOGÍA;Preposición;Adición;;;;
-MORFOLOGÍA;Preposición;Omisión;;;;Trabajan en hospital ê Tianjin. Yo amo ê mi familia mucho.
-MORFOLOGÍA;Preposición;Sustitución;en general;;;Mi padre es profesor de China (¿¿??)
-MORFOLOGÍA;Preposición;Sustitución;A/EN;Sustitución A por EN;;
-MORFOLOGÍA;Preposición;Sustitución;A/EN;Sustitución EN por A;;
-MORFOLOGÍA;Preposición;Sustitución;POR/PARA;Sustitición POR por PARA;;Quiero estudiar mucho para mi familia.
-MORFOLOGÍA;Preposición;Sustitución;POR/PARA;Sustitución PARA por POR;;
-MORFOLOGÍA;Conjunción;Adición;;;;
-MORFOLOGÍA;Conjunción;Omisión;;;;
-MORFOLOGÍA;Conjunción;Sustitución;;;;
-SINTAXIS;Concordancia;de género;;;;Trabaja en una hospital. Mi hermano es muy guapa y alto.  Toda mi familia están muy contentos.
-SINTAXIS;Concordancia;de número;;;;Va al supermercado a comprar vario verduras y carnes.
-SINTAXIS;Concordancia;de persona (6 pers);sujeto-verbo;en general;;Mi padre se llamo…
-SINTAXIS;Concordancia;de persona;sujeto-verbo;ad sensum;;Toda mi familia están muy contentos.
-SINTAXIS;Concordancia;de persona;impersonalidad;impersonal;;
-SINTAXIS;Concordancia;de persona;impersonalidad;pasiva refleja;;
-SINTAXIS;Orden de los constituyentes;en general (¿¿??);;;;Tengo uno alegre familia.
-SINTAXIS;Orden de los constituyentes;posición del adverbio;;;;Me quiero mi familia mucho.
-SINTAXIS;Regimen verbal;Adición preposición;;;;
-SINTAXIS;Regimen verbal;Omisión preposición;;;;Habla ê política
-SINTAXIS;Regimen verbal;Sustitución preposición;;;;
-SINTAXIS;Problemas con GUSTAR/ENCANTAR/AGRADAR/ILUSIONAR  y similares;;;;;Yo gusto trabajo en la revista. Me gustar ser profesora.
-SINTAXIS;Circunloquio;;;;;Yo soy no bonito. Mi hermano es estudiante en Beijing. Soy de la opinión de…
-SINTAXIS;Anacoluto;;;;;Yo estos días me parece que hace demasiado calor.
-SINTAXIS;Falta de subordinación;;;;;Vivo en Tianjin por el estudio [porque estudio]. Mi padre ya trabaja ê [desde hace] veinte años.
-LÉXICO;Epíteto tópico;;;;;altos rascacielos, verde hierba, estrecha colaboración
-LÉXICO;Redundancia;;;;;bajar abajo, bifurcarse en dos direcciones, constelación de estrellas, hijo primogénito
-LÉXICO;Impropiedad;;;;;bianual (por bienal), microsegundo (opor milisegundo)
-LÉXICO;Sustitución ;;;;;Todos los días, nos levantamos muy apretado. Quiero ser escribita.
-LÉXICO;Préstamos;del chino;;;;
-LÉXICO;Préstamos;del inglés;;;;
-LÉXICO;Préstamos;de otras lenguas;;;;
-LÉXICO;Palabras inventadas;;;;;
-LÉXICO;Indescifrable;;;;;Me gusta ser profesora o transtar.
+﻿Nivel 1;Nivel 2;Nivel 3;Nivel 4;Nivel 5;Nivel 6
+ORTOGRAFÍA;Grafía;Letra;Vocal;Adición;
+ORTOGRAFÍA;Grafía;Letra;Vocal;Omisión;
+ORTOGRAFÍA;Grafía;Letra;Vocal;Sustitución;
+ORTOGRAFÍA;Grafía;Letra;Vocal;Permutación;
+ORTOGRAFÍA;Grafía;Letra;Consonante;Adición;
+ORTOGRAFÍA;Grafía;Letra;Consonante;Omisión;
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;en general
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión b/v
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión c/z
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión c/qu/k
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión g/gu
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión g/j
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión r/rr
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión l/ll
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión y/ll
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión c,z/s
+ORTOGRAFÍA;Grafía;Letra;Consonante;Sustitución;Confusión x/s
+ORTOGRAFÍA;Grafía;Letra;Consonante;Permutación;
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Labiales;Omisión b
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Labiales;Omisión p
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Labiales;Sustitución b>p
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Labiales;Sustitución p>b
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Dentales;Omisión d
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Dentales;Omisión t
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Dentales;Sustitución d>t
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Dentales;Sustitución t>d
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Velares;Omisión g
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Velares;Omisión k
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Velares;Sustitución g>k
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Oclusivas;Velares;Sustitución k>g
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Simple;Adición
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Simple;Omisión
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Simple;Sustitución r > l
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Simple;Permutación
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Múltiple;Adición
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Múltiple;Omisión
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Vibrantes;Múltiple;Sustitución rr>l
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Adición
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Omisión
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Sustitución l>r
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Alveolar;Permutación
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Palatal;Adición
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Palatal;Omisión
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Palatal;Sustitución
+ORTOGRAFÍA;Grafía;Desajuste fonológico;Laterales;Palatal;Permutación
+ORTOGRAFÍA;Tilde;Palabras simples;Acento prosódico;Adición;
+ORTOGRAFÍA;Tilde;Palabras simples;Acento prosódico;Omisión;
+ORTOGRAFÍA;Tilde;Palabras simples;Acento prosódico;Sustitución;
+ORTOGRAFÍA;Tilde;Palabras simples;Acento prosódico;Permutación;
+ORTOGRAFÍA;Tilde;Palabras simples;Acento diacrítico;Adición;
+ORTOGRAFÍA;Tilde;Palabras simples;Acento diacrítico;Omisión;
+ORTOGRAFÍA;Tilde;Palabras simples;Acento diacrítico;Sustitución;
+ORTOGRAFÍA;Tilde;Palabras simples;Acento diacrítico;Permutación;
+ORTOGRAFÍA;Tilde;Palabras derivadas;Acento prosódico;Adición;
+ORTOGRAFÍA;Tilde;Palabras derivadas;Acento prosódico;Omisión;
+ORTOGRAFÍA;Tilde;Palabras derivadas;Acento prosódico;Sustitución;
+ORTOGRAFÍA;Tilde;Palabras derivadas;Acento prosódico;Permutación;
+ORTOGRAFÍA;Tilde;Palabras derivadas;Acento diacrítico;Adición;
+ORTOGRAFÍA;Tilde;Palabras derivadas;Acento diacrítico;Omisión;
+ORTOGRAFÍA;Tilde;Palabras derivadas;Acento diacrítico;Sustitución;
+ORTOGRAFÍA;Tilde;Palabras derivadas;Acento diacrítico;Permutación;
+ORTOGRAFÍA;Tilde;Palabras compuestas;Acento prosódico;Adición;
+ORTOGRAFÍA;Tilde;Palabras compuestas;Acento prosódico;Omisión;
+ORTOGRAFÍA;Tilde;Palabras compuestas;Acento prosódico;Sustitución;
+ORTOGRAFÍA;Tilde;Palabras compuestas;Acento prosódico;Permutación;
+ORTOGRAFÍA;Tilde;Palabras compuestas;Acento diacrítico;Adición;
+ORTOGRAFÍA;Tilde;Palabras compuestas;Acento diacrítico;Omisión;
+ORTOGRAFÍA;Tilde;Palabras compuestas;Acento diacrítico;Sustitución;
+ORTOGRAFÍA;Tilde;Palabras compuestas;Acento diacrítico;Permutación;
+ORTOGRAFÍA;Mayúsculas;Adición;Acento diacrítico;;
+ORTOGRAFÍA;Mayúsculas;Omisión;Nombre propio;;
+ORTOGRAFÍA;Mayúsculas;Omisión;Inicio de frase;;
+ORTOGRAFÍA;Separación palabras;Adición (separación incorrecta);Secuencias homófonas;;
+ORTOGRAFÍA;Separación palabras;Adición (separación incorrecta);Numerales;;
+ORTOGRAFÍA;Separación palabras;Adición (separación incorrecta);Prefijos;;
+ORTOGRAFÍA;Separación palabras;Adición (separación incorrecta);Pronombre enclítico;;
+ORTOGRAFÍA;Separación palabras;Adición (separación incorrecta);Otros casos;;
+ORTOGRAFÍA;Separación palabras;Omisión (unión incorrecta);Secuencias homófonas;;
+ORTOGRAFÍA;Separación palabras;Omisión (unión incorrecta);Numerales;;
+ORTOGRAFÍA;Separación palabras;Omisión (unión incorrecta);Pronombre proclítico;;
+ORTOGRAFÍA;Separación palabras;Omisión (unión incorrecta);Otros casos;;
+ORTOGRAFÍA;Puntuación;Adición;;;
+ORTOGRAFÍA;Puntuación;Omisión;en general;;
+ORTOGRAFÍA;Puntuación;Omisión;Primer ¿ ¡;;
+ORTOGRAFÍA;Puntuación;Sustitución;;;
+MORFOLOGÍA;Artículo;Definido;Adición;;
+MORFOLOGÍA;Artículo;Definido;Omisión;;
+MORFOLOGÍA;Artículo;Definido;Sustitución por indefinido;;
+MORFOLOGÍA;Artículo;Indefinido;Adición;;
+MORFOLOGÍA;Artículo;Indefinido;Omisión;;
+MORFOLOGÍA;Artículo;Indefinido;Sustitución por definido;;
+MORFOLOGÍA;Artículo;Indefinido;Forma plena;;
+MORFOLOGÍA;Artículo;Contracción;Adición;;
+MORFOLOGÍA;Artículo;Contracción;Omisión;;
+MORFOLOGÍA;Pronombre;Personal;Tónico;Adición;
+MORFOLOGÍA;Pronombre;Personal;Tónico;Omisión;
+MORFOLOGÍA;Pronombre;Personal;Tónico;Sustitución;
+MORFOLOGÍA;Pronombre;Personal;Tónico;Permutación;
+MORFOLOGÍA;Pronombre;Personal;Tónico;Duplicación;
+MORFOLOGÍA;Pronombre;Personal;Tónico;Discordancia;
+MORFOLOGÍA;Pronombre;Personal;Átono;Adición (con verbo no pronominal);
+MORFOLOGÍA;Pronombre;Personal;Átono;Omisión (con verbo pronominal);
+MORFOLOGÍA;Pronombre;Personal;Átono;Sustitución;leísmo
+MORFOLOGÍA;Pronombre;Personal;Átono;Sustitución;laísmo
+MORFOLOGÍA;Pronombre;Personal;Átono;Sustitución;loísmo
+MORFOLOGÍA;Pronombre;Personal;Átono;Sustitución;otros casos
+MORFOLOGÍA;Pronombre;Personal;Átono;Permutación;
+MORFOLOGÍA;Pronombre;Personal;Átono;Duplicación;
+MORFOLOGÍA;Pronombre;Personal;Átono;Discordancia;
+MORFOLOGÍA;Pronombre;Relativos;Omisión;;
+MORFOLOGÍA;Pronombre;Relativos;Sustitución;en general;
+MORFOLOGÍA;Pronombre;Relativos;Sustitución;QUE SU por CUYO;
+MORFOLOGÍA;Sustantivo;Derivación;Prefijación inadecuada;;
+MORFOLOGÍA;Sustantivo;Derivación;Lexema inadecuado;;
+MORFOLOGÍA;Sustantivo;Derivación;Sufijación inadecuada;;
+MORFOLOGÍA;Sustantivo;Composición;Adición;;
+MORFOLOGÍA;Sustantivo;Composición;Omisión;;
+MORFOLOGÍA;Sustantivo;Género;Formación inadecuada;;
+MORFOLOGÍA;Sustantivo;Número;Formación inadecuada;;
+MORFOLOGÍA;Sustantivo;Número;Atribución inadecuada;;
+MORFOLOGÍA;Sustantivo;Otros;Sustitución por adjetivo;;
+MORFOLOGÍA;Adjetivo;Calificativo;Sustitución por sustantivo;;
+MORFOLOGÍA;Adjetivo;Calificativo;Sustitución por adverbio;;
+MORFOLOGÍA;Adjetivo;Posesivo;Adición;;
+MORFOLOGÍA;Adjetivo;Posesivo;Omisión;;
+MORFOLOGÍA;Adjetivo;Posesivo;Sustitución de DE+pr. pers.;;
+MORFOLOGÍA;Adjetivo;Posesivo;Sustitución por DE+pr. pers.;;
+MORFOLOGÍA;Adjetivo;Posesivo;Uso pleno del enclítico;;
+MORFOLOGÍA;Adjetivo;Demostrativo;Sustituciónde ESE por ESTE;;
+MORFOLOGÍA;Adjetivo;Demostrativo;Sustitución de ESTE/ESE por EL;;
+MORFOLOGÍA;Adjetivo;Indefinidos;Confusión ALGÚN/NINGÚN;;
+MORFOLOGÍA;Adjetivo;Indefinidos;Problemas con SENDOS;;
+MORFOLOGÍA;Adjetivo;Indefinidos;Problemas con CUALQUIERA;;
+MORFOLOGÍA;Adjetivo;Numerales;Sustitución de ordinal por partitivo;;
+MORFOLOGÍA;Adjetivo;Numerales;Enclítico;Sustitución del apocopado por el pleno;
+MORFOLOGÍA;Adjetivo;Numerales;Enclítico;Sustitución del pleno por el apocopado;
+MORFOLOGÍA;Adjetivo;Numerales;Problemas con AMBOS;;
+MORFOLOGÍA;Adjetivo;Numerales;Confusión CIEN/CIENTO;;
+MORFOLOGÍA;Adjetivo;Numerales;Confusión MIL/MILLAR;;
+MORFOLOGÍA;Verbo;Omisión;Omisión verbo principal;;
+MORFOLOGÍA;Verbo;Omisión;Omisión verbo auxiliar;;
+MORFOLOGÍA;Verbo;Pronominalización;Adición (pronominal cuando no lo es);;
+MORFOLOGÍA;Verbo;Pronominalización;Omisión (no pronominal cuando lo es);;
+MORFOLOGÍA;Verbo;Regularización;Adición (regular cuando no lo es);;
+MORFOLOGÍA;Verbo;Regularización;Omisión (irregular cuando no lo es);;
+MORFOLOGÍA;Verbo;Otros errores en la conjugación;;;
+MORFOLOGÍA;Verbo;Persona;Sustitución (falta de concordancia);;
+MORFOLOGÍA;Verbo;Persona;Formas no personales;Sustitución Infinitivo por forma personal;
+MORFOLOGÍA;Verbo;Persona;Formas no personales;Gerundio no simultáneo;
+MORFOLOGÍA;Verbo;Persona;Formas no personales;Uso de gerundio por participio;
+MORFOLOGÍA;Verbo;Persona;Formas no personales;Otros errores;
+MORFOLOGÍA;Verbo;Tiempo;Uso del presente para expresar pasado;;
+MORFOLOGÍA;Verbo;Tiempo;Uso de Imperfecto por Indefinido;;
+MORFOLOGÍA;Verbo;Tiempo;Uso de Indefinido por Imperfecto;;
+MORFOLOGÍA;Verbo;Tiempo;Uso de P.Perfecto por Indefinido;;
+MORFOLOGÍA;Verbo;Tiempo;Uso de Indefinido por P.Perfecto;;
+MORFOLOGÍA;Verbo;Tiempo;Correlación temporal;;
+MORFOLOGÍA;Verbo;Tiempo;Uso forma no personal por personal;;
+MORFOLOGÍA;Verbo;Modo;Uso de Indicativo por Subjuntivo;;
+MORFOLOGÍA;Verbo;Modo;Uso de Subjuntivo por Indicativo;;
+MORFOLOGÍA;Verbo;Modo;Uso de Condicional por Subjuntivo;;
+MORFOLOGÍA;Verbo;Modo;Uso de Infinitivo por imperativo;;
+MORFOLOGÍA;Verbo;Copulativo;Omisión (falta el verbo);;
+MORFOLOGÍA;Verbo;Copulativo;Sustitución ESTAR por SER;;
+MORFOLOGÍA;Verbo;Copulativo;Sustitución SER por ESTAR;;
+MORFOLOGÍA;Verbo;Copulativo;Sustitución SER por TENER;;
+MORFOLOGÍA;Verbo;Otras confusiones;Sustitución TENER por HABER;;
+MORFOLOGÍA;Verbo;Otros fenómenos;;;
+MORFOLOGÍA;Adverbio;Adición;;;
+MORFOLOGÍA;Adverbio;Omisión;;;
+MORFOLOGÍA;Adverbio;Sustitución;en general;;
+MORFOLOGÍA;Adverbio;Sustitución;NO/NI;;
+MORFOLOGÍA;Adverbio;Sustitución;MUY/MUCHO-A;;
+MORFOLOGÍA;Adverbio;Sustitución;aquí / ahí / allí;;
+MORFOLOGÍA;Preposición;Adición;en general;;
+MORFOLOGÍA;Preposición;Adición;dequeísmo;;
+MORFOLOGÍA;Preposición;Omisión;en general;;
+MORFOLOGÍA;Preposición;Omisión;de A en CD de persona;;
+MORFOLOGÍA;Preposición;Omisión;queísmo;;
+MORFOLOGÍA;Preposición;Sustitución;en general;;
+MORFOLOGÍA;Preposición;Sustitución;A/EN;Sustitución A por EN;
+MORFOLOGÍA;Preposición;Sustitución;A/EN;Sustitución EN por A;
+MORFOLOGÍA;Preposición;Sustitución;POR/PARA;Sustitición POR por PARA;
+MORFOLOGÍA;Preposición;Sustitución;POR/PARA;Sustitución PARA por POR;
+MORFOLOGÍA;Preposición;Sustitución;PARA/A;Sustitución PARA por A;
+MORFOLOGÍA;Conjunción;Adición;;;
+MORFOLOGÍA;Conjunción;Omisión;;;
+MORFOLOGÍA;Conjunción;Sustitución;en general;;
+MORFOLOGÍA;Conjunción;Sustitución;Y/E;;
+SINTAXIS;Concordancia nominal;de género;sustantivo fem. -e;;
+SINTAXIS;Concordancia nominal;de género;sustantivo masc. en -e;;
+SINTAXIS;Concordancia nominal;de género;sustantivo fem. -cons;;
+SINTAXIS;Concordancia nominal;de género;sustantivo masc. en -cons;;
+SINTAXIS;Concordancia nominal;de género;sustantivo fem. en -a;;
+SINTAXIS;Concordancia nominal;de género;sustantivo masc. en -o;;
+SINTAXIS;Concordancia nominal;de género;sustantivo fem. en -o;;
+SINTAXIS;Concordancia nominal;de género;sustantivo masc. en -a;;
+SINTAXIS;Concordancia nominal;de género;sustantivo de género común;;
+SINTAXIS;Concordancia nominal;de género;sustantivo fem. á-/há-;;
+SINTAXIS;Concordancia nominal;de número;en general;;
+SINTAXIS;Concordancia nominal;de número;colectivos (ad sensum);;
+SINTAXIS;Concordancia verbal;de persona;sujeto-verbo;en general;
+SINTAXIS;Concordancia verbal;de persona;sujeto-verbo;ad sensum;
+SINTAXIS;Concordancia verbal;de persona;impersonalidad;impersonal;
+SINTAXIS;Concordancia verbal;de persona;impersonalidad;pasiva refleja;
+SINTAXIS;Orden de los constituyentes;posición del adjetivo;;;
+SINTAXIS;Orden de los constituyentes;posición del pronombre;;;
+SINTAXIS;Orden de los constituyentes;posición del adverbio;;;
+SINTAXIS;Orden de los constituyentes;otros casos;;;
+SINTAXIS;Regimen verbal;Adición preposición;;;
+SINTAXIS;Regimen verbal;Omisión preposición;;;
+SINTAXIS;Regimen verbal;Sustitución preposición;;;
+SINTAXIS;Falta de subordinación;;;;
+SINTAXIS;Problemas con GUSTAR/ENCANTAR/ILUSIONAR  y similares;;;;
+SINTAXIS;Pleonasmo;;;;
+SINTAXIS;Circunloquio;;;;
+SINTAXIS;Anacoluto;;;;
+SINTAXIS;Indescrifable;;;;
+LÉXICO;Epíteto tópico;;;;
+LÉXICO;Redundancia;;;;
+LÉXICO;Impropiedad;;;;
+LÉXICO;Desajustes en los límites semánticos;;;;
+LÉXICO;Confusión en la misma familia léxica;;;;
+LÉXICO;Confusión en la misma familia semántica;;;;
+LÉXICO;Confusión por similitud fonética;;;;
+LÉXICO;Sustitución;;;;
+LÉXICO;Permutación;;;;
+LÉXICO;Préstamos;del chino;;;
+LÉXICO;Préstamos;del inglés;;;
+LÉXICO;Préstamos;de otras lenguas;;;
+LÉXICO;Palabras inventadas;en general;;;
+LÉXICO;Palabras inventadas;por derivación;;;
+LÉXICO;Palabras inventadas;por composición;;;
+LÉXICO;Indescifrable;;;;
+FRASEOLOGÍA;Locución;Nominal;Adición en la forma;;
+FRASEOLOGÍA;Locución;Nominal;Omisión en la forma;;
+FRASEOLOGÍA;Locución;Nominal;Formación inadecuada;;
+FRASEOLOGÍA;Locución;Nominal;Impropiedad idiomática;;
+FRASEOLOGÍA;Locución;Nominal;Impropiedad en la adecuación;;
+FRASEOLOGÍA;Locución;Nominal;Uso correcto;;
+FRASEOLOGÍA;Locución;Adjetiva;Adición en la forma;;
+FRASEOLOGÍA;Locución;Adjetiva;Omisión en la forma;;
+FRASEOLOGÍA;Locución;Adjetiva;Formación inadecuada;;
+FRASEOLOGÍA;Locución;Adjetiva;Impropiedad idiomática;;
+FRASEOLOGÍA;Locución;Adjetiva;Impropiedad en la adecuación;;
+FRASEOLOGÍA;Locución;Adjetiva;Uso correcto;;
+FRASEOLOGÍA;Locución;Adverbial;Adición en la forma;;
+FRASEOLOGÍA;Locución;Adverbial;Omisión en la forma;;
+FRASEOLOGÍA;Locución;Adverbial;Formación inadecuada;;
+FRASEOLOGÍA;Locución;Adverbial;Impropiedad idiomática;;
+FRASEOLOGÍA;Locución;Adverbial;Impropiedad en la adecuación;;
+FRASEOLOGÍA;Locución;Adverbial;Uso correcto;;
+FRASEOLOGÍA;Locución;Verbal;Adición en la forma;;
+FRASEOLOGÍA;Locución;Verbal;Omisión en la forma;;
+FRASEOLOGÍA;Locución;Verbal;Formación inadecuada;;
+FRASEOLOGÍA;Locución;Verbal;Impropiedad idiomática;;
+FRASEOLOGÍA;Locución;Verbal;Impropiedad en la adecuación;;
+FRASEOLOGÍA;Locución;Verbal;Uso correcto;;
+FRASEOLOGÍA;Locución;Prepositiva;Adición en la forma;;
+FRASEOLOGÍA;Locución;Prepositiva;Omisión en la forma;;
+FRASEOLOGÍA;Locución;Prepositiva;Formación inadecuada;;
+FRASEOLOGÍA;Locución;Prepositiva;Impropiedad idiomática;;
+FRASEOLOGÍA;Locución;Prepositiva;Impropiedad en la adecuación;;
+FRASEOLOGÍA;Locución;Prepositiva;Uso correcto;;
+FRASEOLOGÍA;Locución;Conjuntiva;Adición en la forma;;
+FRASEOLOGÍA;Locución;Conjuntiva;Omisión en la forma;;
+FRASEOLOGÍA;Locución;Conjuntiva;Formación inadecuada;;
+FRASEOLOGÍA;Locución;Conjuntiva;Impropiedad idiomática;;
+FRASEOLOGÍA;Locución;Conjuntiva;Impropiedad en la adecuación;Inadecuación al registro solicitado;
+FRASEOLOGÍA;Locución;Conjuntiva;Uso correcto;;
+FRASEOLOGÍA;Colocaciones;Base;Sust. (suj.) + vbo.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Sust. (suj.) + vbo.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Sust. (suj.) + vbo.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Base;Sust. (suj.) + vbo.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Base;Sust. (suj.) + vbo.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Base;Sust. (suj.) + vbo.;Uso correcto;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Sust. (obj.);Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Sust. (obj.);Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Sust. (obj.);Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Sust. (obj.);Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Sust. (obj.);Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Sust. (obj.);Uso correcto;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + sust.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + sust.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + sust.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + sust.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + sust.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + sust.;Uso correcto;
+FRASEOLOGÍA;Colocaciones;Base;Sust. + prep. + sust.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Sust. + prep. + sust.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Sust. + prep. + sust.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Base;Sust. + prep. + sust.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Base;Sust. + prep. + sust.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Base;Sust. + prep. + sust.;Uso correcto;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Adv.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Adv.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Adv.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Adv.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Adv.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Base;Vbo. + Adv.;Uso correcto;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + adv.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + adv.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + adv.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + adv.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + adv.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Base;Adj. + adv.;Uso correcto;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. (suj.) + vbo.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. (suj.) + vbo.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. (suj.) + vbo.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. (suj.) + vbo.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. (suj.) + vbo.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. (suj.) + vbo.;Uso correcto;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Sust. (obj.);Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Sust. (obj.);Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Sust. (obj.);Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Sust. (obj.);Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Sust. (obj.);Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Sust. (obj.);Uso correcto;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + sust.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + sust.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + sust.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + sust.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + sust.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + sust.;Uso correcto;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. + prep. + sust.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. + prep. + sust.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. + prep. + sust.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. + prep. + sust.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. + prep. + sust.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Colocativo;Sust. + prep. + sust.;Uso correcto;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Adv.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Adv.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Adv.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Adv.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Adv.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Colocativo;Vbo. + Adv.;Uso correcto;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + adv.;Adición en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + adv.;Omisión en la forma;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + adv.;Formación inadecuada;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + adv.;Impropiedad idiomática;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + adv.;Impropiedad en la adecuación;
+FRASEOLOGÍA;Colocaciones;Colocativo;Adj. + adv.;Uso correcto;
+FRASEOLOGÍA;Paremia;Citas y lugares comunes;Adición en la forma;;
+FRASEOLOGÍA;Paremia;Citas y lugares comunes;Omisión en la forma;;
+FRASEOLOGÍA;Paremia;Citas y lugares comunes;Formación inadecuada;;
+FRASEOLOGÍA;Paremia;Citas y lugares comunes;Impropiedad idiomática;;
+FRASEOLOGÍA;Paremia;Citas y lugares comunes;Impropiedad en la adecuación;;
+FRASEOLOGÍA;Paremia;Citas y lugares comunes;Desautomatización;;
+FRASEOLOGÍA;Paremia;Citas y lugares comunes;Uso correcto;;
+FRASEOLOGÍA;Paremia;Refranes;Adición en la forma;;
+FRASEOLOGÍA;Paremia;Refranes;Omisión en la forma;;
+FRASEOLOGÍA;Paremia;Refranes;Formación inadecuada;;
+FRASEOLOGÍA;Paremia;Refranes;Impropiedad idiomática;;
+FRASEOLOGÍA;Paremia;Refranes;Impropiedad en la adecuación;;
+FRASEOLOGÍA;Paremia;Refranes;Desautomatización;;
+FRASEOLOGÍA;Paremia;Refranes;Uso correcto;;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de apertura y cierre;Adición en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de apertura y cierre;Omisión en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de apertura y cierre;Formación inadecuada;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de apertura y cierre;Impropiedad idiomática;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de apertura y cierre;Impropiedad en la adecuación;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de apertura y cierre;Desautomatización;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de apertura y cierre;Uso correcto;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de transición;Adición en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de transición;Omisión en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de transición;Formación inadecuada;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de transición;Impropiedad idiomática;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de transición;Impropiedad en la adecuación;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de transición;Desautomatización;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas discursivas;Fórmulas de transición;Uso correcto;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas expresivas;Adición en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas expresivas;Omisión en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas expresivas;Formación inadecuada;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas expresivas;Impropiedad idiomática;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas expresivas;Impropiedad en la adecuación;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas expresivas;Desautomatización;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas expresivas;Uso correcto;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas comisivas;Adición en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas comisivas;Omisión en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas comisivas;Formación inadecuada;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas comisivas;Impropiedad idiomática;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas comisivas;Impropiedad en la adecuación;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas comisivas;Desautomatización;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas comisivas;Uso correcto;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas directivas;Adición en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas directivas;Omisión en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas directivas;Formación inadecuada;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas directivas;Impropiedad idiomática;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas directivas;Impropiedad en la adecuación;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas directivas;Desautomatización;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas directivas;Uso correcto;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas asertivas;Adición en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas asertivas;Omisión en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas asertivas;Formación inadecuada;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas asertivas;Impropiedad idiomática;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas asertivas;Impropiedad en la adecuación;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas asertivas;Desautomatización;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas asertivas;Uso correcto;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas rituales;Adición en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas rituales;Omisión en la forma;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas rituales;Formación inadecuada;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas rituales;Impropiedad idiomática;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas rituales;Impropiedad en la adecuación;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas rituales;Desautomatización;
+FRASEOLOGÍA;Fórmulas rutinarias;Fórmulas psico-sociales;Fórmulas rituales;Uso correcto;
+PRAGMÁTICA;Macroestructura;Falta de coherencia;;;
+PRAGMÁTICA;Macroestructura;Falta de cohesión;;;
+PRAGMÁTICA;Macroestructura;Impropiedad en el registro;;;
+PRAGMÁTICA;Microestructura;Mantenimiento del referente;Procedimiento léxico;repetición;
+PRAGMÁTICA;Microestructura;Mantenimiento del referente;Procedimiento léxico;sustitución;sinónimos
+PRAGMÁTICA;Microestructura;Mantenimiento del referente;Procedimiento léxico;sustitución;hiperónimo
+PRAGMÁTICA;Microestructura;Mantenimiento del referente;Procedimiento léxico;sustitución;hipónimo
+PRAGMÁTICA;Microestructura;Mantenimiento del referente;Procedimiento léxico;sustitución;antónimo
+PRAGMÁTICA;Microestructura;Mantenimiento del referente;Procedimiento léxico;proforma verbal;
+PRAGMÁTICA;Microestructura;Mantenimiento del referente;Procedimiento léxico;metáfora;
+PRAGMÁTICA;Microestructura;Mantenimiento del referente;Relación campo semántico;;
+PRAGMÁTICA;Microestructura;Ausencia del referente;;;
+PRAGMÁTICA;Microestructura;Procedimientos gramaticales;Deixis;;
+PRAGMÁTICA;Microestructura;Procedimientos gramaticales;Marcadores;Adición;
+PRAGMÁTICA;Microestructura;Procedimientos gramaticales;Marcadores;Omisión;
+PRAGMÁTICA;Microestructura;Procedimientos gramaticales;Marcadores;Sustitución;
+PRAGMÁTICA;Microestructura;Procedimientos gramaticales;Marcadores;Permutación;
+PRAGMÁTICA;Microestructura;Procedimientos gramaticales;Marcadores;Uso correcto;
